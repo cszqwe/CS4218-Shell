@@ -31,8 +31,7 @@ public class ShellImpl implements Shell {
 	public static final String EXP_SYNTAX = "Invalid syntax encountered.";
 	public static final String EXP_REDIR_PIPE = "File output redirection and "
 			+ "pipe operator cannot be used side by side.";
-	public static final String EXP_SAME_REDIR = "Input redirection file same "
-			+ "as output redirection file.";
+	public static final String EXP_SAME_REDIR = "Input redirection file same " + "as output redirection file.";
 	public static final String EXP_STDOUT = "Error writing to stdout.";
 	public static final String EXP_NOT_SUPPORTED = " not supported yet";
 
@@ -55,8 +54,7 @@ public class ShellImpl implements Shell {
 	 *             If an exception happens while processing the content in the
 	 *             back quotes.
 	 */
-	public static String[] processBQ(String... argsArray)
-			throws AbstractApplicationException, ShellException {
+	public static String[] processBQ(String... argsArray) throws AbstractApplicationException, ShellException {
 		// echo "this is space `echo "nbsp"`"
 		// echo "this is space `echo "nbsp"` and `echo "2nd space"`"
 		// Back quoted: any char except \n,`
@@ -74,16 +72,14 @@ public class ShellImpl implements Shell {
 				// System.out.println("backquote" + bqStr);
 				OutputStream bqOutputStream = new ByteArrayOutputStream();
 				ShellImpl shell = new ShellImpl();
-				//shell.parseAndEvaluate(bqStr, bqOutputStream);
+				// shell.parseAndEvaluate(bqStr, bqOutputStream);
 
 				ByteArrayOutputStream outByte = (ByteArrayOutputStream) bqOutputStream;
 				byte[] byteArray = outByte.toByteArray();
-				String bqResult = new String(byteArray).replace("\n", "")
-						.replace("\r", "");
+				String bqResult = new String(byteArray).replace("\n", "").replace("\r", "");
 
 				// replace substring of back quote with result
-				String replacedStr = argsArray[i].replace("`" + bqStr + "`",
-						bqResult);
+				String replacedStr = argsArray[i].replace("`" + bqStr + "`", bqResult);
 				resultArr[i] = replacedStr;
 			}
 		}
@@ -112,8 +108,7 @@ public class ShellImpl implements Shell {
 	 * @throws ShellException
 	 *             If an unsupported or invalid application command is detected.
 	 */
-	public static void runApp(String app, String[] argsArray,
-			InputStream inputStream, OutputStream outputStream)
+	public static void runApp(String app, String[] argsArray, InputStream inputStream, OutputStream outputStream)
 			throws AbstractApplicationException, ShellException {
 		Application absApp = null;
 		if (("cat").equals(app)) {// cat [FILE]...
@@ -142,8 +137,7 @@ public class ShellImpl implements Shell {
 	 * @throws ShellException
 	 *             If file is not found.
 	 */
-	public static InputStream openInputRedir(String inputStreamS)
-			throws ShellException {
+	public static InputStream openInputRedir(String inputStreamS) throws ShellException {
 		File inputFile = new File(inputStreamS);
 		FileInputStream fInputStream = null;
 		try {
@@ -166,8 +160,7 @@ public class ShellImpl implements Shell {
 	 * @throws ShellException
 	 *             If file destination cannot be opened or inaccessible.
 	 */
-	public static OutputStream openOutputRedir(String outputStreamS)
-			throws ShellException {
+	public static OutputStream openOutputRedir(String outputStreamS) throws ShellException {
 		File outputFile = new File(outputStreamS);
 		FileOutputStream fOutputStream = null;
 		try {
@@ -187,8 +180,7 @@ public class ShellImpl implements Shell {
 	 * @throws ShellException
 	 *             If inputStream cannot be closed successfully.
 	 */
-	public static void closeInputStream(InputStream inputStream)
-			throws ShellException {
+	public static void closeInputStream(InputStream inputStream) throws ShellException {
 		if (inputStream != System.in) {
 			try {
 				inputStream.close();
@@ -208,8 +200,7 @@ public class ShellImpl implements Shell {
 	 * @throws ShellException
 	 *             If outputStream cannot be closed successfully.
 	 */
-	public static void closeOutputStream(OutputStream outputStream)
-			throws ShellException {
+	public static void closeOutputStream(OutputStream outputStream) throws ShellException {
 		if (outputStream != System.out) {
 			try {
 				outputStream.close();
@@ -230,8 +221,7 @@ public class ShellImpl implements Shell {
 	 * @throws ShellException
 	 *             If exception is thrown during writing.
 	 */
-	public static void writeToStdout(OutputStream outputStream,
-			OutputStream stdout) throws ShellException {
+	public static void writeToStdout(OutputStream outputStream, OutputStream stdout) throws ShellException {
 		if (outputStream instanceof FileOutputStream) {
 			return;
 		}
@@ -254,10 +244,8 @@ public class ShellImpl implements Shell {
 	 * @throws ShellException
 	 *             If exception is thrown during piping.
 	 */
-	public static InputStream outputStreamToInputStream(
-			OutputStream outputStream) throws ShellException {
-		return new ByteArrayInputStream(
-				((ByteArrayOutputStream) outputStream).toByteArray());
+	public static InputStream outputStreamToInputStream(OutputStream outputStream) throws ShellException {
+		return new ByteArrayInputStream(((ByteArrayOutputStream) outputStream).toByteArray());
 	}
 
 	/**
@@ -270,8 +258,7 @@ public class ShellImpl implements Shell {
 	public static void main(String... args) {
 		ShellImpl shell = new ShellImpl();
 
-		BufferedReader bReader = new BufferedReader(new InputStreamReader(
-				System.in));
+		BufferedReader bReader = new BufferedReader(new InputStreamReader(System.in));
 		String readLine = null;
 		String currentDir;
 
@@ -286,7 +273,7 @@ public class ShellImpl implements Shell {
 				if (("").equals(readLine)) {
 					continue;
 				}
-				//shell.parseAndEvaluate(readLine, System.out);
+				// shell.parseAndEvaluate(readLine, System.out);
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}

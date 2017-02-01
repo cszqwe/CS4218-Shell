@@ -44,7 +44,7 @@ public class CatApplication implements Application {
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout)
 			throws CatException {
-
+		for (int i = 0; i< 10; i++) System.out.println("Test");
 		if (args == null || args.length == 0) {
 			if (stdin == null || stdout == null) {
 				throw new CatException("Null Pointer Exception");

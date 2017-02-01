@@ -279,4 +279,101 @@ public class ShellImpl implements Shell {
 			}
 		}
 	}
+
+	@Override
+	public void parseAndEvaluate(String cmdline, OutputStream stdout)
+			throws AbstractApplicationException, ShellException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String pipeTwoCommands(String args) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String pipeMultipleCommands(String args) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String pipeWithException(String args) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String globNoPaths(String args) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String globOneFile(String args) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String globFilesDirectories(String args) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String globWithException(String args) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String redirectInput(String args) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String redirectOutput(String args) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String redirectInputWithNoFile(String args) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String redirectOutputWithNoFile(String args) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String redirectInputWithException(String args) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String redirectOutputWithException(String args) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String performCommandSubstitution(String args) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String performCommandSubstitutionWithException(String args) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

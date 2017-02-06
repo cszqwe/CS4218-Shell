@@ -13,6 +13,7 @@ import sg.edu.nus.comp.cs4218.impl.app.CatApplication;
 import sg.edu.nus.comp.cs4218.impl.app.EchoApplication;
 import sg.edu.nus.comp.cs4218.impl.app.HeadApplication;
 import sg.edu.nus.comp.cs4218.impl.app.TailApplication;
+import sg.edu.nus.comp.cs4218.impl.app.PwdApplication;
 
 /**
  * A Shell is a command interpreter and forms the backbone of the entire
@@ -124,6 +125,10 @@ public class ShellImpl implements Shell {
 			absApp = new HeadApplication();
 		} else if (("tail").equals(app)) {// tail [OPTIONS] [FILE]
 			absApp = new TailApplication();
+		} else if (("cd").equals(app)) {
+			throw new ShellException(app + ": " + EXP_NOT_SUPPORTED);
+		} else if (("pwd").equals(app)) {
+			absApp = new PwdApplication();
 		} else { // invalid command
 			throw new ShellException(app + ": " + EXP_INVALID_APP);
 		}
@@ -286,7 +291,7 @@ public class ShellImpl implements Shell {
 				if (("").equals(readLine)) {
 					continue;
 				}
-				//shell.parseAndEvaluate(readLine, System.out);
+				shell.parseAndEvaluate(readLine, System.out);
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
@@ -297,7 +302,11 @@ public class ShellImpl implements Shell {
 	public void parseAndEvaluate(String cmdline, OutputStream stdout)
 			throws AbstractApplicationException, ShellException {
 		// TODO Auto-generated method stub
-		
+		// this is WIP
+		String arr[] = {};
+		String args[] = cmdline.split(" ");
+		String app = args[0];
+		runApp(app, arr, null, stdout); // TODO find out what should go under InputStream
 	}
 
 	@Override

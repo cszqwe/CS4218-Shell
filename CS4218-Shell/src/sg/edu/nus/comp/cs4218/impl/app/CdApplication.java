@@ -12,7 +12,8 @@ public class CdApplication implements Application {
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
 		// TODO: implement the case when input is just "cd": we need to go to parent dir
-		Environment.currentDirectory = Environment.currentDirectory + '\\' + args[1];
+		// TODO: check if dir actually exists
+		Environment.currentDirectory = Environment.currentDirectory + '\\' + args[0];
 	}
 
 }

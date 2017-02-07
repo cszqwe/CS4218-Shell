@@ -1,6 +1,7 @@
 package sg.edu.nus.comp.cs4218.impl;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -306,7 +307,7 @@ public class ShellImpl implements Shell {
 		String args[] = cmdline.split(" ");
 		String app = args[0];
 		
-		runApp(app, args, null, stdout);
+		runApp(app, Arrays.copyOfRange(args, 1, args.length), null, stdout);
 	}
 
 	@Override

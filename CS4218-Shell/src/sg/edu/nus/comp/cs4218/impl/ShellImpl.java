@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.List;
+import java.util.ArrayList;
 
 import sg.edu.nus.comp.cs4218.Application;
 import sg.edu.nus.comp.cs4218.Environment;
@@ -304,10 +306,36 @@ public class ShellImpl implements Shell {
 	public void parseAndEvaluate(String cmdline, OutputStream stdout)
 			throws AbstractApplicationException, ShellException {
 		// TODO figure out how to pipe data from one app's OS to another's IS
-		String args[] = cmdline.split(" ");
-		String app = args[0];
+		List<String> argsList = new ArrayList<String>();
+		Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
+		Matcher rgxMatcher = regex.matcher(cmdline);
 		
-		runApp(app, Arrays.copyOfRange(args, 1, args.length), null, stdout);
+		while (rgxMatcher.find()) {
+			if (rgxMatcher.group(1) != null) {
+				argsList.add(rgxMatcher.group(1));
+		    } else if (rgxMatcher.group(2) != null) {
+		    	argsList.add(rgxMatcher.group(2));
+		    } else {
+		    	argsList.add(rgxMatcher.group());
+		    }
+		}
+		// System.out.println(matchList);
+		String app = argsList.get(0);
+		argsList.remove(0); // remove app name: not part of args
+		String[] args = new String[argsList.size()];
+		for (int i = 0; i < argsList.size(); i++) {
+			args[i] = argsList.get(i);
+		}
+		/**
+		System.out.println("App name: " + app);
+		System.out.print("Args: ");
+		for (String arg : args) {
+			System.out.print(arg + " ");
+		}
+		System.out.print("\n");
+		**/
+		
+		runApp(app, args, null, stdout);
 	}
 
 	@Override

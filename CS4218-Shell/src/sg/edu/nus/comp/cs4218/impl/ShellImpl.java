@@ -332,7 +332,7 @@ public class ShellImpl implements Shell {
 		for (String arg : args) {
 			System.out.print(arg + " ");
 		}
-		System.out.print("\n");
+		System.out.println("\nNo. of args: " + args.length);
 		**/
 		
 		runApp(app, args, null, stdout);

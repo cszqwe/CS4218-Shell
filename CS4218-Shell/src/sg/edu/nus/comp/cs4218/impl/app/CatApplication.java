@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 import sg.edu.nus.comp.cs4218.Application;
 import sg.edu.nus.comp.cs4218.Environment;
@@ -44,7 +45,7 @@ public class CatApplication implements Application {
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout)
 			throws CatException {
-		for (int i = 0; i< 10; i++) System.out.println("Test");
+		// for (int i = 0; i< 10; i++) System.out.println("Test");
 		if (args == null || args.length == 0) {
 			if (stdin == null || stdout == null) {
 				throw new CatException("Null Pointer Exception");
@@ -77,7 +78,7 @@ public class CatApplication implements Application {
 
 				// file could be read. perform cat command
 				if (filePathArray.length != 0) {
-					for (int j = 0; j < filePathArray.length - 1; j++) {
+					for (int j = 0; j < filePathArray.length; j++) {
 						try {
 							byte[] byteFileArray = Files
 									.readAllBytes(filePathArray[j]);

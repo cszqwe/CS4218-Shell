@@ -43,10 +43,12 @@ public class EchoApplication implements Application {
 			if (args.length == 0) {
 				stdout.write("\n\n".getBytes());
 			} else {
-				for (int i = 0; i < args.length - 1; i++) {
+				for (int i = 0; i < args.length; i++) {
 					stdout.write(args[i].getBytes());
+					//Output a space between different args
+					if (i != args.length -1) stdout.write(" ".getBytes());
 				}
-				stdout.write(args[args.length].getBytes());
+				//This is different from cat, cat would not print such an extra newline into the stdout.
 				stdout.write("\n".getBytes());
 			}
 		} catch (IOException e) {

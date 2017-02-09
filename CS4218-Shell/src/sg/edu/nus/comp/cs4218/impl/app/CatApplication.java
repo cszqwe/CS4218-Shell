@@ -83,12 +83,12 @@ public class CatApplication implements Application {
 							byte[] byteFileArray = Files
 									.readAllBytes(filePathArray[j]);
 							stdout.write(byteFileArray);
+							
 						} catch (IOException e) {
 							throw new CatException(
 									"Could not write to output stream");
 						}
 					}
-
 				}
 			}
 		}

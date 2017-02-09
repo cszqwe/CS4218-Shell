@@ -31,6 +31,7 @@ import sg.edu.nus.comp.cs4218.impl.app.CdApplication;
  */
 
 public class ShellImpl implements Shell {
+	public static String[] cmdArgs;
 
 	public static final String EXP_INVALID_APP = "Invalid app.";
 	public static final String EXP_SYNTAX = "Invalid syntax encountered.";
@@ -276,8 +277,9 @@ public class ShellImpl implements Shell {
 	 *            List of strings arguments, unused.
 	 */
 
-	public static void main(String... args) {
+	public static void main(String[] args) {
 		ShellImpl shell = new ShellImpl();
+		ShellImpl.cmdArgs = args;
 
 		BufferedReader bReader = new BufferedReader(new InputStreamReader(
 				System.in));

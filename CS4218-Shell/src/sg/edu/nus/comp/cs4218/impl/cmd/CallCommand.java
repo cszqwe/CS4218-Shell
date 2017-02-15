@@ -22,6 +22,7 @@ import sg.edu.nus.comp.cs4218.impl.ShellImpl;
  */
 
 public class CallCommand implements Command {
+	public static final String SPACE_CHAR = "&*^%SpaceChar";
 	public static final String EXP_INVALID_APP = "Invalid app.";
 	public static final String EXP_SYNTAX = "Invalid syntax encountered.";
 	public static final String EXP_REDIR_PIPE = "File output redirection and pipe "
@@ -73,7 +74,6 @@ public class CallCommand implements Command {
 		InputStream inputStream;
 		OutputStream outputStream;
 
-		argsArray = ShellImpl.processBQ(argsArray);
 
 		if (("").equals(inputStreamS)) {// empty
 			inputStream = stdin;
@@ -86,8 +86,10 @@ public class CallCommand implements Command {
 			outputStream = ShellImpl.openOutputRedir(outputStreamS);
 		}
 		ShellImpl.runApp(app, argsArray, inputStream, outputStream);
-		ShellImpl.closeInputStream(inputStream);
-		ShellImpl.closeOutputStream(outputStream);
+		if (inputStream != null)
+			ShellImpl.closeInputStream(inputStream);
+		if (outputStream != null)
+			ShellImpl.closeOutputStream(outputStream);
 	}
 
 	/**
@@ -100,11 +102,17 @@ public class CallCommand implements Command {
 	 *             If an exception happens while parsing the sub-command, or if
 	 *             the input redirection file path is same as that of the output
 	 *             redirection file path.
+	 * @throws AbstractApplicationException 
 	 */
-	public void parse() throws ShellException {
+	public void parse() throws ShellException, AbstractApplicationException {
+		cmdline = ShellImpl.processBQ(cmdline);
+		cmdline = ShellImpl.processDQ(cmdline);
+		cmdline = ShellImpl.processSQ(cmdline);
+		
 		Vector<String> cmdVector = new Vector<String>();
 		Boolean result = true;
 		int endIdx = 0;
+		
 		String str = " " + cmdline + " ";
 		try {
 			endIdx = extractArgs(str, cmdVector);
@@ -150,13 +158,16 @@ public class CallCommand implements Command {
 		} else {
 			this.argsArray = new String[0];
 		}
+		for (int i = 0; i < this.argsArray.length; i++){
+			this.argsArray[i] = this.argsArray[i].replace(SPACE_CHAR, " ");
+		}
 	}
 
 	/**
 	 * Parses the sub-command's arguments to the call command and splits it into
 	 * its different components, namely the application name and the arguments
 	 * (if any), based on rules: Unquoted: any char except for whitespace
-	 * characters, quotes, newlines, semicolons “;”, “|”, “<” and “>”. Double
+	 * characters, quotes, newlines, semicolons . Double
 	 * quoted: any char except \n, ", ` Single quoted: any char except \n, '
 	 * Back quotes in Double Quote for command substitution: DQ rules for
 	 * outside BQ + `anything but \n` in BQ.
@@ -174,14 +185,9 @@ public class CallCommand implements Command {
 	 *             parsing.
 	 */
 	int extractArgs(String str, Vector<String> cmdVector) throws ShellException {
-		String patternDash = "[\\s]+(-[A-Za-z]*)[\\s]";
-		String patternUQ = "[\\s]+([^\\s\"'`\\n;|<>]*)[\\s]";
-		String patternDQ = "[\\s]+\"([^\\n\"`]*)\"[\\s]";
-		String patternSQ = "[\\s]+\'([^\\n']*)\'[\\s]";
-		String patternBQ = "[\\s]+(`[^\\n`]*`)[\\s]";
-		String patternBQinDQ = "[\\s]+\"([^\\n\"`]*`[^\\n]*`[^\\n\"`]*)\"[\\s]";
-		String[] patterns = { patternDash, patternUQ, patternDQ, patternSQ,
-				patternBQ, patternBQinDQ };
+		//String patternDash = "[\\s]+(-[A-Za-z]*)[\\s]";
+		String patternUQ = "[\\s]+([^\\s\\n;|]*)[\\s]";
+		String[] patterns = { patternUQ };
 		String substring;
 		int newStartIdx = 0, smallestStartIdx, smallestPattIdx, newEndIdx = 0;
 		do {

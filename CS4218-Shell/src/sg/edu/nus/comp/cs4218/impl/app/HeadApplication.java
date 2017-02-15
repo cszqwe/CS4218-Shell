@@ -14,6 +14,7 @@ import sg.edu.nus.comp.cs4218.Application;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.CatException;
+import sg.edu.nus.comp.cs4218.exception.HeadException;
 import sg.edu.nus.comp.cs4218.exception.InputstreamNotValidException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
@@ -112,15 +113,14 @@ public class HeadApplication implements Application {
 	 * @throws CatException
 	 *             If the file is not readable
 	 */
-	boolean checkIfFileIsReadable(String filePath) throws CatException {
+	boolean checkIfFileIsReadable(String filePath) throws HeadException {
 		try {
 			FileReader fr = new FileReader(filePath);
 			return true;
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			throw new HeadException("File not found");
+		} 
 		// System.out.println("OH NO");
-		return false;
 	}
 }

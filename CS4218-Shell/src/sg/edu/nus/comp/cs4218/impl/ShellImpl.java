@@ -16,6 +16,7 @@ import sg.edu.nus.comp.cs4218.impl.app.CatApplication;
 import sg.edu.nus.comp.cs4218.impl.app.EchoApplication;
 import sg.edu.nus.comp.cs4218.impl.app.HeadApplication;
 import sg.edu.nus.comp.cs4218.impl.app.TailApplication;
+import sg.edu.nus.comp.cs4218.impl.cmd.CallCommand;
 import sg.edu.nus.comp.cs4218.impl.app.PwdApplication;
 import sg.edu.nus.comp.cs4218.impl.app.CdApplication;
 
@@ -32,7 +33,7 @@ import sg.edu.nus.comp.cs4218.impl.app.CdApplication;
 
 public class ShellImpl implements Shell {
 	public static String[] cmdArgs;
-
+	public static final String SPACE_CHAR = "&*^%SpaceChar";
 	public static final String EXP_INVALID_APP = "Invalid app.";
 	public static final String EXP_SYNTAX = "Invalid syntax encountered.";
 	public static final String EXP_REDIR_PIPE = "File output redirection and "
@@ -48,11 +49,11 @@ public class ShellImpl implements Shell {
 	 * input is returned unchanged. If back quotes are found, the back quotes
 	 * and its enclosed commands substituted with the output from processing the
 	 * commands enclosed in the back quotes.
-	 * 
+	 * Note that the back quotes enclosed by single quotes would not work. They would be viewed as normal characters.
 	 * @param argsArray
-	 *            String array of the individual commands.
+	 *            String of the individual commands.
 	 * 
-	 * @return String array with the back quotes command processed.
+	 * @return String with the back quotes command processed.
 	 * 
 	 * @throws AbstractApplicationException
 	 *             If an exception happens while processing the content in the
@@ -61,41 +62,176 @@ public class ShellImpl implements Shell {
 	 *             If an exception happens while processing the content in the
 	 *             back quotes.
 	 */
-	public static String[] processBQ(String... argsArray)
+	public static String processBQ(String stmt)
 			throws AbstractApplicationException, ShellException {
 		// echo "this is space `echo "nbsp"`"
 		// echo "this is space `echo "nbsp"` and `echo "2nd space"`"
 		// Back quoted: any char except \n,`
-		String[] resultArr = new String[argsArray.length];
-		System.arraycopy(argsArray, 0, resultArr, 0, argsArray.length);
-		String patternBQ = "`([^\\n`]*)`";
-		Pattern patternBQp = Pattern.compile(patternBQ);
+		boolean isQuoted = false;
 
-		for (int i = 0; i < argsArray.length; i++) {
-			Matcher matcherBQ = patternBQp.matcher(argsArray[i]);
-			if (matcherBQ.find()) {// found backquoted
-				String bqStr = matcherBQ.group(1);
-				// cmdVector.add(bqStr.trim());
-				// process back quote
-				// System.out.println("backquote" + bqStr);
-				OutputStream bqOutputStream = new ByteArrayOutputStream();
-				ShellImpl shell = new ShellImpl();
-				//shell.parseAndEvaluate(bqStr, bqOutputStream);
-
-				ByteArrayOutputStream outByte = (ByteArrayOutputStream) bqOutputStream;
-				byte[] byteArray = outByte.toByteArray();
-				String bqResult = new String(byteArray).replace("\n", "")
-						.replace("\r", "");
-
-				// replace substring of back quote with result
-				String replacedStr = argsArray[i].replace("`" + bqStr + "`",
-						bqResult);
-				resultArr[i] = replacedStr;
+		while (true){
+			int start = -1;
+			int end = -1;
+			int len = stmt.length();
+			for (int i = 0; i < len; i++){ 
+				if (stmt.charAt(i) == '\''){
+					if (i != 0){
+						if (stmt.charAt(i-1) == '\\'){
+							continue;
+						}else{
+							isQuoted = !isQuoted;
+						}
+					}
+				}else if (stmt.charAt(i) == '`' && !isQuoted){
+					if (i != 0) {
+						if (stmt.charAt(i-1) == '\\') continue;
+					}
+					start = i;
+					end = -1;
+					for (int j = i+1; j < len; j++){
+						if (stmt.charAt(j) == '`' && stmt.charAt(j-1) != '\\'){
+							end = j;
+							break;
+						}
+					}
+					break;
+				}
 			}
+			
+			if (start == -1) return stmt;
+			if (end == -1) throw new ShellException("Shell not completed!");
+			String bqStr = stmt.substring(start + 1, end);
+			OutputStream bqOutputStream = new ByteArrayOutputStream();
+			ShellImpl shell = new ShellImpl();
+			ByteArrayOutputStream outByte = (ByteArrayOutputStream) bqOutputStream;
+			shell.parseAndEvaluate(bqStr, bqOutputStream);
+			byte[] byteArray = outByte.toByteArray();
+			String bqResult = new String(byteArray).replace("\n", "")
+					.replace("\r", "").replace("\\", "\\\\");
+			
+			String replacedStr = stmt.replaceFirst("`" + bqStr + "`",
+					bqResult);
+			stmt = replacedStr;
 		}
-		return resultArr;
 	}
+	
+	
+	/**
+	 * Searches for and processes the commands enclosed by double quotes.If no double quotes are found, the argsArray from the
+	 * input is returned unchanged. If double quotes are found, the double quotes
+	 * and its enclosed contents substituted with the enclosed contents. 
+	 * Note that the double quotes enclosed by single quotes would not work. They would be viewed as normal characters.
+	 * @param argsArray
+	 *            String of the individual commands.
+	 * 
+	 * @return String with the double quotes command processed.
+	 * 
+	 * @throws AbstractApplicationException
+	 *             If an exception happens while processing the content in the
+	 *             double quotes.
+	 * @throws ShellException
+	 *             If an exception happens while processing the content in the
+	 *             double quotes.
+	 */
+	public static String processDQ(String stmt)
+			throws AbstractApplicationException, ShellException {
+		// echo "this is space `echo "nbsp"`"
+		// echo "this is space `echo "nbsp"` and `echo "2nd space"`"
+		// Back quoted: any char except \n,`
+		boolean isQuoted = false;
 
+		while (true){
+			int start = -1;
+			int end = -1;
+			int len = stmt.length();
+			for (int i = 0; i < len; i++){ 
+				if (stmt.charAt(i) == '\''){
+					if (i != 0){
+						if (stmt.charAt(i-1) == '\\'){
+							continue;
+						}else{
+							isQuoted = !isQuoted;
+						}
+					}
+				}else if (stmt.charAt(i) == '"' && !isQuoted){
+					if (i != 0) {
+						if (stmt.charAt(i-1) == '\\') continue;
+					}
+					start = i;
+					end = -1;
+					for (int j = i+1; j < len; j++){
+						if (stmt.charAt(j) == '"' && stmt.charAt(j-1) != '\\'){
+							end = j;
+							break;
+						}
+					}
+					break;
+				}
+			}
+			
+			if (start == -1) return stmt;
+			if (end == -1) throw new ShellException("Shell not completed!");
+			String bqStr = stmt.substring(start + 1, end);
+			String replacedOne = bqStr.replace(" ", SPACE_CHAR);
+			String replacedStr = stmt.replaceFirst('"' + bqStr + '"',
+					replacedOne);
+			stmt = replacedStr;
+		}
+	}
+	
+	/**
+	 * Searches for and processes the commands enclosed by single quotes.If no double quotes are found, the argsArray from the
+	 * input is returned unchanged. If single quotes are found, the single quotes
+	 * and its enclosed contents substituted with the enclosed contents. 
+	 * @param argsArray
+	 *            String of the individual commands.
+	 * 
+	 * @return String with the single quotes command processed.
+	 * 
+	 * @throws AbstractApplicationException
+	 *             If an exception happens while processing the content in the
+	 *             single  quotes.
+	 * @throws ShellException
+	 *             If an exception happens while processing the content in the
+	 *             single quotes.
+	 */
+	public static String processSQ(String stmt)
+			throws AbstractApplicationException, ShellException {
+		// echo "this is space `echo "nbsp"`"
+		// echo "this is space `echo "nbsp"` and `echo "2nd space"`"
+		// Back quoted: any char except \n,`
+
+		while (true){
+			int start = -1;
+			int end = -1;
+			int len = stmt.length();
+			for (int i = 0; i < len; i++){ 
+				if (stmt.charAt(i) == '\''){
+					if (i != 0) {
+						if (stmt.charAt(i-1) == '\\') continue;
+					}
+					start = i;
+					end = -1;
+					for (int j = i+1; j < len; j++){
+						if (stmt.charAt(j) == '\'' && stmt.charAt(j-1) != '\\'){
+							end = j;
+							break;
+						}
+					}
+					break;
+				}
+			}
+			
+			if (start == -1) return stmt;
+			if (end == -1) throw new ShellException("Shell not completed!");
+			String bqStr = stmt.substring(start + 1, end);
+			String replacedOne = bqStr.replace(" ", SPACE_CHAR);
+			String replacedStr = stmt.replaceFirst('\'' + bqStr + '\'',
+					replacedOne);
+			stmt = replacedStr;
+		}
+	}	
+	
 	/**
 	 * Static method to run the application as specified by the application
 	 * command keyword and arguments.
@@ -307,37 +443,41 @@ public class ShellImpl implements Shell {
 	@Override
 	public void parseAndEvaluate(String cmdline, OutputStream stdout)
 			throws AbstractApplicationException, ShellException {
+		CallCommand callCommand = new CallCommand(cmdline);
+		callCommand.parse();
+		callCommand.evaluate(null, stdout);
 		// TODO figure out how to pipe data from one app's OS to another's IS
-		List<String> argsList = new ArrayList<String>();
-		Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
-		Matcher rgxMatcher = regex.matcher(cmdline);
-		
-		while (rgxMatcher.find()) {
-			if (rgxMatcher.group(1) != null) {
-				argsList.add(rgxMatcher.group(1));
-		    } else if (rgxMatcher.group(2) != null) {
-		    	argsList.add(rgxMatcher.group(2));
-		    } else {
-		    	argsList.add(rgxMatcher.group());
-		    }
-		}
-		// System.out.println(matchList);
-		String app = argsList.get(0);
-		argsList.remove(0); // remove app name: not part of args
-		String[] args = new String[argsList.size()];
-		for (int i = 0; i < argsList.size(); i++) {
-			args[i] = argsList.get(i);
-		}
-		/**
-		System.out.println("App name: " + app);
-		System.out.print("Args: ");
-		for (String arg : args) {
-			System.out.print(arg + " ");
-		}
-		System.out.println("\nNo. of args: " + args.length);
-		**/
-		
-		runApp(app, args, null, stdout);
+//		cmdline = processBQ(cmdline);
+//		List<String> argsList = new ArrayList<String>();
+//		Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
+//		Matcher rgxMatcher = regex.matcher(cmdline);
+//		
+//		while (rgxMatcher.find()) {
+//			if (rgxMatcher.group(1) != null) {
+//				argsList.add(rgxMatcher.group(1));
+//		    } else if (rgxMatcher.group(2) != null) {
+//		    	argsList.add(rgxMatcher.group(2));
+//		    } else {
+//		    	argsList.add(rgxMatcher.group());
+//		    }
+//		}
+//		// System.out.println(matchList);
+//		String app = argsList.get(0);
+//		argsList.remove(0); // remove app name: not part of args
+//		String[] args = new String[argsList.size()];
+//		for (int i = 0; i < argsList.size(); i++) {
+//			args[i] = argsList.get(i);
+//		}
+//		/**
+//		System.out.println("App name: " + app);
+//		System.out.print("Args: ");
+//		for (String arg : args) {
+//			System.out.print(arg + " ");
+//		}
+//		System.out.println("\nNo. of args: " + args.length);
+//		**/
+//		
+//		runApp(app, args, null, stdout);
 	}
 
 	@Override

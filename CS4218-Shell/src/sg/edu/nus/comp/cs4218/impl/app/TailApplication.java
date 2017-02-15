@@ -13,6 +13,7 @@ import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.CatException;
 import sg.edu.nus.comp.cs4218.exception.InputstreamNotValidException;
+import sg.edu.nus.comp.cs4218.exception.TailException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
 public class TailApplication implements Application {
@@ -136,15 +137,13 @@ public class TailApplication implements Application {
 	 * @throws CatException
 	 *             If the file is not readable
 	 */
-	boolean checkIfFileIsReadable(String filePath) throws CatException {
+	boolean checkIfFileIsReadable(String filePath) throws TailException {
 		try {
 			FileReader fr = new FileReader(filePath);
 			return true;
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new TailException("File not found");
 		}
-		// System.out.println("OH NO");
-		return false;
 	}
 }

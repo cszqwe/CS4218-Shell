@@ -186,7 +186,7 @@ public class CallCommand implements Command {
 	 */
 	int extractArgs(String str, Vector<String> cmdVector) throws ShellException {
 		//String patternDash = "[\\s]+(-[A-Za-z]*)[\\s]";
-		String patternUQ = "[\\s]+([^\\s\\n;|]*)[\\s]";
+		String patternUQ = "[\\s]+([^\\s\\n]*)[\\s]";
 		String[] patterns = { patternUQ };
 		String substring;
 		int newStartIdx = 0, smallestStartIdx, smallestPattIdx, newEndIdx = 0;

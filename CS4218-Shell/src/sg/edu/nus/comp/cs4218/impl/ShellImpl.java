@@ -231,6 +231,90 @@ public class ShellImpl implements Shell {
 			stmt = replacedStr;
 		}
 	}	
+
+	/**
+	 * Searches for and processes the Semicolon sign. Read in a string, return an array of strings 
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return Array of strings which means multiple commands.
+	 * 
+	 * @throws AbstractApplicationException
+	 *             If an exception happens while processing the content in the
+	 *             single  quotes.
+	 * @throws ShellException
+	 *             If an exception happens while processing the content in the
+	 *             single quotes.
+	 */
+	public static String[] processSemi(String stmt)
+			throws AbstractApplicationException, ShellException {
+		stmt = stmt+";";
+		int numOfDQ = 0;
+		int numOfSQ = 0;
+		int startIndex = 0;
+		ArrayList<String> stmts = new ArrayList<String>();
+		stmts.clear();
+		int len = stmt.length();
+		for (int i = 0 ; i < len; i++){
+			if (stmt.charAt(i) =='\''){
+				numOfSQ++;
+			}else if (stmt.charAt(i) == '"'){
+				numOfDQ++;
+			}else if (stmt.charAt(i) == ';'){
+				if (numOfDQ % 2 == 0 && numOfSQ %2 ==0){
+					String newCmd = stmt.substring(startIndex, i);
+					stmts.add(newCmd);
+					startIndex = i+1;
+				}
+			}
+		}
+		String[] commands = new String[stmts.size()];
+		stmts.toArray(commands);
+		return commands;
+	}	
+
+	/**
+	 * Searches for and processes the pipe sign. Read in a string, return an array of strings 
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return Array of strings which means multiple commands.
+	 * 
+	 * @throws AbstractApplicationException
+	 *             If an exception happens while processing the content in the
+	 *             single  quotes.
+	 * @throws ShellException
+	 *             If an exception happens while processing the content in the
+	 *             single quotes.
+	 */
+	public static String[] processPipe(String stmt)
+			throws AbstractApplicationException, ShellException {
+		stmt = stmt+"|";
+		int numOfDQ = 0;
+		int numOfSQ = 0;
+		int startIndex = 0;
+		ArrayList<String> stmts = new ArrayList<String>();
+		stmts.clear();
+		int len = stmt.length();
+		for (int i = 0 ; i < len; i++){
+			if (stmt.charAt(i) =='\''){
+				numOfSQ++;
+			}else if (stmt.charAt(i) == '"'){
+				numOfDQ++;
+			}else if (stmt.charAt(i) == '|'){
+				if (numOfDQ % 2 == 0 && numOfSQ %2 ==0){
+					String newCmd = stmt.substring(startIndex, i);
+					stmts.add(newCmd);
+					startIndex = i+1;
+				}
+			}
+		}
+		String[] commands = new String[stmts.size()];
+		stmts.toArray(commands);
+		return commands;
+	}	
+
+
 	
 	/**
 	 * Static method to run the application as specified by the application
@@ -433,7 +517,10 @@ public class ShellImpl implements Shell {
 				if (("").equals(readLine)) {
 					continue;
 				}
-				shell.parseAndEvaluate(readLine, System.out);
+				String[] stmts = processSemi(readLine);
+				for (int i = 0; i < stmts.length; i++){
+					shell.parseAndEvaluate(stmts[i], System.out);
+				}
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
@@ -443,41 +530,48 @@ public class ShellImpl implements Shell {
 	@Override
 	public void parseAndEvaluate(String cmdline, OutputStream stdout)
 			throws AbstractApplicationException, ShellException {
-		CallCommand callCommand = new CallCommand(cmdline);
-		callCommand.parse();
-		callCommand.evaluate(null, stdout);
-		// TODO figure out how to pipe data from one app's OS to another's IS
-//		cmdline = processBQ(cmdline);
-//		List<String> argsList = new ArrayList<String>();
-//		Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
-//		Matcher rgxMatcher = regex.matcher(cmdline);
-//		
-//		while (rgxMatcher.find()) {
-//			if (rgxMatcher.group(1) != null) {
-//				argsList.add(rgxMatcher.group(1));
-//		    } else if (rgxMatcher.group(2) != null) {
-//		    	argsList.add(rgxMatcher.group(2));
-//		    } else {
-//		    	argsList.add(rgxMatcher.group());
-//		    }
-//		}
-//		// System.out.println(matchList);
-//		String app = argsList.get(0);
-//		argsList.remove(0); // remove app name: not part of args
-//		String[] args = new String[argsList.size()];
-//		for (int i = 0; i < argsList.size(); i++) {
-//			args[i] = argsList.get(i);
-//		}
-//		/**
-//		System.out.println("App name: " + app);
-//		System.out.print("Args: ");
-//		for (String arg : args) {
-//			System.out.print(arg + " ");
-//		}
-//		System.out.println("\nNo. of args: " + args.length);
-//		**/
-//		
-//		runApp(app, args, null, stdout);
+		String[] allStmts = processPipe(cmdline);
+		PipedInputStream in = new PipedInputStream();  
+		PipedOutputStream out;
+		try{
+			out = new PipedOutputStream(in);  
+		}catch (Exception e){
+			throw new ShellException("Wrong when generating piped output stream");
+		}
+		PipedInputStream tmpIn = null;  
+		PipedOutputStream tmpout = null;
+
+		InputStream actualIn;
+		OutputStream actualOut;
+		for (int i = 0; i < allStmts.length; i++){
+			CallCommand callCommand = new CallCommand(allStmts[i]);
+			callCommand.parse();
+			if (i == 0){
+				actualIn = System.in;
+			}else if (i == 1){
+				actualIn = in;
+			}else{
+				actualIn = tmpIn;
+			}
+			if (i == allStmts.length -1){
+				actualOut = stdout;
+			}else{
+				tmpIn = new PipedInputStream();
+				try{
+					tmpout = new PipedOutputStream(tmpIn);  
+				}catch (Exception e){
+					throw new ShellException("Wrong when generating piped output stream");
+				}	
+				if (i == 0){
+					actualOut = out;
+				}else{
+					actualOut = tmpout;
+			
+				}
+			}
+			callCommand.evaluate(actualIn, actualOut);
+			
+		}
 	}
 
 	@Override

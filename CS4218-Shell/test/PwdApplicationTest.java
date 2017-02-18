@@ -38,14 +38,12 @@ public class PwdApplicationTest {
 		
 		String CURRENTDIR = "Workspace\\CS4218-Shell";
 		Environment.currentDirectory = CURRENTDIR;
+		InputStream is = null;
+		OutputStream os = new ByteArrayOutputStream();
+		PwdApplication pwdApp = new PwdApplication();
+		String args[] = {};
 		try {
-			InputStream is = null;
-			OutputStream os = new ByteArrayOutputStream();
-			PwdApplication pwdApp = new PwdApplication();
-			String args[] = {};
-			
 			pwdApp.run(args, is, os);
-			
 			String output = os.toString();
 			assertEquals(output, CURRENTDIR);
 			

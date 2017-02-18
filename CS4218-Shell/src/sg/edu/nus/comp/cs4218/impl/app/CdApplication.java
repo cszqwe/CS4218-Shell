@@ -14,6 +14,7 @@ public class CdApplication implements Application {
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
 		String path = Environment.currentDirectory + '\\' + args[0];
+		// if there are more arguments, they are ignored
 		File f = new File(path);
 		if (f.exists() && f.isDirectory()) {
 			try {

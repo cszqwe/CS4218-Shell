@@ -1,6 +1,5 @@
 import static org.junit.Assert.*;
 
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.ByteArrayOutputStream;
 
@@ -11,17 +10,18 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.impl.app.CdApplication;
 
 public class CdApplicationTest {
-	public static final String CURRENTDIR = "Workspace\\CS4218-Shell";
+	static String origPwd;
+	static CdApplication cdApp;
+	static OutputStream os;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		InputStream is = null;
-		OutputStream os = null;
-		CdApplication CdApp = new CdApplication();
-		Environment.currentDirectory = CURRENTDIR;
+		cdApp = new CdApplication();
+		
 	}
 
 	@AfterClass
@@ -30,15 +30,70 @@ public class CdApplicationTest {
 
 	@Before
 	public void setUp() throws Exception {
+		origPwd = Environment.currentDirectory;
+		os = new ByteArrayOutputStream();
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		Environment.currentDirectory = origPwd;
 	}
 
 	@Test
 	public void testCd() {
-		// how to fool the test into thinking that a file exists at given path?
+		String args[] = {"cd Test_folder"};
+		try {
+			cdApp.run(args, null, os);
+			assertEquals(origPwd + "\\cd Test_folder", Environment.currentDirectory);
+		} catch (AbstractApplicationException e) {
+			
+		}
+		
+	}
+	
+	@Test
+	public void testCdNonexistentDir() {
+		String args[] = {"nonexistent"};
+		try {
+			cdApp.run(args, null, null);
+			assertEquals(origPwd, Environment.currentDirectory);
+			
+		} catch (AbstractApplicationException e) {
+			
+		}
+	}
+	
+	@Test
+	public void testCdNestedDir() {
+		String args[] = {"cd Test_folder\\nested-folder"};
+		try {
+			cdApp.run(args, null, os);
+			assertEquals(origPwd + "\\cd Test_folder\\nested-folder", Environment.currentDirectory);
+		} catch (AbstractApplicationException e) {
+			
+		}
+	}
+	
+	@Test
+	public void testMultipleArgsValid() {
+		String args[] = {"cd Test_folder", "asdf"};
+		try {
+			cdApp.run(args, null, os);
+			assertEquals(origPwd + "\\cd Test_folder", Environment.currentDirectory);
+		} catch (AbstractApplicationException e) {
+			
+		}
+	}
+	
+	@Test
+	public void testMultipleArgsNonexistent() {
+		String args[] = {"Nonexistent", "asdf"};
+		try {
+			cdApp.run(args, null, os);
+			assertEquals(origPwd, Environment.currentDirectory);
+		} catch (AbstractApplicationException e) {
+			
+		}
 	}
 
 }

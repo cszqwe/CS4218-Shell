@@ -10,14 +10,13 @@ import java.util.ArrayList;
 
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.app.Wc;
-import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.OutputstreamNotValidException;
 import sg.edu.nus.comp.cs4218.exception.WcException;
 
 public class WcApplication implements Wc {
 
 	@Override
-	public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
+	public void run(String[] args, InputStream stdin, OutputStream stdout) throws WcException, OutputstreamNotValidException {
 		ArrayList<String> files = new ArrayList<>();
 		boolean chars = false;
 		boolean words = false;
@@ -34,6 +33,7 @@ public class WcApplication implements Wc {
 		} else {
 			for (String arg : args) {
 				if (arg.charAt(0) == '-') { // indicates option
+					char invalidOption = 0;
 					for (int i = 1; i < arg.length(); i++) {
 						if (arg.charAt(i) == 'm') {
 							chars = true;
@@ -41,7 +41,10 @@ public class WcApplication implements Wc {
 							words = true;
 						} else if (arg.charAt(i) == 'l') {
 							lines = true;
-						} // else ignore
+						} else {
+							invalidOption = arg.charAt(i);
+							throw new WcException("invalid option -- " + invalidOption);
+						}
 					}
 				} else {
 					files.add(arg); // first add, later check for validity
@@ -76,8 +79,6 @@ public class WcApplication implements Wc {
 		if (Files.exists(filePath) && Files.isReadable(filePath) && !Files.isDirectory(filePath)) {
 			try {
 				String contents = new String(Files.readAllBytes(filePath));
-				contents = contents.replaceAll("\\r", "").concat("\r");
-				// count only /n at newlines
 				
 				if (chars) line = line.concat(printCharacterCountInFile(contents) + " ");
 				if (words) line = line.concat(printWordCountInFile(contents) + " ");
@@ -96,7 +97,6 @@ public class WcApplication implements Wc {
 
 	@Override
 	public String printCharacterCountInFile(String args) {
-		if (args.equals("\r")) return "0";
 		return Integer.toString(args.length());
 	}
 
@@ -109,7 +109,7 @@ public class WcApplication implements Wc {
 
 	@Override
 	public String printNewlineCountInFile(String args) {
-		if (args.equals("\r")) return "0";
+		if (args.equals("")) return "0";
 		return Integer.toString(args.split("\n", -1).length);
 	}
 

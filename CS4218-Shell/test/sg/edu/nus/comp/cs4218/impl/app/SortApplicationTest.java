@@ -140,9 +140,11 @@ public class SortApplicationTest {
 		} catch (Exception e) {
 			
 		}
-		
-		os = new ByteArrayOutputStream();
-		args = new String[]{"-n", "test.txt", "sortTest_numstart.txt"};
+	}
+	
+	@Test
+	public void testSortMultipleFilesNumeric() {
+		String[] args = {"-n", "test.txt", "sortTest_numstart.txt"};
 		try {
 			sortApp.run(args, is, os);
 			assertEquals("1st\n2nd\n20th\nline1\nline2\nline3\nline4\n", os.toString());
@@ -159,8 +161,11 @@ public class SortApplicationTest {
 		} catch (Exception e) {
 			assertEquals("sort: cannot read: invalid.txt: No such file", e.getMessage());
 		}
+	}
 
-		args = new String[]{"-n", "invalid.txt"};
+	@Test
+	public void testSortInvalidFileNumeric() {
+		String[] args ={"-n", "invalid.txt"};
 		try {
 			sortApp.run(args, is, os);
 		} catch (Exception e) {
@@ -169,22 +174,18 @@ public class SortApplicationTest {
 	}
 	
 	@Test
-	public void testSortInvalidMultipleFiles() {
+	public void testSortFilesInvalidInvalid() {
 		String[] args = {"invalid.txt", "wrong.txt"};
 		try {
 			sortApp.run(args, is, os);
 		} catch (Exception e) {
 			assertEquals("sort: cannot read: invalid.txt: No such file", e.getMessage());
 		}
-
-		args = new String[]{"invalid.txt", "sortTestBasic.txt"};
-		try {
-			sortApp.run(args, is, os);
-		} catch (Exception e) {
-			assertEquals("sort: cannot read: invalid.txt: No such file", e.getMessage());
-		}
-
-		args = new String[]{"sortTestBasic.txt", "invalid.txt"};
+	}
+	
+	@Test
+	public void testSortFilesInvalidValid() {
+		String[] args = {"invalid.txt", "sortTestBasic.txt"};
 		try {
 			sortApp.run(args, is, os);
 		} catch (Exception e) {
@@ -193,22 +194,38 @@ public class SortApplicationTest {
 	}
 	
 	@Test
-	public void testSortInvalidOptions() {
+	public void testSortFilesValidInvalid() {
+		String[] args = {"sortTestBasic.txt", "invalid.txt"};
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			assertEquals("sort: cannot read: invalid.txt: No such file", e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testSortInvalidOption() {
 		String[] args = {"-x", "sortTest_numstart.txt"};
 		try {
 			sortApp.run(args, is, os);
 		} catch (Exception e) {
 			assertEquals("sort: invalid option -- 'x'", e.getMessage());
 		}
-
-		args = new String[]{"-qn", "sortTestBasic.txt"};
+	}
+	
+	@Test
+	public void testSortOptionInvalidValid() {
+		String[] args = {"-qn", "sortTestBasic.txt"};
 		try {
 			sortApp.run(args, is, os);
 		} catch (Exception e) {
 			assertEquals("sort: invalid option -- 'q'", e.getMessage());
 		}
-
-		args = new String[]{"-nl", "test2.txt"};
+	}
+	
+	@Test
+	public void testSortOptionValidInvalid() {
+		String[] args = {"-nl", "test2.txt"};
 		try {
 			sortApp.run(args, is, os);
 		} catch (Exception e) {
@@ -217,29 +234,38 @@ public class SortApplicationTest {
 	}
 	
 	@Test
-	public void testSortInvalidOptionsInvalidFiles() {
+	public void testSortInvalidOptionInvalidFile() {
 		String[] args = {"-q", "inval"};
 		try {
 			sortApp.run(args, is, os);
 		} catch (Exception e) {
 			assertEquals("sort: invalid option -- 'q'", e.getMessage());
 		}
-
-		args = new String[]{"-ln", "wrong.txt"};
+	}
+	
+	@Test
+	public void testSortInvalidOptionsInvalidFile() {
+		String[] args = {"-ln", "wrong.txt"};
 		try {
 			sortApp.run(args, is, os);
 		} catch (Exception e) {
 			assertEquals("sort: invalid option -- 'l'", e.getMessage());
 		}
-
-		args = new String[]{"-nx", "test2.txt", "asdf.tx"};
+	}
+	
+	@Test
+	public void testSortInvalidOptionsFileValidInvalid() {
+		String[] args = {"-nx", "test2.txt", "asdf.tx"};
 		try {
 			sortApp.run(args, is, os);
 		} catch (Exception e) {
 			assertEquals("sort: invalid option -- 'x'", e.getMessage());
 		}
-
-		args = new String[]{"-x", "n", "test2.txt"};
+	}
+	
+	@Test
+	public void testSortInvalidOptionFileValidInvalid() {
+		String[] args = {"-x", "n", "test2.txt"};
 		try {
 			sortApp.run(args, is, os);
 		} catch (Exception e) {

@@ -20,6 +20,7 @@ import sg.edu.nus.comp.cs4218.impl.cmd.CallCommand;
 import sg.edu.nus.comp.cs4218.impl.app.PwdApplication;
 import sg.edu.nus.comp.cs4218.impl.app.CdApplication;
 import sg.edu.nus.comp.cs4218.impl.app.DateApplication;
+import sg.edu.nus.comp.cs4218.impl.app.WcApplication;
 
 /**
  * A Shell is a command interpreter and forms the backbone of the entire
@@ -357,6 +358,8 @@ public class ShellImpl implements Shell {
 			absApp = new PwdApplication();
 		} else if (("date").equals(app)) {
 			absApp = new DateApplication();
+		} else if (("wc").equals(app)) {
+			absApp = new WcApplication();
 		} else { // invalid command
 			throw new ShellException(app + ": " + EXP_INVALID_APP);
 		}

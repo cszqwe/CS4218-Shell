@@ -16,13 +16,9 @@ import sg.edu.nus.comp.cs4218.exception.OutputstreamNotValidException;
 import sg.edu.nus.comp.cs4218.exception.WcException;
 
 public class WcApplication implements Wc {
-	InputStream stdin;
-	OutputStream stdout;
 	
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws WcException, OutputstreamNotValidException {
-		this.stdin = stdin;
-		this.stdout = stdout;
 		ArrayList<String> files = new ArrayList<>();
 		boolean chars = false;
 		boolean words = false;

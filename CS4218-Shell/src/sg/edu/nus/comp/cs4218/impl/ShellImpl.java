@@ -18,6 +18,7 @@ import sg.edu.nus.comp.cs4218.impl.app.HeadApplication;
 import sg.edu.nus.comp.cs4218.impl.app.TailApplication;
 import sg.edu.nus.comp.cs4218.impl.cmd.CallCommand;
 import sg.edu.nus.comp.cs4218.impl.app.PwdApplication;
+import sg.edu.nus.comp.cs4218.impl.app.SedApplication;
 import sg.edu.nus.comp.cs4218.impl.app.CdApplication;
 import sg.edu.nus.comp.cs4218.impl.app.DateApplication;
 import sg.edu.nus.comp.cs4218.impl.app.WcApplication;
@@ -360,7 +361,9 @@ public class ShellImpl implements Shell {
 			absApp = new DateApplication();
 		} else if (("wc").equals(app)) {
 			absApp = new WcApplication();
-		} else { // invalid command
+		} else if (("sed").equals(app)) {
+			absApp = new SedApplication();
+		}else { // invalid command
 			throw new ShellException(app + ": " + EXP_INVALID_APP);
 		}
 		absApp.run(argsArray, inputStream, outputStream);

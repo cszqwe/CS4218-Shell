@@ -36,6 +36,7 @@ public class PwdApplicationTest {
 
 	@Test
 	public void testPwd() {
+		String origPwd = Environment.currentDirectory; // for backup
 		
 		String CURRENTDIR = "Workspace\\CS4218-Shell";
 		Environment.currentDirectory = CURRENTDIR;
@@ -51,6 +52,9 @@ public class PwdApplicationTest {
 		} catch (AbstractApplicationException e) {
 			
 		}
+		
+		Environment.currentDirectory = origPwd; // reset pwd
+		// no other test cases possible as far as we could think of: hence does not use setup, teardown, etc
 	}
 
 }

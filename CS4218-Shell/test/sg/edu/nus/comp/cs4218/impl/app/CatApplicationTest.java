@@ -1,3 +1,4 @@
+package sg.edu.nus.comp.cs4218.impl.app;
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
@@ -78,6 +79,48 @@ public class CatApplicationTest {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
 			assertEquals("cat: Could not read file", e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testCatWithEmptyFile() {
+		String[] args = "fileTestEmpty.txt".split(" ");
+		String expected = "";
+		try {
+			catApplication.run(args, is, os);
+			String output = os.toString();
+			assertEquals(expected, output);
+		} catch (CatException e) {
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testCatWithOnlySpacesFile() {
+		String[] args = "fileTest_onlyspaces.txt".split(" ");
+		String expected = "     ";
+		try {
+			catApplication.run(args, is, os);
+			String output = os.toString();
+			assertEquals(expected, output);
+		} catch (CatException e) {
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testCatWithOnlyNewlinesFile() {
+		String[] args = "fileTest only newlines.txt".split(" ");
+		String expected = "\n\n\n\n";
+		try {
+			catApplication.run(args, is, os);
+			String output = os.toString();
+			assertEquals(expected, output);
+		} catch (CatException e) {
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
 		}
 	}
 

@@ -1,3 +1,4 @@
+package sg.edu.nus.comp.cs4218.impl.app;
 import static org.junit.Assert.*;
 
 import org.junit.After;
@@ -47,7 +48,7 @@ public class CdApplicationTest {
 	}
 	
 	@Test
-	public void testCdNonexistentDir() {
+	public void testCdInvalidDir() {
 		String args[] = {"nonexistent"};
 		try {
 			cdApp.run(args, null, null);
@@ -81,7 +82,7 @@ public class CdApplicationTest {
 	}
 	
 	@Test
-	public void testMultipleArgsNonexistent() {
+	public void testMultipleArgsInvalid() {
 		String args[] = {"Nonexistent", "asdf"};
 		try {
 			cdApp.run(args, null, null);

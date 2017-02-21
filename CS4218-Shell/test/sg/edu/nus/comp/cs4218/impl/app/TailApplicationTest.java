@@ -1,3 +1,4 @@
+package sg.edu.nus.comp.cs4218.impl.app;
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
@@ -73,6 +74,62 @@ public class TailApplicationTest {
 		// 12 lines in test2.txt, should print 10 lines
 		String args[] = "test2.txt".split(" ");
 		String expected ="line 3\nline 4\nline 5\nline 6\nline 7\nline 8\nline 9\nline 10\nline 11\nline 12\n";
+		try {
+			tailApp.run(args, is, os);
+			String output = os.toString();
+			assertEquals(expected, output);
+		} catch (AbstractApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testEmptyFile() {
+		String args[] = "fileTestEmpty.txt".split(" ");
+		String expected = ""; // newline is not added
+		try {
+			tailApp.run(args, is, os);
+			String output = os.toString();
+			assertEquals(expected, output);
+		} catch (AbstractApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testOnlySpacesFile() {
+		String args[] = "fileTest_onlyspaces.txt".split(" ");
+		String expected = "     \n";
+		try {
+			tailApp.run(args, is, os);
+			String output = os.toString();
+			assertEquals(expected, output);
+		} catch (AbstractApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testOnlyNewlinesFile() {
+		String args[] = {"fileTest only newlines.txt"};
+		String expected = "\n\n\n\n";
+		try {
+			tailApp.run(args, is, os);
+			String output = os.toString();
+			assertEquals(expected, output);
+		} catch (AbstractApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testManyNewlinesFile() {
+		String args[] = {"fileTest manynewlines.txt"};
+		String expected = "\n\n\n\n\n\n\n\n\n\n";
 		try {
 			tailApp.run(args, is, os);
 			String output = os.toString();

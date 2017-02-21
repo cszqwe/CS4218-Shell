@@ -1,3 +1,4 @@
+package sg.edu.nus.comp.cs4218.impl.app;
 import static org.junit.Assert.*;
 
 import java.io.InputStream;
@@ -40,10 +41,10 @@ public class WcApplicationTest {
 
 	@Test
 	public void testWc() {
-		String[] args = {"wcTest.txt"};
+		String[] args = {"fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 32 wcTest.txt\n", os.toString());
+			assertEquals("978 181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -51,10 +52,10 @@ public class WcApplicationTest {
 
 	@Test
 	public void testWcEmptyFile() {
-		String[] args = {"wcTestEmpty.txt"};
+		String[] args = {"fileTestEmpty.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("0 0 0 wcTestEmpty.txt\n", os.toString());
+			assertEquals("0 0 0 fileTestEmpty.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -62,10 +63,10 @@ public class WcApplicationTest {
 
 	@Test
 	public void testWcOnlyNewlines() {
-		String[] args = {"wcTest only newlines.txt"};
+		String[] args = {"fileTest only newlines.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("8 0 5 wcTest only newlines.txt\n", os.toString());
+			assertEquals("8 0 5 fileTest only newlines.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -73,10 +74,10 @@ public class WcApplicationTest {
 
 	@Test
 	public void testWcOnlySpaces() {
-		String[] args = {"wcTest_onlyspaces.txt"};
+		String[] args = {"fileTest_onlyspaces.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("5 0 1 wcTest_onlyspaces.txt\n", os.toString());
+			assertEquals("5 0 1 fileTest_onlyspaces.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -84,10 +85,10 @@ public class WcApplicationTest {
 
 	@Test
 	public void testWcCountChars() {
-		String[] args = {"-m", "wcTest.txt"};
+		String[] args = {"-m", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 wcTest.txt\n", os.toString());
+			assertEquals("978 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -95,10 +96,10 @@ public class WcApplicationTest {
 
 	@Test
 	public void testWcCountWords() {
-		String[] args = {"-w", "wcTest.txt"};
+		String[] args = {"-w", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("181 wcTest.txt\n", os.toString());
+			assertEquals("181 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -106,10 +107,10 @@ public class WcApplicationTest {
 
 	@Test
 	public void testWcCountLines() {
-		String[] args = {"-l", "wcTest.txt"};
+		String[] args = {"-l", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("32 wcTest.txt\n", os.toString());
+			assertEquals("32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -117,28 +118,28 @@ public class WcApplicationTest {
 
 	@Test
 	public void testWcCountTwoOptions() {
-		String[] args = {"-m", "-w", "wcTest.txt"};
+		String[] args = {"-m", "-w", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 wcTest.txt\n", os.toString());
+			assertEquals("978 181 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
 		
 		os = new ByteArrayOutputStream();
-		args[0] = "-w"; args[1] = "-l";
+		args = new String[]{"-w", "-l", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("181 32 wcTest.txt\n", os.toString());
+			assertEquals("181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
 		
 		os = new ByteArrayOutputStream();
-		args[0] = "-m"; args[1] = "-l";
+		args = new String[]{"-m", "-l", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 32 wcTest.txt\n", os.toString());
+			assertEquals("978 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -146,28 +147,28 @@ public class WcApplicationTest {
 
 	@Test
 	public void testWcCountTwoOptionsReverse() {
-		String[] args = {"-w", "-m", "wcTest.txt"};
+		String[] args = {"-w", "-m", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 wcTest.txt\n", os.toString());
+			assertEquals("978 181 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
 		
 		os = new ByteArrayOutputStream();
-		args[0] = "-l"; args[1] = "-w";
+		args = new String[]{"-l", "-w", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("181 32 wcTest.txt\n", os.toString());
+			assertEquals("181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
 		
 		os = new ByteArrayOutputStream();
-		args[0] = "-l"; args[1] = "-m";
+		args = new String[]{"-l", "-m", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 32 wcTest.txt\n", os.toString());
+			assertEquals("978 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -175,10 +176,10 @@ public class WcApplicationTest {
 
 	@Test
 	public void testWcCountWordsChars() { // in different orders of input
-		String[] args = {"-w", "-m", "wcTest.txt"};
+		String[] args = {"-w", "-m", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 wcTest.txt\n", os.toString());
+			assertEquals("978 181 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -186,10 +187,10 @@ public class WcApplicationTest {
 
 	@Test
 	public void testWcAllOptions() {
-		String[] args = {"-m", "-w", "-l", "wcTest.txt"};
+		String[] args = {"-m", "-w", "-l", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 32 wcTest.txt\n", os.toString());
+			assertEquals("978 181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -197,28 +198,28 @@ public class WcApplicationTest {
 
 	@Test
 	public void testWcAllOptionsDiffOrder() {
-		String[] args = {"-w", "-l", "-m", "wcTest.txt"};
+		String[] args = {"-w", "-l", "-m", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 32 wcTest.txt\n", os.toString());
+			assertEquals("978 181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
 		
 		os = new ByteArrayOutputStream();
-		args[0] = "-l"; args[1] = "-m"; args[2] = "-w";
+		args = new String[]{"-l", "-m", "-w", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 32 wcTest.txt\n", os.toString());
+			assertEquals("978 181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
 		
 		os = new ByteArrayOutputStream();
-		args[0] = "-l"; args[1] = "-w"; args[2] = "-m";
+		args = new String[]{"-l", "-w", "-m", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 32 wcTest.txt\n", os.toString());
+			assertEquals("978 181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -226,28 +227,28 @@ public class WcApplicationTest {
 
 	@Test
 	public void testWcOptionsOverlapping() {
-		String[] args = {"-m", "-m", "-l", "wcTest.txt"};
+		String[] args = {"-m", "-m", "-l", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 32 wcTest.txt\n", os.toString());
+			assertEquals("978 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
 		
 		os = new ByteArrayOutputStream();
-		args[0] = "-w"; args[1] = "-l"; args[2] = "-w";
+		args = new String[]{"-w", "-l", "-w", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("181 32 wcTest.txt\n", os.toString());
+			assertEquals("181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
 		
 		os = new ByteArrayOutputStream();
-		args[0] = "-w"; args[1] = "-w"; args[2] = "-w";
+		args = new String[]{"-w", "-w", "-w", "-w", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("181 wcTest.txt\n", os.toString());
+			assertEquals("181 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -255,64 +256,64 @@ public class WcApplicationTest {
 
 	@Test
 	public void testWcMulticharOptionsBasic() {
-		String[] args = {"-mw", "wcTest.txt"};
+		String[] args = {"-mw", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 wcTest.txt\n", os.toString());
+			assertEquals("978 181 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
 		
 		os = new ByteArrayOutputStream();
-		args[0] = "-wl";
+		args = new String[]{"-wl", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("181 32 wcTest.txt\n", os.toString());
+			assertEquals("181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
 		
 		os = new ByteArrayOutputStream();
-		args[0] = "-ml";
+		args = new String[]{"-ml", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 32 wcTest.txt\n", os.toString());
+			assertEquals("978 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
 		
 		os = new ByteArrayOutputStream();
-		args[0] = "-lm";
+		args = new String[]{"-lm", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 32 wcTest.txt\n", os.toString());
+			assertEquals("978 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
 		
 		os = new ByteArrayOutputStream();
-		args[0] = "-www";
+		args = new String[]{"-www", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("181 wcTest.txt\n", os.toString());
+			assertEquals("181 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
 		
 		os = new ByteArrayOutputStream();
-		args[0] = "-mwl";
+		args = new String[]{"-mwl", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 32 wcTest.txt\n", os.toString());
+			assertEquals("978 181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
 		
 		os = new ByteArrayOutputStream();
-		args[0] = "-wlm";
+		args = new String[]{"-wlm", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 32 wcTest.txt\n", os.toString());
+			assertEquals("978 181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -320,28 +321,28 @@ public class WcApplicationTest {
 
 	@Test
 	public void testWcMulticharOptionsOverlapping() {
-		String[] args = {"-m", "-wm", "wcTest.txt"};
+		String[] args = {"-m", "-wm", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 wcTest.txt\n", os.toString());
+			assertEquals("978 181 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
 		
 		os = new ByteArrayOutputStream();
-		args[0] = "-ml"; args[1] = "-mm";
+		args = new String[]{"-ml", "-mm", "-l", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 32 wcTest.txt\n", os.toString());
+			assertEquals("978 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
 		
 		os = new ByteArrayOutputStream();
-		args[0] = "-wwm"; args[1] = "-mllm";
+		args = new String[]{"-wwm", "-mllm", "-w", "-wl", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 32 wcTest.txt\n", os.toString());
+			assertEquals("978 181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -349,10 +350,10 @@ public class WcApplicationTest {
 	
 	@Test
 	public void testWcMultipleFiles() {
-		String[] args = {"wcTest.txt", "test2.txt"};
+		String[] args = {"fileTest.txt", "test2.txt"};
 		try {
 			wcApp.run(args, is, os);
-			assertEquals("978 181 32 wcTest.txt\n97 24 12 test2.txt\n", os.toString());
+			assertEquals("978 181 32 fileTest.txt\n97 24 12 test2.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -360,28 +361,28 @@ public class WcApplicationTest {
 	
 	@Test
 	public void testWcOptionsMultipleFiles() {
-		String[] args = {"-m", "wcTest.txt", "test2.txt"};
+		String[] args = {"-m", "fileTest.txt", "test2.txt"};
 		try {
 			wcApp.run(args, is, os);
-			assertEquals("978 wcTest.txt\n97 test2.txt\n", os.toString());
+			assertEquals("978 fileTest.txt\n97 test2.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
 		
 		os = new ByteArrayOutputStream();
-		args = new String[]{"-ml", "wcTest.txt", "test.txt"};
+		args = new String[]{"-ml", "fileTest.txt", "test.txt"};
 		try {
 			wcApp.run(args, is, os);
-			assertEquals("978 32 wcTest.txt\n30 4 test.txt\n", os.toString());
+			assertEquals("978 32 fileTest.txt\n30 4 test.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
 		
 		os = new ByteArrayOutputStream();
-		args = new String[]{"-l", "-wl", "test2.txt", "wcTest.txt"};
+		args = new String[]{"-l", "-wl", "test2.txt", "fileTest.txt"};
 		try {
 			wcApp.run(args, is, os);
-			assertEquals("24 12 test2.txt\n181 32 wcTest.txt\n", os.toString());
+			assertEquals("24 12 test2.txt\n181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -408,11 +409,11 @@ public class WcApplicationTest {
 			
 		}
 		
-		args[0] = "wcTest.txt"; args[1] = "m"; args[2] = "wcTest_onlyspaces.txt";
+		args[0] = "fileTest.txt"; args[1] = "m"; args[2] = "fileTest_onlyspaces.txt";
 		os = new ByteArrayOutputStream();
 		try {
 			wcApp.run(args, is, os);
-			assertEquals("978 181 32 wcTest.txt\nwc: m: No such file\n5 0 1 wcTest_onlyspaces.txt\n", os.toString());
+			assertEquals("978 181 32 fileTest.txt\nwc: m: No such file\n5 0 1 fileTest_onlyspaces.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -420,28 +421,28 @@ public class WcApplicationTest {
 	
 	@Test
 	public void testWcOptionsInvalid() {
-		String[] args = {"-s", "wcTest.txt"};
+		String[] args = {"-s", "fileTest.txt"};
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
 			assertEquals("wc: invalid option -- s", e.getMessage());
 		}
 		
-		args = new String[]{"-a", "-m", "wcTest.txt"};
+		args = new String[]{"-a", "-m", "fileTest.txt"};
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
 			assertEquals("wc: invalid option -- a", e.getMessage());
 		}
 		
-		args = new String[]{"-m", "-t", "wcTest.txt"};
+		args = new String[]{"-m", "-t", "fileTest.txt"};
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
 			assertEquals("wc: invalid option -- t", e.getMessage());
 		}
 		
-		args = new String[]{"-m", "-a", "-s", "-m", "wcTest.txt"};
+		args = new String[]{"-m", "-a", "-s", "-m", "fileTest.txt"};
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
@@ -451,21 +452,21 @@ public class WcApplicationTest {
 	
 	@Test
 	public void testWcMulticharOptionsInvalid() {
-		String[] args = {"-asd", "wcTest.txt"};
+		String[] args = {"-asd", "fileTest.txt"};
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
 			assertEquals("wc: invalid option -- a", e.getMessage());
 		}
 		
-		args = new String[]{"-maw", "-lst", "wcTest.txt"};
+		args = new String[]{"-maw", "-lst", "fileTest.txt"};
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
 			assertEquals("wc: invalid option -- a", e.getMessage());
 		}
 		
-		args = new String[]{"-ml", "-lw", "-tasd", "wcTest.txt"};
+		args = new String[]{"-ml", "-lw", "-tasd", "fileTest.txt"};
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
@@ -475,14 +476,14 @@ public class WcApplicationTest {
 	
 	@Test
 	public void testWcInvalidOptionsMultipleFiles() {
-		String[] args = {"-a", "wcTest.txt", "test2.txt"};
+		String[] args = {"-a", "fileTest.txt", "test2.txt"};
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
 			assertEquals("wc: invalid option -- a", e.getMessage());
 		}
 		
-		args = new String[]{"-lam", "wcTest.txt", "test2.txt", "test.txt"};
+		args = new String[]{"-lam", "fileTest.txt", "test2.txt", "test.txt"};
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
@@ -506,14 +507,14 @@ public class WcApplicationTest {
 			assertEquals("wc: invalid option -- t", e.getMessage());
 		}
 		
-		args = new String[]{"-z", "testfile", "wcTest.txt"};
+		args = new String[]{"-z", "testfile", "fileTest.txt"};
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
 			assertEquals("wc: invalid option -- z", e.getMessage());
 		}
 		
-		args = new String[]{"-m", "-wl", "-r", "wcTest.txt", "wrongtest.txt"};
+		args = new String[]{"-m", "-wl", "-r", "fileTest.txt", "wrongtest.txt"};
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {

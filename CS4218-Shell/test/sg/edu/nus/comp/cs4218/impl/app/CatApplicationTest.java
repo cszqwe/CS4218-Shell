@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -41,7 +43,7 @@ public class CatApplicationTest {
 
 	@After
 	public void tearDown() throws Exception {
-		
+		os = new ByteArrayOutputStream();
 	}
 	
 	@Test
@@ -112,8 +114,22 @@ public class CatApplicationTest {
 	
 	@Test
 	public void testCatWithOnlyNewlinesFile() {
-		String[] args = "fileTest only newlines.txt".split(" ");
-		String expected = "\n\n\n\n";
+		String[] args = {"fileTest only newlines.txt"};
+		String expected = "\r\n\r\n\r\n\r\n";
+		try {
+			catApplication.run(args, is, os);
+			String output = os.toString();
+			assertEquals(expected, output);
+		} catch (CatException e) {
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testCatWithManyNewlinesFile() {
+		String[] args = {"fileTest manyNewlines.txt"};
+		String expected = "\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n";
 		try {
 			catApplication.run(args, is, os);
 			String output = os.toString();

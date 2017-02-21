@@ -35,10 +35,12 @@ public class ShellTest {
 	public void tearDown() throws Exception {
 	}
 
+	/**
 	@Test
 	public void testParseAndEvaluate() {
 		String cmdline = "";
 		
 	}
+	**/
 
 }

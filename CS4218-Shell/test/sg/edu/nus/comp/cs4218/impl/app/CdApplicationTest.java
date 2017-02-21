@@ -23,6 +23,7 @@ public class CdApplicationTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		Environment.currentDirectory = origPwd;
 	}
 
 	@Before

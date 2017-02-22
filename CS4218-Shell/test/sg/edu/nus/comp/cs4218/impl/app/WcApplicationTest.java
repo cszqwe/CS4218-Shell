@@ -39,6 +39,103 @@ public class WcApplicationTest {
 		os = new ByteArrayOutputStream();
 	}
 
+
+	@Test
+	//Notice all the interfaces in Wc has been slightly changed. The args does not mean the command anymore, but the content from the input
+	public void testPrintCharacterCountInFile() {
+		String args = "line 1\nline 2\nline 3\nline 4";
+		try {
+			String answer = wcApp.printCharacterCountInFile(args);
+			assertEquals("27", answer);
+		} catch (Exception e) {
+			
+		}
+	}
+
+	@Test
+	//Notice all the interfaces in Wc has been slightly changed. The args does not mean the command anymore, but the content from the input
+	public void testPrintWordCountInFile() {
+		String args = "line 1\nline 2\nline 3\nline 4";
+		try {
+			String answer = wcApp.printWordCountInFile(args);
+			assertEquals("8", answer);
+		} catch (Exception e) {
+			
+		}
+	}
+
+	@Test
+	//Notice all the interfaces in Wc has been slightly changed. The args does not mean the command anymore, but the content from the input
+	public void testPrintNewlineCountInFile() {
+		String args = "line 1\nline 2\nline 3\nline 4";
+		try {
+			String answer = wcApp.printNewlineCountInFile(args);
+			assertEquals("4", answer);
+		} catch (Exception e) {
+			
+		}
+	}
+	
+	@Test
+	//Notice all the interfaces in Wc has been slightly changed. The args does not mean the command anymore, but the content from the input
+	public void testPrintCharacterCountInStdin() {
+		String args = "line 1\nline 2\nline 3\nline 4";
+		try {
+			String answer = wcApp.printCharacterCountInStdin(args);
+			assertEquals("27", answer);
+		} catch (Exception e) {
+			
+		}
+	}
+
+	@Test
+	//Notice all the interfaces in Wc has been slightly changed. The args does not mean the command anymore, but the content from the input
+	public void testPrintWordCountInStdin() {
+		String args = "line 1\nline 2\nline 3\nline 4";
+		try {
+			String answer = wcApp.printWordCountInStdin(args);
+			assertEquals("8", answer);
+		} catch (Exception e) {
+			
+		}
+	}
+
+	@Test
+	//Notice all the interfaces in Wc has been slightly changed. The args does not mean the command anymore, but the content from the input
+	public void testPrintNewlineCountInStdin() {
+		String args = "line 1\nline 2\nline 3\nline 4";
+		try {
+			String answer = wcApp.printNewlineCountInStdin(args);
+			assertEquals("4", answer);
+		} catch (Exception e) {
+			
+		}
+	}
+	
+	@Test
+	//Notice all the interfaces in Wc has been slightly changed. The args does not mean the command anymore, but the content from the input
+	public void testPrintAllCountsInFile() {
+		String args = "line 1\nline 2\nline 3\nline 4";
+		try {
+			String answer = wcApp.printAllCountsInFile(args);
+			assertEquals("27 8 4 ", answer);
+		} catch (Exception e) {
+			
+		}
+	}
+	
+	@Test
+	//Notice all the interfaces in Wc has been slightly changed. The args does not mean the command anymore, but the content from the input
+	public void testPrintAllCountsInStdin() {
+		String args = "line 1\nline 2\nline 3\nline 4";
+		try {
+			String answer = wcApp.printAllCountsInStdin(args);
+			assertEquals("27 8 4 ", answer);
+		} catch (Exception e) {
+			
+		}
+	}
+	
 	@Test
 	public void testWc() {
 		String[] args = {"fileTest.txt"};

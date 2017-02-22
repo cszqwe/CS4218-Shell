@@ -11,7 +11,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.app.WcApplication;
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.exception.WcException;
 
 public class WcApplicationTest {
@@ -141,7 +144,7 @@ public class WcApplicationTest {
 		String[] args = {"fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 32 fileTest.txt\n", os.toString());
+			assertEquals("947 181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -163,7 +166,7 @@ public class WcApplicationTest {
 		String[] args = {"fileTest only newlines.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("8 0 5 fileTest only newlines.txt\n", os.toString());
+			assertEquals("4 0 5 fileTest only newlines.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -185,7 +188,7 @@ public class WcApplicationTest {
 		String[] args = {"-m", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 fileTest.txt\n", os.toString());
+			assertEquals("947 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -218,7 +221,7 @@ public class WcApplicationTest {
 		String[] args = {"-m", "-w", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 fileTest.txt\n", os.toString());
+			assertEquals("947 181 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -240,7 +243,7 @@ public class WcApplicationTest {
 		String[] args = {"-m", "-l", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 32 fileTest.txt\n", os.toString());
+			assertEquals("947 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -251,7 +254,7 @@ public class WcApplicationTest {
 		String[] args = {"-w", "-m", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 fileTest.txt\n", os.toString());
+			assertEquals("947 181 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -273,7 +276,7 @@ public class WcApplicationTest {
 		String[] args = {"-l", "-m", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 32 fileTest.txt\n", os.toString());
+			assertEquals("947 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -284,7 +287,7 @@ public class WcApplicationTest {
 		String[] args = {"-m", "-w", "-l", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 32 fileTest.txt\n", os.toString());
+			assertEquals("947 181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -295,7 +298,7 @@ public class WcApplicationTest {
 		String[] args = {"-w", "-l", "-m", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 32 fileTest.txt\n", os.toString());
+			assertEquals("947 181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -306,7 +309,7 @@ public class WcApplicationTest {
 		String[] args = {"-l", "-m", "-w", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 32 fileTest.txt\n", os.toString());
+			assertEquals("947 181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -316,7 +319,7 @@ public class WcApplicationTest {
 		String[] args = {"-l", "-w", "-m", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 32 fileTest.txt\n", os.toString());
+			assertEquals("947 181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -327,7 +330,7 @@ public class WcApplicationTest {
 		String[] args = {"-m", "-m", "-l", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 32 fileTest.txt\n", os.toString());
+			assertEquals("947 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -360,7 +363,7 @@ public class WcApplicationTest {
 		String[] args = {"-mw", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 fileTest.txt\n", os.toString());
+			assertEquals("947 181 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -382,7 +385,7 @@ public class WcApplicationTest {
 		String[] args = {"-ml", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 32 fileTest.txt\n", os.toString());
+			assertEquals("947 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -393,7 +396,7 @@ public class WcApplicationTest {
 		String[] args = {"-lm", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 32 fileTest.txt\n", os.toString());
+			assertEquals("947 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -415,7 +418,7 @@ public class WcApplicationTest {
 		String[] args = {"-mwl", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 32 fileTest.txt\n", os.toString());
+			assertEquals("947 181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -426,7 +429,7 @@ public class WcApplicationTest {
 		String[] args = {"-wlm", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 32 fileTest.txt\n", os.toString());
+			assertEquals("947 181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -437,7 +440,7 @@ public class WcApplicationTest {
 		String[] args = {"-m", "-wm", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 fileTest.txt\n", os.toString());
+			assertEquals("947 181 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -448,7 +451,7 @@ public class WcApplicationTest {
 		String[] args = {"-ml", "-mm", "-l", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 32 fileTest.txt\n", os.toString());
+			assertEquals("947 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -459,7 +462,7 @@ public class WcApplicationTest {
 		String[] args = {"-wwm", "-mllm", "-w", "-wl", "fileTest.txt"};
 		try {
 			wcApp.run(args, null, os);
-			assertEquals("978 181 32 fileTest.txt\n", os.toString());
+			assertEquals("947 181 32 fileTest.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -470,7 +473,7 @@ public class WcApplicationTest {
 		String[] args = {"fileTest.txt", "test2.txt"};
 		try {
 			wcApp.run(args, is, os);
-			assertEquals("978 181 32 fileTest.txt\n97 24 12 test2.txt\n", os.toString());
+			assertEquals("947 181 32 fileTest.txt\n86 24 12 test2.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -481,7 +484,7 @@ public class WcApplicationTest {
 		String[] args = {"-m", "fileTest.txt", "test2.txt"};
 		try {
 			wcApp.run(args, is, os);
-			assertEquals("978 fileTest.txt\n97 test2.txt\n", os.toString());
+			assertEquals("947 fileTest.txt\n86 test2.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -492,7 +495,7 @@ public class WcApplicationTest {
 		String[] args = {"-ml", "fileTest.txt", "test.txt"};
 		try {
 			wcApp.run(args, is, os);
-			assertEquals("978 32 fileTest.txt\n30 4 test.txt\n", os.toString());
+			assertEquals("947 32 fileTest.txt\n27 4 test.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -536,7 +539,7 @@ public class WcApplicationTest {
 		String[] args = {"fileTest.txt", "m", "fileTest_onlyspaces.txt"};
 		try {
 			wcApp.run(args, is, os);
-			assertEquals("978 181 32 fileTest.txt\nwc: m: No such file\n5 0 1 fileTest_onlyspaces.txt\n", os.toString());
+			assertEquals("947 181 32 fileTest.txt\nwc: m: No such file\n5 0 1 fileTest_onlyspaces.txt\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -670,6 +673,28 @@ public class WcApplicationTest {
 		} catch (Exception e) {
 			assertEquals("wc: invalid option -- r", e.getMessage());
 		}
+	}
+	
+	@Test
+	//Integrated Test
+	public void testOverAllFromStdin() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		ShellImpl shell = new ShellImpl();
+		String args = "cat test.txt | wc";
+		String expected = "27 8 4 \n";
+		shell.parseAndEvaluate(args,os);
+		assertEquals(expected, os.toString());
+		
+	}
+	
+	@Test
+	public void testOverAllFromFile() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		ShellImpl shell = new ShellImpl();
+		String args = "wc test.txt";
+		String expected = "27 8 4 test.txt\n";
+		shell.parseAndEvaluate(args,os);
+		assertEquals(expected, os.toString());	
 	}
 
 }

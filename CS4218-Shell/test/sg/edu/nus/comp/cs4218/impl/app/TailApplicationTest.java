@@ -12,6 +12,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.app.HeadApplication;
 import sg.edu.nus.comp.cs4218.impl.app.TailApplication;
 
@@ -151,6 +153,28 @@ public class TailApplicationTest {
 			// e.printStackTrace();
 			assertEquals("tail: File not found", e.getMessage());
 		}
+	}
+	
+	@Test
+	//Integrated Test
+	public void testOverAllFromStdin() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		ShellImpl shell = new ShellImpl();
+		String args = "cat test.txt | tail -n 2";
+		String expected = "line 3\nline 4\n";
+		shell.parseAndEvaluate(args,os);
+		assertEquals(expected, os.toString());
+		
+	}
+	
+	@Test
+	public void testOverAllFromFile() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		ShellImpl shell = new ShellImpl();
+		String args = "tail -n 2 test.txt";
+		String expected = "line 3\nline 4\n";
+		shell.parseAndEvaluate(args,os);
+		assertEquals(expected, os.toString());
 	}
 
 }

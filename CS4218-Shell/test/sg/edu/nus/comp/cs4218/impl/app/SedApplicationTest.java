@@ -96,8 +96,7 @@ public class SedApplicationTest {
 		String args = "sed s/l/L/g test.txt";
 		String expected = "Line 1\r\nLine 2\r\nLine 3\r\nLine 4";
 		shell.parseAndEvaluate(args,os);
-		assertEquals(expected, os.toString());
-		
+		assertEquals(expected, os.toString());	
 	}
 	
 

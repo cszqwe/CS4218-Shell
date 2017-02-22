@@ -13,6 +13,8 @@ import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.HeadException;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.app.HeadApplication;
 
 public class HeadApplicationTest {
@@ -162,6 +164,28 @@ public class HeadApplicationTest {
 			// e.printStackTrace();
 			assertEquals("head: File not found", e.getMessage());
 		}
+	}
+	
+	@Test
+	//Integrated Test
+	public void testOverAllFromStdin() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		ShellImpl shell = new ShellImpl();
+		String args = "cat test.txt | head -n 2";
+		String expected = "line 1\nline 2\n";
+		shell.parseAndEvaluate(args,os);
+		assertEquals(expected, os.toString());
+		
+	}
+	
+	@Test
+	public void testOverAllFromFile() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		ShellImpl shell = new ShellImpl();
+		String args = "head -n 2 test.txt";
+		String expected = "line 1\nline 2\n";
+		shell.parseAndEvaluate(args,os);
+		assertEquals(expected, os.toString());
 	}
 
 }

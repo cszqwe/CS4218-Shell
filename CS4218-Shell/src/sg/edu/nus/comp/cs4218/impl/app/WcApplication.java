@@ -130,7 +130,7 @@ public class WcApplication implements Wc {
 
 	@Override
 	public String printCharacterCountInFile(String args) {
-		args.replaceAll("\r\n", "\n");
+		args = args.replaceAll("\r\n", "\n");
 		return Integer.toString(args.length());
 	}
 

@@ -15,7 +15,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.CatException;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.app.CatApplication;
 import sg.edu.nus.comp.cs4218.impl.app.HeadApplication;
 
@@ -140,4 +143,26 @@ public class CatApplicationTest {
 		}
 	}
 
+	@Test
+	//Integrated Test
+	public void testOverAllFromStdin() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		ShellImpl shell = new ShellImpl();
+		String args = "cat test.txt | cat";
+		String expected = "line 1\r\nline 2\r\nline 3\r\nline 4\r\n".trim();
+		shell.parseAndEvaluate(args,os);
+	
+		assertEquals(expected, os.toString().trim());
+		
+	}
+	
+	@Test
+	public void testOverAllFromFile() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		ShellImpl shell = new ShellImpl();
+		String args = "cat test.txt";
+		String expected = "line 1\r\nline 2\r\nline 3\r\nline 4";
+		shell.parseAndEvaluate(args,os);
+		assertEquals(expected, os.toString());
+	}
 }

@@ -72,7 +72,7 @@ public class CdApplicationTest {
 	}
 	
 	@Test
-	public void testMultipleArgsValid() {
+	public void testCdMultipleArgsValid() {
 		String args[] = {"cd Test_folder", "asdf"};
 		try {
 			cdApp.run(args, null, null);
@@ -83,7 +83,7 @@ public class CdApplicationTest {
 	}
 	
 	@Test
-	public void testMultipleArgsInvalid() {
+	public void testCdMultipleArgsInvalid() {
 		String args[] = {"Nonexistent", "asdf"};
 		try {
 			cdApp.run(args, null, null);
@@ -94,8 +94,41 @@ public class CdApplicationTest {
 	}
 	
 	@Test
-	public void testFileNotDir() {
+	public void testCdFileNotDir() {
 		String args[] = {"Test.txt"};
+		try {
+			cdApp.run(args, null, null);
+			assertEquals(origPwd, Environment.currentDirectory);
+		} catch (AbstractApplicationException e) {
+			
+		}
+	}
+	
+	@Test
+	public void testCdNoArgs() {
+		String[] args = {};
+		try {
+			cdApp.run(args, null, null);
+			assertEquals(origPwd, Environment.currentDirectory);
+		} catch (AbstractApplicationException e) {
+			
+		}
+	}
+	
+	@Test
+	public void testCdNullArgs() {
+		String[] args = null;
+		try {
+			cdApp.run(args, null, null);
+			assertEquals(origPwd, Environment.currentDirectory);
+		} catch (AbstractApplicationException e) {
+			
+		}
+	}
+	
+	@Test
+	public void testCdEmptyArgs() {
+		String[] args = {""};
 		try {
 			cdApp.run(args, null, null);
 			assertEquals(origPwd, Environment.currentDirectory);

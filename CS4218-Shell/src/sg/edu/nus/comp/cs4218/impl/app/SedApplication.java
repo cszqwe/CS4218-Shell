@@ -23,7 +23,6 @@ public class SedApplication implements Sed{
 	OutputStream stdout;
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws SedException, OutputstreamNotValidException {
-		ArrayList<String> files = new ArrayList<>();
 		this.stdin = stdin;
 		this.stdout = stdout;
 		String output = "";
@@ -70,7 +69,9 @@ public class SedApplication implements Sed{
 			replaceSubstringWithInvalidReplacement(wholeCommand);
 		}
 
+		//If there is a file
 		if (args.length == 2){
+			//If there is a /g.
 			if (isGlobal){
 				output = replaceAllSubstringsInFile(wholeCommand);
 			}else{
@@ -91,17 +92,40 @@ public class SedApplication implements Sed{
 		}
 
 	}
-
+	/**
+	 * @params args
+	 * 		Arguments from input, with app name
+	 * 
+	 * @return
+	 * 		The regex get from the args.
+	 * 
+	 */
 	public String getReg(String args){
 		String[] allArgs = args.trim().split(" ");
 		return allArgs[1].split(allArgs[1].charAt(1)+"")[1];
 	}
 	
+	/**
+	 * @params args
+	 * 		Arguments from input, with app name
+	 * 
+	 * @return
+	 * 		The replacement get from the args.
+	 * 
+	 */
 	public String getReplacement(String args){
 		String[] allArgs = args.trim().split(" ");
 		return allArgs[1].split(allArgs[1].charAt(1)+"")[2];
 	}
 	
+	/**
+	 * @params args
+	 * 		Arguments from input, with app name
+	 * 
+	 * @return
+	 * 		The content stdin.
+	 * 
+	 */
 	public String getContentFromStdin(String args){
         BufferedReader in = new BufferedReader(new InputStreamReader(stdin));
         StringBuilder str = new StringBuilder();      
@@ -128,6 +152,14 @@ public class SedApplication implements Sed{
        return str.toString();
 	}
 	
+	/**
+	 * @params args
+	 * 		Arguments from input, with app name
+	 * 
+	 * @return
+	 * 		The content get from the file.
+	 * 
+	 */
 	public String getContentFromFile(String args) throws SedException{
 		String file = args.trim().split(" ")[2];
 		Path filePath = Paths.get(Environment.currentDirectory).resolve(file);
@@ -145,6 +177,7 @@ public class SedApplication implements Sed{
 		}
 		return contents;
 	}
+	
 	@Override
 	public String replaceFirstSubStringInFile(String args) {
 		String regex = getReg(args);
@@ -201,11 +234,19 @@ public class SedApplication implements Sed{
 		return contents;
 	}
 
+	/*
+	 * return 
+	 * 	a error message to indicate the invalid replacement problem.
+	 */
 	@Override
 	public String replaceSubstringWithInvalidReplacement(String args) {
 		return "The command " + args + " has invalid Replacement";
 	}
 
+	/*
+	 * return 
+	 * 	a error message to indicate the invalid regex problem.
+	 */
 	@Override
 	public String replaceSubstringWithInvalidRegex(String args) {
 		return "The command " + args + " has invalid Regex";

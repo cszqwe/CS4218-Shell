@@ -19,7 +19,7 @@ public class WcApplication implements Wc {
 	
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws WcException, OutputstreamNotValidException {
-		ArrayList<String> files = new ArrayList<>();
+		ArrayList<String> files = new ArrayList<>(); //The list of all files
 		boolean chars = false;
 		boolean words = false;
 		boolean lines = false;
@@ -71,6 +71,14 @@ public class WcApplication implements Wc {
 
 	}
 	
+	/**
+	 * @params file chars words lines
+	 * 		file is the file name to read, the rest three are all boolean values indicating the options
+	 * 
+	 * @return
+	 * 		A string with required information, followed by the file name.
+	 * 
+	 */
 	public String printCountInFile(String file, boolean chars, boolean words, boolean lines) {
 		String line = "";
 		Path filePath = Paths.get(Environment.currentDirectory).resolve(file);
@@ -94,6 +102,14 @@ public class WcApplication implements Wc {
 		return line + "\n";
 	}
 	
+	/**
+	 * @params stdin
+
+	 * The given input stream
+	 * @return
+		A string which represents the content read from the stdin.
+	 * 
+	 */
 	public static String readInputStreamToString(InputStream stdin) {      
          BufferedReader in = new BufferedReader(new InputStreamReader(stdin));
          StringBuilder str = new StringBuilder();      
@@ -119,6 +135,8 @@ public class WcApplication implements Wc {
          }
         return str.toString();
      }
+	
+	
 	public String printCountInStdin(InputStream stdin) {
 		String line = "";
 		String contents = readInputStreamToString(stdin);
@@ -128,12 +146,26 @@ public class WcApplication implements Wc {
 		return line + "\n";
 	}
 
+	/**
+	 * @params args
+	 * 		args here is different from the defination from the interface, it means the content read from the input only.
+	 * 
+	 * @return
+	 * 		The count of character of the args
+	 */
 	@Override
 	public String printCharacterCountInFile(String args) {
-		args = args.replaceAll("\r\n", "\n");
+		args = args.replaceAll("\r\n", "\n"); //Under windows, the newline char would be counted twice, therefore replace it with \n
 		return Integer.toString(args.length());
 	}
 
+	/**
+	 * @params args
+	 * 		args here is different from the defination from the interface, it means the content read from the input only.
+	 * 
+	 * @return
+	 * 		The count of words of the args
+	 */
 	@Override
 	public String printWordCountInFile(String args) {
 		String trim = args.trim();
@@ -141,12 +173,26 @@ public class WcApplication implements Wc {
 	    return Integer.toString(trim.split("\\s+").length);
 	}
 
+	/**
+	 * @params args
+	 * 		args here is different from the defination from the interface, it means the content read from the input only.
+	 * 
+	 * @return
+	 * 		The count of newlines of the args
+	 */
 	@Override
 	public String printNewlineCountInFile(String args) {
 		if (args.equals("")) return "0";
 		return Integer.toString(args.split("\n", -1).length);
 	}
 
+	/**
+	 * @params args
+	 * 		args here is different from the defination from the interface, it means the content read from the input only.
+	 * 
+	 * @return
+	 * 		The count of character, word and newline of the args
+	 */
 	@Override
 	public String printAllCountsInFile(String args) {
 		String line = "";
@@ -156,11 +202,25 @@ public class WcApplication implements Wc {
 		return line;
 	}
 
+	/**
+	 * @params args
+	 * 		args here is different from the defination from the interface, it means the content read from the input only.
+	 * 
+	 * @return
+	 * 		The count of character of the args
+	 */
 	@Override
 	public String printCharacterCountInStdin(String args) {
 		return Integer.toString(args.length());
 	}
 
+	/**
+	 * @params args
+	 * 		args here is different from the defination from the interface, it means the content read from the input only.
+	 * 
+	 * @return
+	 * 		The count of words of the args
+	 */
 	@Override
 	public String printWordCountInStdin(String args) {
 		String trim = args.trim();
@@ -168,12 +228,26 @@ public class WcApplication implements Wc {
 	    return Integer.toString(trim.split("\\s+").length);
 	}
 
+	/**
+	 * @params args
+	 * 		args here is different from the defination from the interface, it means the content read from the input only.
+	 * 
+	 * @return
+	 * 		The count of newlines of the args
+	 */
 	@Override
 	public String printNewlineCountInStdin(String args) {
 		if (args.equals("")) return "0";
 		return Integer.toString(args.split("\n", -1).length);
 	}
 
+	/**
+	 * @params args
+	 * 		args here is different from the defination from the interface, it means the content read from the input only.
+	 * 
+	 * @return
+	 * 		The count of character, word and newline of the args
+	 */
 	@Override
 	public String printAllCountsInStdin(String args) {
 		String line = "";

@@ -105,6 +105,7 @@ public class CallCommand implements Command {
 	 * @throws AbstractApplicationException 
 	 */
 	public void parse() throws ShellException, AbstractApplicationException {
+		cmdline = ShellImpl.processRedirectInput(cmdline);		
 		cmdline = ShellImpl.processGlobbing(cmdline);
 		cmdline = ShellImpl.processBQ(cmdline);
 		cmdline = ShellImpl.processDQ(cmdline);

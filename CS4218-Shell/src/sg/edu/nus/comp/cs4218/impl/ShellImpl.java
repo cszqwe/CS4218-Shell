@@ -1,6 +1,9 @@
 package sg.edu.nus.comp.cs4218.impl;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -8,6 +11,7 @@ import sg.edu.nus.comp.cs4218.Application;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Shell;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.CatException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.app.CatApplication;
 import sg.edu.nus.comp.cs4218.impl.app.EchoApplication;
@@ -387,8 +391,211 @@ public class ShellImpl implements Shell {
 		return stmt.trim();
 	}	
 
+	/**
+	 * Checks if a file is readable.
+	 * 
+	 * @param filePath
+	 *            The path to the file
+	 * @return True if the file is readable.
+	 * @throws CatException
+	 *             If the file is not readable
+	 */
+	static boolean checkIfFileIsReadable(Path filePath) throws ShellException {
+		
+		if (Files.isDirectory(filePath)) {
+			throw new ShellException("This is a directory");
+		}
+		if (Files.exists(filePath) && Files.isReadable(filePath)) {
+			return true;
+		} else {
+			throw new ShellException("Could not read file");
+		}
+	}
 	
+	/**
+	 * Process the globbing functionality of the command.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return A String which replace all the * with the certain files.
+	 * 
+	 * @throws AbstractApplicationException
+	 *             If an exception happens while processing the content in the
+	 *             single  quotes.
+	 * @throws ShellException
+	 *             If an exception happens while processing the content in the
+	 *             single quotes.
+	 */
+	public static String processRedirectInput(String stmt)
+			throws AbstractApplicationException, ShellException {
+		stmt = stmt.trim();
+		int numOfDQ = 0;
+		int numOfSQ = 0;
+		int numOfRedirect = 0;
+		for (int i = 0 ; i < stmt.length(); i++){
+			if (stmt.charAt(i) =='\''){
+				numOfSQ++;
+			}else if (stmt.charAt(i) == '"'){
+				numOfDQ++;
+			}else if (stmt.charAt(i) == '<'){
+				if (numOfDQ % 2 == 0 && numOfSQ %2 ==0){
+					numOfRedirect++;
+					if (numOfRedirect > 1) throw new ShellException("More than one redirect input");
+					String inputFileName = "";
+					for (int j = i + 2; j < stmt.length(); j++){
+						if (stmt.charAt(j) == ' ') break;
+						inputFileName += stmt.charAt(j);
+					}
+					Path currentDir = Paths.get(Environment.currentDirectory);
+					Path filePath = currentDir.resolve(inputFileName);
+					boolean isFileReadable = checkIfFileIsReadable(filePath);
+					if (isFileReadable){
+						stmt = stmt.replace("< "+inputFileName, "").trim();
+					}
+				}
+			}
+		}
+		return stmt.trim();
+	}	
+
+	/**
+	 * Process the globbing functionality of the command.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return A String which replace all the * with the certain files.
+	 * 
+	 * @throws AbstractApplicationException
+	 *             If an exception happens while processing the content in the
+	 *             single  quotes.
+	 * @throws ShellException
+	 *             If an exception happens while processing the content in the
+	 *             single quotes.
+	 */
+	public static InputStream getRedirectInput(String stmt)
+			throws AbstractApplicationException, ShellException {
+		stmt = stmt.trim();
+		int numOfDQ = 0;
+		int numOfSQ = 0;
+		int numOfRedirect = 0;
+		InputStream is = null;
+		for (int i = 0 ; i < stmt.length(); i++){
+			if (stmt.charAt(i) =='\''){
+				numOfSQ++;
+			}else if (stmt.charAt(i) == '"'){
+				numOfDQ++;
+			}else if (stmt.charAt(i) == '<'){
+				if (numOfDQ % 2 == 0 && numOfSQ %2 ==0){
+					numOfRedirect++;
+					if (numOfRedirect > 1) throw new ShellException("More than one redirect input");
+					String inputFileName = "";
+					for (int j = i + 2; j < stmt.length(); j++){
+						if (stmt.charAt(j) == ' ') break;
+						inputFileName += stmt.charAt(j);
+					}
+					try{
+						is = new FileInputStream(inputFileName);
+					}catch (Exception e){
+						throw new ShellException(e.getMessage());
+					}
+				}
+			}
+		}
+		return is;
+	}	
 	
+	/**
+	 * Process the globbing functionality of the command.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return A String which replace all the * with the certain files.
+	 * 
+	 * @throws AbstractApplicationException
+	 *             If an exception happens while processing the content in the
+	 *             single  quotes.
+	 * @throws ShellException
+	 *             If an exception happens while processing the content in the
+	 *             single quotes.
+	 */
+	public static String processRedirectOutput(String stmt)
+			throws AbstractApplicationException, ShellException {
+		stmt = stmt.trim();
+		int numOfDQ = 0;
+		int numOfSQ = 0;
+		int numOfRedirect = 0;
+		for (int i = 0 ; i < stmt.length(); i++){
+			if (stmt.charAt(i) =='\''){
+				numOfSQ++;
+			}else if (stmt.charAt(i) == '"'){
+				numOfDQ++;
+			}else if (stmt.charAt(i) == '>'){
+				if (numOfDQ % 2 == 0 && numOfSQ %2 ==0){
+					numOfRedirect++;
+					if (numOfRedirect > 1) throw new ShellException("More than one redirect input");
+					String inputFileName = "";
+					for (int j = i + 2; j < stmt.length(); j++){
+						if (stmt.charAt(j) == ' ') break;
+						inputFileName += stmt.charAt(j);
+					}
+					Path currentDir = Paths.get(Environment.currentDirectory);
+					Path filePath = currentDir.resolve(inputFileName);
+					boolean isFileReadable = checkIfFileIsReadable(filePath);
+					if (isFileReadable){
+						stmt = stmt.replace("< "+inputFileName, "").trim();
+					}
+				}
+			}
+		}
+		return stmt.trim();
+	}	
+
+	/**
+	 * Process the globbing functionality of the command.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return A String which replace all the * with the certain files.
+	 * 
+	 * @throws AbstractApplicationException
+	 *             If an exception happens while processing the content in the
+	 *             single  quotes.
+	 * @throws ShellException
+	 *             If an exception happens while processing the content in the
+	 *             single quotes.
+	 */
+	public static OutputStream getRedirectOutput(String stmt)
+			throws AbstractApplicationException, ShellException {
+		stmt = stmt.trim();
+		int numOfDQ = 0;
+		int numOfSQ = 0;
+		int numOfRedirect = 0;
+		OutputStream os = null;
+		for (int i = 0 ; i < stmt.length(); i++){
+			if (stmt.charAt(i) =='\''){
+				numOfSQ++;
+			}else if (stmt.charAt(i) == '"'){
+				numOfDQ++;
+			}else if (stmt.charAt(i) == '>'){
+				if (numOfDQ % 2 == 0 && numOfSQ %2 ==0){
+					numOfRedirect++;
+					if (numOfRedirect > 1) throw new ShellException("More than one redirect input");
+					String inputFileName = "";
+					for (int j = i + 2; j < stmt.length(); j++){
+						if (stmt.charAt(j) == ' ') break;
+						inputFileName += stmt.charAt(j);
+					}
+					try{
+						os = new FileOutputStream(inputFileName);
+					}catch (Exception e){
+						throw new ShellException(e.getMessage());
+					}
+				}
+			}
+		}
+		return os;
+	}	
+
 	
 	/**
 	 * Static method to run the application as specified by the application
@@ -620,10 +827,12 @@ public class ShellImpl implements Shell {
 		}
 		PipedInputStream tmpIn = null;  
 		PipedOutputStream tmpout = null;
-		InputStream actualIn;
-		OutputStream actualOut;
+		InputStream actualIn, redirectIn;
+		OutputStream actualOut, redirectOut;
 		for (int i = 0; i < allStmts.length; i++){
 			CallCommand callCommand = new CallCommand(allStmts[i]);
+			redirectIn = getRedirectInput(allStmts[i]);
+			redirectOut = getRedirectOutput(allStmts[i]);
 			callCommand.parse();
 			if (i == 0){
 				actualIn = System.in;
@@ -647,6 +856,8 @@ public class ShellImpl implements Shell {
 					actualOut = tmpout;
 				}
 			}
+			if (redirectIn != null) actualIn = redirectIn;
+			if (redirectOut != null) actualOut = redirectOut;
 			callCommand.evaluate(actualIn, actualOut);
 			
 		}

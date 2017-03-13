@@ -1,10 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.List;
 import java.util.ArrayList;
 
 import sg.edu.nus.comp.cs4218.Application;
@@ -549,7 +545,6 @@ public class ShellImpl implements Shell {
 		}
 		PipedInputStream tmpIn = null;  
 		PipedOutputStream tmpout = null;
-
 		InputStream actualIn;
 		OutputStream actualOut;
 		for (int i = 0; i < allStmts.length; i++){
@@ -575,101 +570,161 @@ public class ShellImpl implements Shell {
 					actualOut = out;
 				}else{
 					actualOut = tmpout;
-			
 				}
 			}
 			callCommand.evaluate(actualIn, actualOut);
 			
 		}
+
 	}
 
 	@Override
 	public String pipeTwoCommands(String args) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			parseAndEvaluate(args, System.out);
+			return System.out.toString();
+		} catch (AbstractApplicationException | ShellException e) {
+			return e.getMessage();
+		}
 	}
 
 	@Override
 	public String pipeMultipleCommands(String args) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			parseAndEvaluate(args, System.out);
+			return System.out.toString();
+		} catch (AbstractApplicationException | ShellException e) {
+			return e.getMessage();
+		}
 	}
 
 	@Override
 	public String pipeWithException(String args) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			parseAndEvaluate(args, System.out);
+			return System.out.toString();
+		} catch (AbstractApplicationException | ShellException e) {
+			return e.getMessage();
+		}
 	}
 
 	@Override
 	public String globNoPaths(String args) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			parseAndEvaluate(args, System.out);
+			return System.out.toString();
+		} catch (AbstractApplicationException | ShellException e) {
+			return e.getMessage();
+		}
 	}
 
 	@Override
 	public String globOneFile(String args) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			parseAndEvaluate(args, System.out);
+			return System.out.toString();
+		} catch (AbstractApplicationException | ShellException e) {
+			return e.getMessage();
+		}
 	}
 
 	@Override
 	public String globFilesDirectories(String args) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			parseAndEvaluate(args, System.out);
+			return System.out.toString();
+		} catch (AbstractApplicationException | ShellException e) {
+			return e.getMessage();
+		}
 	}
 
 	@Override
 	public String globWithException(String args) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			parseAndEvaluate(args, System.out);
+			return System.out.toString();
+		} catch (AbstractApplicationException | ShellException e) {
+			return e.getMessage();
+		}
 	}
 
 	@Override
 	public String redirectInput(String args) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			parseAndEvaluate(args, System.out);
+			return System.out.toString();
+		} catch (AbstractApplicationException | ShellException e) {
+			return e.getMessage();
+		}
 	}
 
 	@Override
 	public String redirectOutput(String args) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			parseAndEvaluate(args, System.out);
+			return System.out.toString();
+		} catch (AbstractApplicationException | ShellException e) {
+			return e.getMessage();
+		}
 	}
 
 	@Override
 	public String redirectInputWithNoFile(String args) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			parseAndEvaluate(args, System.out);
+			return System.out.toString();
+		} catch (AbstractApplicationException | ShellException e) {
+			return e.getMessage();
+		}
 	}
 
 	@Override
 	public String redirectOutputWithNoFile(String args) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			parseAndEvaluate(args, System.out);
+			return System.out.toString();
+		} catch (AbstractApplicationException | ShellException e) {
+			return e.getMessage();
+		}
 	}
 
 	@Override
 	public String redirectInputWithException(String args) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			parseAndEvaluate(args, System.out);
+			return System.out.toString();
+		} catch (AbstractApplicationException | ShellException e) {
+			return e.getMessage();
+		}
 	}
 
 	@Override
 	public String redirectOutputWithException(String args) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			parseAndEvaluate(args, System.out);
+			return System.out.toString();
+		} catch (AbstractApplicationException | ShellException e) {
+			return e.getMessage();
+		}
 	}
 
 	@Override
 	public String performCommandSubstitution(String args) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			parseAndEvaluate(args, System.out);
+			return System.out.toString();
+		} catch (AbstractApplicationException | ShellException e) {
+			return e.getMessage();
+		}
 	}
 
 	@Override
 	public String performCommandSubstitutionWithException(String args) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			parseAndEvaluate(args, System.out);
+			return System.out.toString();
+		} catch (AbstractApplicationException | ShellException e) {
+			return e.getMessage();
+		}
 	}
 }

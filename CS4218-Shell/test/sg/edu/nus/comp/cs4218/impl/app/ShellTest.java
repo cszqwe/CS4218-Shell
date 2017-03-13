@@ -133,7 +133,6 @@ public class ShellTest {
 		String expected = "line 1\r\nline 2\r\nline 3\r\nline 4";
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(os.toString(), expected);
-		
 		os = new ByteArrayOutputStream();
 		cmdline = "cat test.txt | head -n 2 | tail -n 1";
 		expected = "line 2\n";

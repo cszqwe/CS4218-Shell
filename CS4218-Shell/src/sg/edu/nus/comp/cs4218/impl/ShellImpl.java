@@ -2,6 +2,7 @@ package sg.edu.nus.comp.cs4218.impl;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import sg.edu.nus.comp.cs4218.Application;
 import sg.edu.nus.comp.cs4218.Environment;
@@ -312,7 +313,18 @@ public class ShellImpl implements Shell {
 		stmts.toArray(commands);
 		return commands;
 	}	
-
+	public static File[] listFilesMatching(File root, String regex) {
+	    if(!root.isDirectory()) {
+	        throw new IllegalArgumentException(root+" is no directory.");
+	    }
+	    final Pattern p = Pattern.compile(regex); // careful: could also throw an exception!
+	    return root.listFiles(new FileFilter(){
+	        @Override
+	        public boolean accept(File file) {
+	            return p.matcher(file.getName()).matches();
+	        }
+	    });
+	}
 	/**
 	 * Process the globbing functionality of the command.
 	 * @param stmt
@@ -339,27 +351,40 @@ public class ShellImpl implements Shell {
 				numOfDQ++;
 			}else if (stmt.charAt(i) == '*'){
 				if (numOfDQ % 2 == 0 && numOfSQ %2 ==0){
-					String directory = new String("*");
-					for (int j = i; j >=0; j--){
+					String directory = new String();
+					String pattern = new String(".*");
+					String replacedString = new String("*");
+					boolean isPattern = true;
+					for (int j = i-1; j >=0; j--){
 						if (stmt.charAt(j) != ' '){
-							directory = stmt.charAt(j) + directory;
+							if (stmt.charAt(j) == '\\' || stmt.charAt(j) == '/'){
+								isPattern = false;
+							}
+							if (isPattern){
+								pattern = stmt.charAt(j) + pattern;
+								replacedString = stmt.charAt(j) + replacedString;
+							}else{
+								directory = stmt.charAt(j) + directory;
+								replacedString = stmt.charAt(j) + replacedString;
+							}
 						}else{
 							break;
 						}
 					}
   				    File dir = new File(directory);
-					File file[] = dir.listFiles();
-					if (file.length != 0){
+					File file[] = listFilesMatching(dir, pattern);;
+					if (file != null){
 						String newStr = "";
 						for (int j = 0; j < file.length; j++){
-							newStr += file[j].getName() + " ";
+							newStr += (file[j].getPath() + " ").replace("\\", "/");
 						}
-						stmt = stmt.replaceFirst(directory, newStr);
+						
+						stmt = stmt.replace(replacedString, newStr);
 					}
 				}
 			}
 		}
-		return stmt;
+		return stmt.trim();
 	}	
 
 	

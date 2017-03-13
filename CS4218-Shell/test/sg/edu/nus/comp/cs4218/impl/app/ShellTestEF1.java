@@ -18,6 +18,7 @@ public class ShellTestEF1 {
 	@Test
 	//Test the globbing function.
 	public void testGlobbing() throws AbstractApplicationException, ShellException {
+		assertEquals(ShellImpl.processGlobbing("cat globbingTest\\*"), "cat globbingTest\test1.txt globbingTest\test2.txt ");
 		os = new ByteArrayOutputStream();
 		//A normal one
 		String cmdline = "cat globbingTest\\*";

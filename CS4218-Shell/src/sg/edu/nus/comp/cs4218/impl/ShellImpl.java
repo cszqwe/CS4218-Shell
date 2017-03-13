@@ -313,7 +313,57 @@ public class ShellImpl implements Shell {
 		return commands;
 	}	
 
+	/**
+	 * Process the globbing functionality of the command.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return A String which replace all the * with the certain files.
+	 * 
+	 * @throws AbstractApplicationException
+	 *             If an exception happens while processing the content in the
+	 *             single  quotes.
+	 * @throws ShellException
+	 *             If an exception happens while processing the content in the
+	 *             single quotes.
+	 */
+	public static String processGlobbing(String stmt)
+			throws AbstractApplicationException, ShellException {
+		int numOfDQ = 0;
+		int numOfSQ = 0;
+		int len = stmt.length();
+		for (int i = 0 ; i < len; i++){
+			if (stmt.charAt(i) =='\''){
+				numOfSQ++;
+			}else if (stmt.charAt(i) == '"'){
+				numOfDQ++;
+			}else if (stmt.charAt(i) == '*'){
+				if (numOfDQ % 2 == 0 && numOfSQ %2 ==0){
+					String directory = new String("*");
+					for (int j = i; j >=0; j--){
+						if (stmt.charAt(j) != ' '){
+							directory = stmt.charAt(j) + directory;
+						}else{
+							break;
+						}
+					}
+  				    File dir = new File(directory);
+					File file[] = dir.listFiles();
+					if (file.length != 0){
+						String newStr = "";
+						for (int j = 0; j < file.length; j++){
+							newStr += file[j].getName() + " ";
+						}
+						stmt = stmt.replaceFirst(directory, newStr);
+					}
+				}
+			}
+		}
+		return stmt;
+	}	
 
+	
+	
 	
 	/**
 	 * Static method to run the application as specified by the application

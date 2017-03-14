@@ -3,7 +3,7 @@ package sg.edu.nus.comp.cs4218.impl.app;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import CharGroup.Type;
+// import CharGroup.Type;
 import sg.edu.nus.comp.cs4218.app.Sort;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 
@@ -134,9 +134,10 @@ class StrObj {
 		this.type = type;
 		this.contents = contents;
 	}
-	
+	/*
 	public boolean isThisAfterOther(CharGroup other) {
 		
 		return false;
 	}
+	*/
 }

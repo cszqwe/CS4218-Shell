@@ -24,6 +24,7 @@ import sg.edu.nus.comp.cs4218.impl.app.SedApplication;
 import sg.edu.nus.comp.cs4218.impl.app.CdApplication;
 import sg.edu.nus.comp.cs4218.impl.app.DateApplication;
 import sg.edu.nus.comp.cs4218.impl.app.WcApplication;
+import sg.edu.nus.comp.cs4218.impl.app.SortApplication;
 
 /**
  * A Shell is a command interpreter and forms the backbone of the entire
@@ -645,7 +646,9 @@ public class ShellImpl implements Shell {
 		} else if (("cal").equals(app)) {
 			absApp = new CalApplication();
 		}
-		else { // invalid command
+		else if (("sort").equals(app)) {
+			absApp = new SortApplication();
+		} else { // invalid command
 			throw new ShellException(app + ": " + EXP_INVALID_APP);
 		}
 		absApp.run(argsArray, inputStream, outputStream);

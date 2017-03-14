@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.exception.SortException;
 
-public class SortApplicationTest { 
+public class ExtraSortApplicationTest { 
   
     SortApplication ssa;
 	String args[];

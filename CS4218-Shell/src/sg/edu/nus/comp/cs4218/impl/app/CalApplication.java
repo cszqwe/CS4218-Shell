@@ -117,11 +117,20 @@ public class CalApplication implements Cal {
 		String result = "";
 		int lineLength = line.length();
 		int padding = (ROW_MAX_LENGTH - lineLength) / 2;
+		boolean extraPadding = false;
+		
+		// Need an extra space at the end for odd number of characters
+		if ((ROW_MAX_LENGTH - lineLength) % 2 != 0) {
+			extraPadding = true;
+		}
 		for (int i = 0; i < padding; i++) {
 			result += " ";
 		}
 		result += line;
 		for (int i = 0; i < padding; i++) {
+			result += " ";
+		}
+		if (extraPadding) {
 			result += " ";
 		}
 		return result;
@@ -298,6 +307,82 @@ public class CalApplication implements Cal {
 	    
 		return result;
 	}
+	
+	public String processResultArray(String[][] arrayResult) {
+		// Build the result row by row
+		String result = "";
+		// String january = arrayResult[0][0];
+		boolean padLastRow = false;
+
+		
+		for (int i = 0; i < 4; i++) {
+			String[] colOneSplit = arrayResult[i][0].split("\\r?\\n");
+			String[] colTwoSplit = arrayResult[i][1].split("\\r?\\n");
+			String[] colThreeSplit = arrayResult[i][2].split("\\r?\\n");
+			int colOneLength = colOneSplit.length;
+			int colTwoLength = colTwoSplit.length;
+			int colThreeLength = colThreeSplit.length;
+			System.out.println(colOneLength + " " + colTwoLength + " " + colThreeLength);
+			
+			int minColLength = Math.min(Math.min(colOneLength, colTwoLength), colThreeLength);
+			
+			// Fill up last row with extra spaces
+			if (colOneLength != colTwoLength || colTwoLength != colThreeLength) {
+				padLastRow = true;
+			} else {
+				padLastRow = false;
+			}
+			
+			for (int j = 0; j < minColLength; j++) {
+				result += colOneSplit[j] + "  " + colTwoSplit[j] + "  " +
+							colThreeSplit[j];
+				result += "\n";	
+			}
+			if (padLastRow) {
+				// Identify the longest column
+				if ((minColLength+1) == colOneLength) {
+					System.out.println("PAD FIRST COLUMN");
+					result += colOneSplit[minColLength];
+					// Pad with 44 spaces
+					for (int k = 0; k < 44; k++) {
+						result += " ";
+					}
+					result += "\n";
+				} else if ((minColLength+1) == colTwoLength) {
+					System.out.println("PAD SECOND COLUMN");
+					// Pad with 22 spaces
+					for (int k = 0; k < 22; k++) {
+						result += " ";
+					}
+					result += colTwoSplit[minColLength];
+					
+					// Pad with 22 spaces
+					for (int k = 0; k < 22; k++) {
+						result += " ";
+					}
+					result += "\n";
+				} else if ((minColLength+1) == colThreeLength) {
+					System.out.println("PAD THIRD COLUMN");
+					// Pad with 44 spaces
+					for (int k = 0; k < 44; k++) {
+						result += " ";
+					}
+					result += colThreeSplit[minColLength];
+					result += "\n";
+				}
+			}
+			result += "\n\n";
+		}
+		/*
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 3; j++) {
+				System.out.println(arrayResult[i][j]);
+			}
+		}
+		*/
+		return result;
+		// return null;
+	}
 
 	/**
 	 * Returns the string to print the calendar for specified year
@@ -339,31 +424,18 @@ public class CalApplication implements Cal {
 			    System.out.println("starting pos: " + startingPos);
 			    
 			    int maxDaysInCurrentMonth = getMaxDaysInMonth(
-			    		Integer.parseInt(currentMonth)-1, Integer.parseInt(currentYear));
-			    // System.out.println("max days in current month: " + maxDaysInCurrentMonth);
+			    		currMonth-1, Integer.parseInt(currentYear));
+			    System.out.println("max days in current month: " + maxDaysInCurrentMonth);
 			    
 			    result += populateCalendarDays(startingPos, maxDaysInCurrentMonth);
 			    
 			    masterResultArray[i][j] = result;
 			    // masterResult += result;
-			    System.out.println(masterResultArray[i][j]);
 			    currMonth++;
 			}
-			// masterResult += "\n";
-			// System.out.println(masterResult);
 		}
-		/*
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0 ; j < 3; j++) {
-				System.out.print(masterResultArray[i][j]);
-			}
-			System.out.println();
-		}
-		
-		// System.out.println(Arrays.toString(masterResultArray));
-		*/
-		return masterResult;
-		
+		// return masterResult;
+		return processResultArray(masterResultArray);
 	}
 
 	/**
@@ -374,21 +446,70 @@ public class CalApplication implements Cal {
 	@Override
 	public String printCalForMonthYearMondayFirst(String month, String year) {
 		// firstLine e.g. December 2009
-				String result = "";
-				String firstLine = "";
-				
-				firstLine = getFirstLine(month, year);
+			String result = "";
+			String firstLine = "";
+			
+			firstLine = getFirstLine(month, year);
+			firstLine = indentFirstLine(firstLine) + "\n";
+			
+			result = firstLine;
+			result += "Mo Tu We Th Fr Sa Su\n";
+			
+			Calendar cal = Calendar.getInstance(); 
+			cal.set(Calendar.YEAR, Integer.parseInt(year));
+			cal.set(Calendar.MONTH, Integer.parseInt(month)-1);
+		    cal.set(Calendar.DAY_OF_MONTH, 1);
+		    Date calDate = cal.getTime();
+		    System.out.println(calDate);
+		    
+		    // Get first day of the month
+		    DateFormat sdf = new SimpleDateFormat("EEEE");
+		    String firstDayOfMonth = sdf.format(calDate);
+		    System.out.println("first day of month: " + firstDayOfMonth);
+		    
+		    // Get the starting position
+		    int startingPos = firstDayOfMonthPositionMondayFirst.get(firstDayOfMonth);
+		    System.out.println("starting pos: " + startingPos);
+		    
+		    int maxDaysInCurrentMonth = getMaxDaysInMonth(
+		    		Integer.parseInt(month)-1, Integer.parseInt(year));
+		    System.out.println("max days in current month: " + maxDaysInCurrentMonth);
+		    
+		    result += populateCalendarDays(startingPos, maxDaysInCurrentMonth);
+		    
+			return result;
+	}
+
+	/**
+	 * Returns the string to print the calendar for specified year with Monday
+	 * as the first day of the week
+	 * @param args String containing command and arguments
+	 */
+	@Override
+	public String printCalForYearMondayFirst(String year) {
+		// firstLine e.g. December 2009
+		String masterResult = "";
+		String[][] masterResultArray = new String[4][3];
+		String result = "";
+		String firstLine = "";
+		int currMonth = 1;
+		
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 3; j++) {
+				result = "";
+				// populate calendar for each month of the year
+				firstLine = getFirstLine(String.valueOf(currMonth), "");
 				firstLine = indentFirstLine(firstLine) + "\n";
-				
 				result = firstLine;
 				result += "Mo Tu We Th Fr Sa Su\n";
+
 				
-				Calendar cal = Calendar.getInstance(); 
+				Calendar cal = Calendar.getInstance();
 				cal.set(Calendar.YEAR, Integer.parseInt(year));
-				cal.set(Calendar.MONTH, Integer.parseInt(month)-1);
+				cal.set(Calendar.MONTH, currMonth-1);
 			    cal.set(Calendar.DAY_OF_MONTH, 1);
 			    Date calDate = cal.getTime();
-			    System.out.println(calDate);
+			    // System.out.println(calDate);
 			    
 			    // Get first day of the month
 			    DateFormat sdf = new SimpleDateFormat("EEEE");
@@ -400,21 +521,17 @@ public class CalApplication implements Cal {
 			    System.out.println("starting pos: " + startingPos);
 			    
 			    int maxDaysInCurrentMonth = getMaxDaysInMonth(
-			    		Integer.parseInt(month)-1, Integer.parseInt(year));
-			    // System.out.println("max days in current month: " + maxDaysInCurrentMonth);
+			    		currMonth-1, Integer.parseInt(currentYear));
+			    System.out.println("max days in current month: " + maxDaysInCurrentMonth);
 			    
 			    result += populateCalendarDays(startingPos, maxDaysInCurrentMonth);
 			    
-				return result;
-	}
-
-	/**
-	 * Returns the string to print the calendar for specified year with Monday
-	 * as the first day of the week
-	 * @param args String containing command and arguments
-	 */
-	@Override
-	public String printCalForYearMondayFirst(String year) {
-		return null;
+			    masterResultArray[i][j] = result;
+			    // masterResult += result;
+			    currMonth++;
+			}
+		}
+		// return masterResult;
+		return processResultArray(masterResultArray);
 	}
 }

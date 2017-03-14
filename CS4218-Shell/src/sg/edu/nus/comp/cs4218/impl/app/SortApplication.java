@@ -1,5 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -15,8 +16,6 @@ import sg.edu.nus.comp.cs4218.exception.OutputstreamNotValidException;
 
 public class SortApplication implements Sort {
 	
-	
-
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws SortException, OutputstreamNotValidException {
 		String output = "";
@@ -40,17 +39,19 @@ public class SortApplication implements Sort {
 		}
 		
 		if (args[0].charAt(0) == '-') {
-			if (args[0].equals("-n")) {
-				isNumericSort = true;
-			} else {
-				throw new SortException("sort: invalid option -- '" + args[0].charAt(1) + "'");
+			for (int i = 1; i < args[0].length(); i++) {
+				if (args[0].charAt(i) == 'n') {
+					isNumericSort = true;
+				} else {
+					throw new SortException("invalid option -- '" + args[0].charAt(i) + "'");
+				}
 			}
 		}
 		
 		if (isNumericSort) {
-			lines = getFilesContents(Arrays.copyOfRange(args, 1, args.length));
+			lines = getFilesContents(new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(args, 1, args.length))));
 		} else {
-			lines = getFilesContents(args);
+			lines = getFilesContents(new ArrayList<String>(Arrays.asList(args)));
 		}
 		
 		for (String line : lines) {
@@ -63,17 +64,78 @@ public class SortApplication implements Sort {
 			}
 		}
 		
+		String cmd = "sort";
+		for (String arg : args) {
+			cmd = cmd.concat(" " + arg);
+		}
+		
 		// invoke appropriate method
+		if (isSimpleFound && !isCapitalFound && !isNumbersFound && !isSpecialFound) {
+			output = sortStringsSimple(cmd);
+		} else if (!isSimpleFound && isCapitalFound && !isNumbersFound && !isSpecialFound) {
+			output = sortStringsCapital(cmd);
+		} else if (!isSimpleFound && !isCapitalFound && isNumbersFound && !isSpecialFound) {
+			output = sortNumbers(cmd);
+		} else if (!isSimpleFound && !isCapitalFound && !isNumbersFound && isSpecialFound) {
+			output = sortSpecialChars(cmd);
+		} else if (isSimpleFound && isCapitalFound && !isNumbersFound && !isSpecialFound) {
+			output = sortSimpleCapital(cmd);
+		} else if (isSimpleFound && !isCapitalFound && isNumbersFound && !isSpecialFound) {
+			output = sortSimpleNumbers(cmd);
+		} else if (isSimpleFound && !isCapitalFound && !isNumbersFound && isSpecialFound) {
+			output = sortSimpleSpecialChars(cmd);
+		} else if (!isSimpleFound && isCapitalFound && isNumbersFound && !isSpecialFound) {
+			output = sortCapitalNumbers(cmd);
+		} else if (!isSimpleFound && isCapitalFound && !isNumbersFound && isSpecialFound) {
+			output = sortCapitalSpecialChars(cmd);
+		} else if (!isSimpleFound && !isCapitalFound && isNumbersFound && isSpecialFound) {
+			output = sortNumbersSpecialChars(cmd);
+		} else if (isSimpleFound && isCapitalFound && isNumbersFound && !isSpecialFound) {
+			output = sortSimpleCapitalNumber(cmd);
+		} else if (isSimpleFound && isCapitalFound && !isNumbersFound && isSpecialFound) {
+			output = sortSimpleCapitalSpecialChars(cmd);
+		} else if (isSimpleFound && !isCapitalFound && isNumbersFound && isSpecialFound) {
+			output = sortSimpleNumbersSpecialChars(cmd);
+		} else if (!isSimpleFound && isCapitalFound && isNumbersFound && isSpecialFound) {
+			output = sortCapitalNumbersSpecialChars(cmd);
+		} else {
+			output = sortAll(cmd);
+		}
 		
 		// for now, print all lines without sorting
 		// do TDD
-		for (String line : lines) {
-			System.out.println(line);
+		//for (String line : lines) {
+			//output = output.concat(line + "\n");
+		//}
+		
+		try {
+			stdout.write(output.getBytes());
+		} catch (IOException e) {
+			throw new OutputstreamNotValidException("Output stream not working");
 		}
 
 	}
 	
-	public ArrayList<String> getFilesContents(String[] filenames) throws SortException {
+	public ParseRes parseCmd(String cmd) {
+		ArrayList<String> filenames = new ArrayList<>();
+		boolean isNumericSort = false;
+		
+		String[] args = cmd.split(" ");
+		if (args[1].equals("-n")) isNumericSort = true;
+		
+		int i = 1;
+		if (isNumericSort) i = 2;
+		
+		for (; i < args.length; i++) {
+			filenames.add(args[i]);
+		}
+		
+		ParseRes res = new ParseRes(filenames, isNumericSort);
+		return res;
+	}
+	
+	public ArrayList<String> getFilesContents(ArrayList<String> filenames) throws SortException {
+		System.out.println(filenames.size() + " files");
 		ArrayList<String> lines = new ArrayList<>();
 		
 		for (String filename : filenames) {
@@ -83,104 +145,115 @@ public class SortApplication implements Sort {
 					String contents = new String(Files.readAllBytes(filePath));
 					lines.addAll(new ArrayList<String>(Arrays.asList(contents.replaceAll("\r\n", "\n").split("\n"))));
 				} catch (Exception e) {
-					throw new SortException("sort: " + filename + "Could not read file");
+					throw new SortException("sort: " + filename + ": Could not read file");
 				}
 			} else {
-				throw new SortException("sort: " + filename + ": No such file");
+				throw new SortException("cannot read: " + filename + ": No such file");
 			}
 		}
 		
 		return lines;
 	}
+	
+	public String sort(String toSort) {
+		ParseRes res = parseCmd(toSort);
+		ArrayList<String> files = res.filenames;
+		boolean isNumericSort = res.isNumericSort;
+		ArrayList<ArrayList<StrObj>> objLsts = new ArrayList<>();
+		ArrayList<String> lines = new ArrayList<>();
+		try {
+			lines = getFilesContents(files);
+		} catch (SortException e) {
+			// not supposed to happen since run() does the file validation
+			e.printStackTrace();
+		}
+		
+		for (String line : lines) {
+			objLsts.add(convertStringToStrObjLst(line, isNumericSort));
+		}
+		
+		ArrayList<String> sortedLines = sortLines(objLsts);
+		String output = "";
+		for (String line : sortedLines) {
+			output = output.concat(line + "\n");
+		}
+		
+		return output;
+	}
 
 	@Override
 	public String sortStringsSimple(String toSort) {
-		// TODO Auto-generated method stub
-		return null;
+		return sort(toSort);
 	}
 
 	@Override
 	public String sortStringsCapital(String toSort) {
-		// TODO Auto-generated method stub
-		return null;
+		return sort(toSort);
 	}
 
 	@Override
 	public String sortNumbers(String toSort) {
-		// TODO Auto-generated method stub
-		return null;
+		return sort(toSort);
 	}
 
 	@Override
 	public String sortSpecialChars(String toSort) {
-		// TODO Auto-generated method stub
-		return null;
+		return sort(toSort);
 	}
 
 	@Override
 	public String sortSimpleCapital(String toSort) {
-		// TODO Auto-generated method stub
-		return null;
+		return sort(toSort);
 	}
 
 	@Override
 	public String sortSimpleNumbers(String toSort) {
-		// TODO Auto-generated method stub
-		return null;
+		return sort(toSort);
 	}
 
 	@Override
 	public String sortSimpleSpecialChars(String toSort) {
-		// TODO Auto-generated method stub
-		return null;
+		return sort(toSort);
 	}
 
 	@Override
 	public String sortCapitalNumbers(String toSort) {
-		// TODO Auto-generated method stub
-		return null;
+		return sort(toSort);
 	}
 
 	@Override
 	public String sortCapitalSpecialChars(String toSort) {
-		// TODO Auto-generated method stub
-		return null;
+		return sort(toSort);
 	}
 
 	@Override
 	public String sortNumbersSpecialChars(String toSort) {
-		// TODO Auto-generated method stub
-		return null;
+		return sort(toSort);
 	}
 
 	@Override
 	public String sortSimpleCapitalNumber(String toSort) {
-		// TODO Auto-generated method stub
-		return null;
+		return sort(toSort);
 	}
 
 	@Override
 	public String sortSimpleCapitalSpecialChars(String toSort) {
-		// TODO Auto-generated method stub
-		return null;
+		return sort(toSort);
 	}
 
 	@Override
 	public String sortSimpleNumbersSpecialChars(String toSort) {
-		// TODO Auto-generated method stub
-		return null;
+		return sort(toSort);
 	}
 
 	@Override
 	public String sortCapitalNumbersSpecialChars(String toSort) {
-		// TODO Auto-generated method stub
-		return null;
+		return sort(toSort);
 	}
 
 	@Override
 	public String sortAll(String toSort) {
-		// TODO Auto-generated method stub
-		return null;
+		return sort(toSort);
 	}
 	
 	public StrObj.Type getType(char c) {
@@ -352,5 +425,15 @@ class StrObj {
 	public StrObj(Type type, String contents) {
 		this.type = type;
 		this.contents = contents;
+	}
+}
+
+class ParseRes {
+	public ArrayList<String> filenames;
+	public boolean isNumericSort;
+	
+	public ParseRes(ArrayList<String> filenames, boolean isNumericSort) {
+		this.filenames = new ArrayList<String>(filenames);
+		this.isNumericSort = isNumericSort;
 	}
 }

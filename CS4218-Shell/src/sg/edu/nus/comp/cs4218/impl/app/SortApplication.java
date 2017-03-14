@@ -9,7 +9,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+
+// import CharGroup.Type;
+
 import sg.edu.nus.comp.cs4218.Environment;
+
 import sg.edu.nus.comp.cs4218.app.Sort;
 import sg.edu.nus.comp.cs4218.exception.SortException;
 import sg.edu.nus.comp.cs4218.exception.OutputstreamNotValidException;
@@ -426,6 +430,14 @@ class StrObj {
 		this.type = type;
 		this.contents = contents;
 	}
+
+	/*
+	public boolean isThisAfterOther(CharGroup other) {
+		
+		return false;
+	}
+	*/
+
 }
 
 class ParseRes {

@@ -21,7 +21,7 @@ public interface Cal extends Application {
 	 * Returns the string to print the calendar for specified month and year
 	 * @param args String containing command and arguments
 	 */
-	public String printCalForMonthYear(String args);
+	public String printCalForMonthYear(String args, String args2);
 
 	/**
 	 * Returns the string to print the calendar for specified year
@@ -34,7 +34,7 @@ public interface Cal extends Application {
 	 * with Monday as the first day of the week
 	 * @param args String containing command and arguments
 	 */
-	public String printCalForMonthYearMondayFirst(String args);
+	public String printCalForMonthYearMondayFirst(String args, String args2);
 
 	/**
 	 * Returns the string to print the calendar for specified year with Monday

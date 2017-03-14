@@ -13,6 +13,7 @@ import sg.edu.nus.comp.cs4218.Shell;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.CatException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.impl.app.CalApplication;
 import sg.edu.nus.comp.cs4218.impl.app.CatApplication;
 import sg.edu.nus.comp.cs4218.impl.app.EchoApplication;
 import sg.edu.nus.comp.cs4218.impl.app.HeadApplication;
@@ -642,7 +643,10 @@ public class ShellImpl implements Shell {
 			absApp = new WcApplication();
 		} else if (("sed").equals(app)) {
 			absApp = new SedApplication();
-		} else if (("sort").equals(app)) {
+		} else if (("cal").equals(app)) {
+			absApp = new CalApplication();
+		}
+		else if (("sort").equals(app)) {
 			absApp = new SortApplication();
 		} else { // invalid command
 			throw new ShellException(app + ": " + EXP_INVALID_APP);

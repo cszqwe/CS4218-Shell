@@ -42,7 +42,7 @@ public class WcApplication implements Wc {
 						lines = true;
 					} else {
 						invalidOption = arg.charAt(i);
-						throw new WcException("invalid option -- " + invalidOption);
+						throw new WcException("invalid option -- '" + invalidOption + "'");
 					}
 				}
 			} else {

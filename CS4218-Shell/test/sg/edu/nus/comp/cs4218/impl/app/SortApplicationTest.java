@@ -37,6 +37,7 @@ public class SortApplicationTest {
 
 	@After
 	public void tearDown() throws Exception {
+		os = new ByteArrayOutputStream();
 	}
 
 	@Test
@@ -44,7 +45,7 @@ public class SortApplicationTest {
 		String[] args = {"sortTestBasic.txt"};
 		try {
 			sortApp.run(args, is, os);
-			assertEquals("1\n10\n100\n102\n1--2\n20\n3\nnu0\nnum1\nnum10\nnum2\n", os.toString());
+			assertEquals("1\n1--2\n10\n100\n102\n20\n3\nnu0\nnum1\nnum10\nnum2\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -66,7 +67,7 @@ public class SortApplicationTest {
 		String[] args = {"test.txt"};
 		try {
 			sortApp.run(args, is, os);
-			assertEquals("Line 1\nLine 2\nLine 3\nLine 4\n", os.toString());
+			assertEquals("line 1\nline 2\nline 3\nline 4\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -77,7 +78,7 @@ public class SortApplicationTest {
 		String[] args = {"-n", "test.txt"};
 		try {
 			sortApp.run(args, is, os);
-			assertEquals("Line 1\nLine 2\nLine 3\nLine 4\n", os.toString());
+			assertEquals("line 1\nline 2\nline 3\nline 4\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -136,7 +137,7 @@ public class SortApplicationTest {
 		String[] args = {"test.txt", "sortTest_numstart.txt"};
 		try {
 			sortApp.run(args, is, os);
-			assertEquals("1st\n20th\n2nd\nline1\nline2\nline3\nline4\n", os.toString());
+			assertEquals("1st\n20th\n2nd\nline 1\nline 2\nline 3\nline 4\n", os.toString());
 		} catch (Exception e) {
 			
 		}
@@ -147,7 +148,7 @@ public class SortApplicationTest {
 		String[] args = {"-n", "test.txt", "sortTest_numstart.txt"};
 		try {
 			sortApp.run(args, is, os);
-			assertEquals("1st\n2nd\n20th\nline1\nline2\nline3\nline4\n", os.toString());
+			assertEquals("1st\n2nd\n20th\nline 1\nline 2\nline 3\nline 4\n", os.toString());
 		} catch (Exception e) {
 			
 		}

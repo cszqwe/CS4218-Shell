@@ -43,34 +43,23 @@ public class CalApplication implements Cal {
 	
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
-		firstDayOfMonthPositionMondayFirst.put("Sunday", 0);
-		firstDayOfMonthPositionMondayFirst.put("Monday", 1);
-		firstDayOfMonthPositionMondayFirst.put("Tuesday", 2);
-		firstDayOfMonthPositionMondayFirst.put("Wednesday", 3);
-		firstDayOfMonthPositionMondayFirst.put("Thursday", 4);
-		firstDayOfMonthPositionMondayFirst.put("Friday", 5);
-		firstDayOfMonthPositionMondayFirst.put("Saturday", 6);
+		firstDayOfMonthPositionMondayFirst.put("Monday", 0);
+		firstDayOfMonthPositionMondayFirst.put("Tuesday", 1);
+		firstDayOfMonthPositionMondayFirst.put("Wednesday", 2);
+		firstDayOfMonthPositionMondayFirst.put("Thursday", 3);
+		firstDayOfMonthPositionMondayFirst.put("Friday", 4);
+		firstDayOfMonthPositionMondayFirst.put("Saturday", 5);
+		firstDayOfMonthPositionMondayFirst.put("Sunday", 6);
 		
-		firstDayOfMonthPositionSundayFirst.put("Monday", 0);
-		firstDayOfMonthPositionSundayFirst.put("Tuesday", 1);
-		firstDayOfMonthPositionSundayFirst.put("Wednesday", 2);
-		firstDayOfMonthPositionSundayFirst.put("Thursday", 3);
-		firstDayOfMonthPositionSundayFirst.put("Friday", 4);
-		firstDayOfMonthPositionSundayFirst.put("Saturday", 5);
-		firstDayOfMonthPositionSundayFirst.put("Sunday", 6);
+		firstDayOfMonthPositionSundayFirst.put("Sunday", 0);
+		firstDayOfMonthPositionSundayFirst.put("Monday", 1);
+		firstDayOfMonthPositionSundayFirst.put("Tuesday", 2);
+		firstDayOfMonthPositionSundayFirst.put("Wednesday", 3);
+		firstDayOfMonthPositionSundayFirst.put("Thursday", 4);
+		firstDayOfMonthPositionSundayFirst.put("Friday", 5);
+		firstDayOfMonthPositionSundayFirst.put("Saturday", 6);
 		
-		monthStringToInt.put("January", 1);
-		monthStringToInt.put("Febuary", 2);
-		monthStringToInt.put("March", 3);
-		monthStringToInt.put("April", 4);
-		monthStringToInt.put("May", 5);
-		monthStringToInt.put("June", 6);
-		monthStringToInt.put("July", 7);
-		monthStringToInt.put("August", 8);
-		monthStringToInt.put("September", 9);
-		monthStringToInt.put("October", 10);
-		monthStringToInt.put("November", 11);
-		monthStringToInt.put("December", 12);
+		
 		
 		// cal
 		if (args.length == 0) {
@@ -109,6 +98,12 @@ public class CalApplication implements Cal {
 		} else {
 			throw new CalException("Cal should have between 1 to 3 arguments");
 		}
+	}
+	
+	public String getFirstLine() {
+		int currentMonthInt = Integer.parseInt(currentMonth);
+		String firstLine = monthIntToString[currentMonthInt] + " " + currentYear;
+		return firstLine;
 	}
 	
 	public String indentFirstLine(String line) {
@@ -177,8 +172,7 @@ public class CalApplication implements Cal {
 		String result = "";
 		String firstLine = "";
 		
-		int currentMonthInt = Integer.parseInt(currentMonth);
-		firstLine = monthIntToString[currentMonthInt] + " " + currentYear;
+		firstLine = getFirstLine();
 		firstLine = indentFirstLine(firstLine) + "\n";
 		
 		result = firstLine;
@@ -215,7 +209,38 @@ public class CalApplication implements Cal {
 	 */
 	@Override
 	public String printCalWithMondayFirst(String args) {
-		return null;
+		// firstLine e.g. December 2009
+		String result = "";
+		String firstLine = "";
+		
+		firstLine = getFirstLine();
+		firstLine = indentFirstLine(firstLine) + "\n";
+		
+		result = firstLine;
+		result += "Mo Tu We Th Fr Sa Su\n";
+		
+		Calendar cal = Calendar.getInstance();  
+		// cal.set(Calendar.MONTH, 0);
+	    cal.set(Calendar.DAY_OF_MONTH, 1);
+	    Date calDate = cal.getTime();
+	    // System.out.println(calDate);
+	    
+	    // Get first day of the month
+	    DateFormat sdf = new SimpleDateFormat("EEEE");
+	    String firstDayOfMonth = sdf.format(calDate);
+	    System.out.println("first day of month: " + firstDayOfMonth);
+	    
+	    // Get the starting position
+	    int startingPos = firstDayOfMonthPositionMondayFirst.get(firstDayOfMonth);
+	    System.out.println("starting pos: " + startingPos);
+	    
+	    int maxDaysInCurrentMonth = getMaxDaysInMonth(
+	    		Integer.parseInt(currentMonth)-1, Integer.parseInt(currentYear));
+	    // System.out.println("max days in current month: " + maxDaysInCurrentMonth);
+	    
+	    result += populateCalendarDays(startingPos, maxDaysInCurrentMonth);
+	    
+		return result;
 	}
 
 	/**

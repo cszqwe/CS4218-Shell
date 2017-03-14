@@ -551,7 +551,7 @@ public class WcApplicationTest {
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
-			assertEquals("wc: invalid option -- s", e.getMessage());
+			assertEquals("wc: invalid option -- 's'", e.getMessage());
 		}
 	}
 	
@@ -561,7 +561,7 @@ public class WcApplicationTest {
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
-			assertEquals("wc: invalid option -- a", e.getMessage());
+			assertEquals("wc: invalid option -- 'a'", e.getMessage());
 		}
 	}
 	
@@ -571,7 +571,7 @@ public class WcApplicationTest {
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
-			assertEquals("wc: invalid option -- t", e.getMessage());
+			assertEquals("wc: invalid option -- 't'", e.getMessage());
 		}
 	}
 	
@@ -581,7 +581,7 @@ public class WcApplicationTest {
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
-			assertEquals("wc: invalid option -- a", e.getMessage());
+			assertEquals("wc: invalid option -- 'a'", e.getMessage());
 		}
 	}
 	
@@ -591,7 +591,7 @@ public class WcApplicationTest {
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
-			assertEquals("wc: invalid option -- a", e.getMessage());
+			assertEquals("wc: invalid option -- 'a'", e.getMessage());
 		}
 	}
 	
@@ -601,7 +601,7 @@ public class WcApplicationTest {
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
-			assertEquals("wc: invalid option -- a", e.getMessage());
+			assertEquals("wc: invalid option -- 'a'", e.getMessage());
 		}
 	}
 	
@@ -611,7 +611,7 @@ public class WcApplicationTest {
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
-			assertEquals("wc: invalid option -- t", e.getMessage());
+			assertEquals("wc: invalid option -- 't'", e.getMessage());
 		}
 	}
 	
@@ -621,7 +621,7 @@ public class WcApplicationTest {
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
-			assertEquals("wc: invalid option -- a", e.getMessage());
+			assertEquals("wc: invalid option -- 'a'", e.getMessage());
 		}
 	}
 	
@@ -631,7 +631,7 @@ public class WcApplicationTest {
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
-			assertEquals("wc: invalid option -- a", e.getMessage());
+			assertEquals("wc: invalid option -- 'a'", e.getMessage());
 		}
 	}
 	
@@ -641,7 +641,7 @@ public class WcApplicationTest {
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
-			assertEquals("wc: invalid option -- x", e.getMessage());
+			assertEquals("wc: invalid option -- 'x'", e.getMessage());
 		}
 	}
 	
@@ -651,7 +651,7 @@ public class WcApplicationTest {
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
-			assertEquals("wc: invalid option -- t", e.getMessage());
+			assertEquals("wc: invalid option -- 't'", e.getMessage());
 		}
 	}
 	
@@ -661,7 +661,7 @@ public class WcApplicationTest {
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
-			assertEquals("wc: invalid option -- z", e.getMessage());
+			assertEquals("wc: invalid option -- 'z'", e.getMessage());
 		}
 	}
 	
@@ -671,7 +671,7 @@ public class WcApplicationTest {
 		try {
 			wcApp.run(args, is, os);
 		} catch (Exception e) {
-			assertEquals("wc: invalid option -- r", e.getMessage());
+			assertEquals("wc: invalid option -- 'r'", e.getMessage());
 		}
 	}
 	

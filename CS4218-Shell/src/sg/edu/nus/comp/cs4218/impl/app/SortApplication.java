@@ -17,14 +17,13 @@ import sg.edu.nus.comp.cs4218.Environment;
 
 import sg.edu.nus.comp.cs4218.app.Sort;
 import sg.edu.nus.comp.cs4218.exception.SortException;
-import sg.edu.nus.comp.cs4218.exception.OutputstreamNotValidException;
 
 public class SortApplication implements Sort {
 	
 	InputStream stdin;
 	
 	@Override
-	public void run(String[] args, InputStream stdin, OutputStream stdout) throws SortException, OutputstreamNotValidException {
+	public void run(String[] args, InputStream stdin, OutputStream stdout) throws SortException {
 		this.stdin = stdin;
 		String output = "";
 		boolean isNumericSort = false;
@@ -41,21 +40,21 @@ public class SortApplication implements Sort {
 		}
 		
 		String wholeCommand = "sort ";
-		for (int i = 0; i< args.length; i++){
-			// System.out.println(args[i]);
-			wholeCommand = wholeCommand + args[i] + " ";
-		}
-		
-		if (args[0].charAt(0) == '-') {
-			for (int i = 1; i < args[0].length(); i++) {
-				if (args[0].charAt(i) == 'n') {
-					isNumericSort = true;
-				} else {
-					throw new SortException("invalid option -- '" + args[0].charAt(i) + "'");
+		if (args != null){
+			for (int i = 0; i< args.length; i++){
+				// System.out.println(args[i]);
+				wholeCommand = wholeCommand + args[i] + " ";
+			}		
+			if (args[0].charAt(0) == '-') {
+				for (int i = 1; i < args[0].length(); i++) {
+					if (args[0].charAt(i) == 'n') {
+						isNumericSort = true;
+					} else {
+						throw new SortException("invalid option -- '" + args[0].charAt(i) + "'");
+					}
 				}
 			}
-		}
-		
+		}		
 		if (isNumericSort) {
 			lines = getFilesContents(new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(args, 1, args.length))));
 		} else {
@@ -122,8 +121,8 @@ public class SortApplication implements Sort {
 		
 		try {
 			stdout.write(output.getBytes());
-		} catch (IOException e) {
-			throw new OutputstreamNotValidException("Output stream not working");
+		} catch (Exception e) {
+			throw new SortException("Sort: Output stream not working");
 		}
 
 	}

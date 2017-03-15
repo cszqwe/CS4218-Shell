@@ -6,12 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import sg.edu.nus.comp.cs4218.exception.SortException;
 
 public class ExtraSortApplicationTest { 
@@ -149,103 +145,7 @@ public class ExtraSortApplicationTest {
 	public void testNull() throws SortException {
 		ssa.run(null,null,System.out);
 	}
-	
-	@Test
-	public void testReOrder1(){
-		assertTrue(Arrays.equals(new String[]{"-n", reorderStr2, reorderStr1}, ssa.reOrder(new String[]{reorderStr1, reorderStr2, "-n"})));
-	}
-	
-	@Test
-	public void testReOrder2(){
-		assertTrue(Arrays.equals(new String[]{"-n", reorderStr1, reorderStr2}, ssa.reOrder(new String[]{reorderStr1, "-n", reorderStr2})));
-	}
-	@Test
-	public void testReOrder3(){
-		assertTrue(Arrays.equals(new String[]{"-n", reorderStr1, reorderStr2}, ssa.reOrder(new String[]{"-n", reorderStr1, reorderStr2})));
-	}
-	
-	@Test
-	public void testReOrder4(){
-		assertTrue(Arrays.equals(new String[]{"-n", reorderStr1}, ssa.reOrder(new String[]{reorderStr1, "-n"})));
-	}
-	
-	@Test
-	public void testReOrder5(){
-		assertTrue(Arrays.equals(new String[]{"-n"}, ssa.reOrder(new String[]{"-n"})));
-	}
 
-	@Test(expected = SortException.class)
-	public void moreThanOneOpt() throws SortException {
-		// More than 1 -n
-		ssa.validate(new String[]{"-n", "-n"});
-	}
-	
-	@Test
-	public void validArgs() throws SortException {
-		ssa.validate(new String[]{"-n", fileName, fileName});
-	}
-	
-	@Test
-	public void arrToString() {
-		assertEquals("convert to string", SortExtendedFunctions.arrToString(new String[]{"convert","to","string"}));
-	}
-
-	@Test
-	public void listToString() {
-		ArrayList<String> temp = new ArrayList<String>();
-		temp.add("convert");
-		temp.add("to");
-		temp.add("string");
-		assertEquals("convert\nto\nstring\n", SortExtendedFunctions.listToString(temp));
-	}
-
-	@Test
-	public void stringToArr(){
-		assertTrue(Arrays.equals(new String[]{"convert", "to", "arr"}, SortExtendedFunctions.stringToArr("convert to arr")));
-	}
-	
-	@Test
-	public void readFromInputStream() throws SortException {
-		 assertEquals(defaultString, SortExtendedFunctions.readFromInputStream(stdin));
-	}
-
-	@Test
-	public void switchLeftRight(){
-		ArrayList<String> temp = new ArrayList<String>();
-		temp.add("b");
-		temp.add("a");
-		ArrayList<String> compareTemp = (ArrayList<String>)SortExtendedFunctions.switchLeftRight(temp, 1);
-		temp.clear();
-		temp.add("a");
-		temp.add("b");
-		assertEquals(compareTemp , temp);
-	}
-	
-	@Test
-	public void bubbleSort(){
-		ArrayList<String> list = new ArrayList<String>();
-		list.add("10");
-		list.add("1");
-		list.add("2");
-		ArrayList<String> compareList = new ArrayList<String>();
-		compareList.add("1");
-		compareList.add("10");
-		compareList.add("2");
-		assertEquals(SortExtendedFunctions.bubbleSort(list), compareList);
-	}
-
-	@Test
-	public void numericBubbleSort(){
-		ArrayList<String> list = new ArrayList<String>();
-		list.add("10");
-		list.add("1");
-		list.add("2");
-		ArrayList<String> compareList = new ArrayList<String>();
-		compareList.add("1");
-		compareList.add("2");
-		compareList.add("10");
-		assertEquals(SortExtendedFunctions.numericBubbleSort(list), compareList);
-	}
 	
 	@Test
 	public void sortAllNumericInputStream() throws SortException {
@@ -311,7 +211,7 @@ public class ExtraSortApplicationTest {
 		args[0] = emptyFile;
 		ssa.run(args, null, System.out);
 		System.out.flush();
-		assertEquals("", baos.toString());
+		assertEquals("", baos.toString().trim());
 	}
 	
 	@Test

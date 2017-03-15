@@ -15,14 +15,13 @@ import java.util.regex.Pattern;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.app.Sed;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
-import sg.edu.nus.comp.cs4218.exception.OutputstreamNotValidException;
 import sg.edu.nus.comp.cs4218.exception.SedException;
 
 public class SedApplication implements Sed{
 	InputStream stdin = System.in;
 	OutputStream stdout;
 	@Override
-	public void run(String[] args, InputStream stdin, OutputStream stdout) throws SedException, OutputstreamNotValidException {
+	public void run(String[] args, InputStream stdin, OutputStream stdout) throws SedException {
 		this.stdin = stdin;
 		this.stdout = stdout;
 		String output = "";
@@ -88,7 +87,7 @@ public class SedApplication implements Sed{
 		try {
 			stdout.write(output.getBytes());
 		} catch (IOException e) {
-			throw new OutputstreamNotValidException("Output stream not working");
+			throw new SedException("Output stream not working");
 		}
 
 	}

@@ -17,7 +17,6 @@ import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.CatException;
 import sg.edu.nus.comp.cs4218.exception.HeadException;
-import sg.edu.nus.comp.cs4218.exception.InputstreamNotValidException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
 public class HeadApplication implements Application {
@@ -108,7 +107,7 @@ public class HeadApplication implements Application {
 				try{
 					numOfLines = Integer.parseInt(cmdArgs[1]);
 				}catch (Exception e){
-					AbstractApplicationException err =  new InputstreamNotValidException("The second parameter should be a number");
+					AbstractApplicationException err =  new HeadException("Head: The second parameter should be a number");
 					throw err;
 				}
 				fileName = cmdArgs[2];
@@ -132,11 +131,11 @@ public class HeadApplication implements Application {
 					isFileReadable = false;
 
 				}catch (Exception e){
-					AbstractApplicationException err =  new InputstreamNotValidException("The second parameter should be a number");
+					AbstractApplicationException err =  new HeadException("The second parameter should be a number");
 					throw err;
 				}
 			}else{
-				AbstractApplicationException e =  new InputstreamNotValidException("Invalid usage of head");
+				AbstractApplicationException e =  new HeadException("Invalid usage of head");
 				throw e;
 			}
 		} // TODO: read from stdin

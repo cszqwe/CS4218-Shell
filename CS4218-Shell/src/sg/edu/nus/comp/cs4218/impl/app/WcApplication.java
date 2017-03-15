@@ -12,13 +12,12 @@ import java.util.ArrayList;
 
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.app.Wc;
-import sg.edu.nus.comp.cs4218.exception.OutputstreamNotValidException;
 import sg.edu.nus.comp.cs4218.exception.WcException;
 
 public class WcApplication implements Wc {
 	
 	@Override
-	public void run(String[] args, InputStream stdin, OutputStream stdout) throws WcException, OutputstreamNotValidException {
+	public void run(String[] args, InputStream stdin, OutputStream stdout) throws WcException {
 		ArrayList<String> files = new ArrayList<>(); //The list of all files
 		boolean chars = false;
 		boolean words = false;
@@ -66,7 +65,7 @@ public class WcApplication implements Wc {
 		try {
 			stdout.write(output.getBytes());
 		} catch (IOException e) {
-			throw new OutputstreamNotValidException("Output stream not working");
+			throw new WcException("Output stream not working");
 		}
 
 	}

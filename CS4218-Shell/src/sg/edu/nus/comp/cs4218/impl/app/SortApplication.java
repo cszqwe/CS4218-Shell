@@ -1,8 +1,12 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,17 +26,12 @@ import sg.edu.nus.comp.cs4218.exception.OutputstreamNotValidException;
 public class SortApplication implements Sort {
 	
 	InputStream stdin;
+	ByteArrayOutputStream baos;
 	
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws SortException, OutputstreamNotValidException {
-		this.stdin = stdin;
+		// this.stdin = stdin;
 		String output = "";
-		boolean isNumericSort = false;
-		ArrayList<String> lines = new ArrayList<>();
-		boolean isSimpleFound = false;
-		boolean isCapitalFound = false;
-		boolean isNumbersFound = false;
-		boolean isSpecialFound = false;
 		
 		if (args == null) {
 			if (stdin == null || stdout == null) {
@@ -40,27 +39,72 @@ public class SortApplication implements Sort {
 			}
 		}
 		
+		if (stdin != null) {
+			// copy stdin so that it can be accessed >1 times
+			// System.out.println("stdin detected");
+			baos = new ByteArrayOutputStream();
+			byte[] buffer = new byte[1024];
+			int len;
+			try {
+				while ((len = stdin.read(buffer)) > -1 ) {
+				    baos.write(buffer, 0, len);
+				}
+				baos.flush();
+			} catch (IOException e) {
+				throw new SortException("InputStream failed");
+				// System.out.println("Copy stdin failed");
+			}
+			this.stdin = new ByteArrayInputStream(baos.toByteArray());
+		}
+		
+		boolean isNumericSort = false;
+		ArrayList<String> filepaths = new ArrayList<>();
+		ArrayList<String> lines = new ArrayList<>();
+		
+		boolean isSimpleFound = false;
+		boolean isCapitalFound = false;
+		boolean isNumbersFound = false;
+		boolean isSpecialFound = false;
+		// for (String arg : args) System.out.print(arg + " ");
+		// System.out.println("");
+		
 		String wholeCommand = "sort ";
 		for (int i = 0; i< args.length; i++){
 			// System.out.println(args[i]);
 			wholeCommand = wholeCommand + args[i] + " ";
 		}
 		
-		if (args[0].charAt(0) == '-') {
-			for (int i = 1; i < args[0].length(); i++) {
-				if (args[0].charAt(i) == 'n') {
-					isNumericSort = true;
-				} else {
-					throw new SortException("invalid option -- '" + args[0].charAt(i) + "'");
+		if (args.length > 0) {
+			if (args[0].charAt(0) == '-') {
+				for (int i = 1; i < args[0].length(); i++) {
+					if (args[0].charAt(i) == 'n') {
+						isNumericSort = true;
+					} else {
+						throw new SortException("invalid option -- '" + args[0].charAt(i) + "'");
+					}
 				}
 			}
 		}
+		// if (stdin != null) System.out.println("Sorting stdin reached here");
 		
 		if (isNumericSort) {
-			lines = getFilesContents(new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(args, 1, args.length))));
+			// if (stdin != null) System.out.println("Numeric sort on stdin");
+			filepaths = new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(args, 1, args.length)));
 		} else {
-			lines = getFilesContents(new ArrayList<String>(Arrays.asList(args)));
+			// if (stdin != null) System.out.println("Non-numeric sort on stdin");
+			filepaths = new ArrayList<String>(Arrays.asList(args));
 		}
+		
+		if (filepaths.size() == 0) {
+			// System.out.println("No file(s): read from stdin");
+			// if (isNumericSort) System.out.println("Numeric sort");
+			// else System.out.println("Non-numeric sort");
+			lines = getStdinContents();
+		} else {
+			lines = getFilesContents(filepaths);
+		}
+		
+		// System.out.println(lines);
 		
 		for (String line : lines) {
 			for (int i = 0; i < line.length(); i++) {
@@ -83,42 +127,53 @@ public class SortApplication implements Sort {
 		
 		// invoke appropriate method
 		if (isSimpleFound && !isCapitalFound && !isNumbersFound && !isSpecialFound) {
+			// System.out.println("sortStringsSimple");
 			output = sortStringsSimple(cmd);
 		} else if (!isSimpleFound && isCapitalFound && !isNumbersFound && !isSpecialFound) {
+			// System.out.println("sortStringsCapital");
 			output = sortStringsCapital(cmd);
 		} else if (!isSimpleFound && !isCapitalFound && isNumbersFound && !isSpecialFound) {
+			// System.out.println("sortNumbers");
 			output = sortNumbers(cmd);
 		} else if (!isSimpleFound && !isCapitalFound && !isNumbersFound && isSpecialFound) {
+			// System.out.println("sortSpecialChars");
 			output = sortSpecialChars(cmd);
 		} else if (isSimpleFound && isCapitalFound && !isNumbersFound && !isSpecialFound) {
+			// System.out.println("sortSimpleCapital");
 			output = sortSimpleCapital(cmd);
 		} else if (isSimpleFound && !isCapitalFound && isNumbersFound && !isSpecialFound) {
+			// System.out.println("sortSimpleNumbers");
 			output = sortSimpleNumbers(cmd);
 		} else if (isSimpleFound && !isCapitalFound && !isNumbersFound && isSpecialFound) {
+			// System.out.println("sortSimpleSpecialChars");
 			output = sortSimpleSpecialChars(cmd);
 		} else if (!isSimpleFound && isCapitalFound && isNumbersFound && !isSpecialFound) {
+			// System.out.println("sortCapitalNumbers");
 			output = sortCapitalNumbers(cmd);
 		} else if (!isSimpleFound && isCapitalFound && !isNumbersFound && isSpecialFound) {
+			// System.out.println("sortCapitalSpecialChars");
 			output = sortCapitalSpecialChars(cmd);
 		} else if (!isSimpleFound && !isCapitalFound && isNumbersFound && isSpecialFound) {
+			// System.out.println("sortNumbersSpecialChars");
 			output = sortNumbersSpecialChars(cmd);
 		} else if (isSimpleFound && isCapitalFound && isNumbersFound && !isSpecialFound) {
+			// System.out.println("sortSimpleCapitalNumber");
 			output = sortSimpleCapitalNumber(cmd);
 		} else if (isSimpleFound && isCapitalFound && !isNumbersFound && isSpecialFound) {
+			// System.out.println("sortSimpleCapitalSpecialChars");
 			output = sortSimpleCapitalSpecialChars(cmd);
 		} else if (isSimpleFound && !isCapitalFound && isNumbersFound && isSpecialFound) {
+			// System.out.println("sortSimpleNumbersSpecialChars");
 			output = sortSimpleNumbersSpecialChars(cmd);
 		} else if (!isSimpleFound && isCapitalFound && isNumbersFound && isSpecialFound) {
+			// System.out.println("sortCapitalNumbersSpecialChars");
 			output = sortCapitalNumbersSpecialChars(cmd);
 		} else {
+			// System.out.println("sortAll");
 			output = sortAll(cmd);
 		}
 		
-		// for now, print all lines without sorting
-		// do TDD
-		//for (String line : lines) {
-			//output = output.concat(line + "\n");
-		//}
+		// System.out.println("Sorting complete");
 		
 		try {
 			stdout.write(output.getBytes());
@@ -129,6 +184,7 @@ public class SortApplication implements Sort {
 	}
 	
 	public ParseRes parseCmd(String cmd) {
+		// System.out.println("(Re-)parsing cmd");
 		ArrayList<String> filenames = new ArrayList<>();
 		boolean isNumericSort = false;
 		
@@ -149,7 +205,10 @@ public class SortApplication implements Sort {
 		}
 		
 		String[] args = matchList.toArray(new String[matchList.size()]);
-		if (args[1].equals("-n")) isNumericSort = true;
+		// for (String arg : args) System.out.println("\"" + arg + "\"");
+		if (args.length > 1) {
+			if (args[1].equals("-n")) isNumericSort = true;
+		}
 		
 		int i = 1;
 		if (isNumericSort) i = 2;
@@ -159,7 +218,37 @@ public class SortApplication implements Sort {
 		}
 		
 		ParseRes res = new ParseRes(filenames, isNumericSort);
+		// System.out.println("(Re-)parsing cmd successful");
 		return res;
+	}
+	
+	public ArrayList<String> getStdinContents() {
+		InputStream is = new ByteArrayInputStream(baos.toByteArray());
+		// System.out.println("Reading from stdin");
+        BufferedReader in = new BufferedReader(new InputStreamReader(is));
+        StringBuilder str = new StringBuilder();      
+        String line = null; 
+        boolean first = true;
+        try {
+        	while ((line = in.readLine()) != null) {
+        		if (!first)
+        			str.append("\n" + line);      
+        		else {
+        			str.append(line);
+        			first = false;
+        		}
+        	}      
+        } catch (IOException e) {      
+            e.printStackTrace();      
+        } finally {      
+        	try {      
+        		in.close();      
+            } catch (IOException e) {      
+                e.printStackTrace();      
+            }      
+        }
+        // System.out.println(str.toString());
+        return new ArrayList<String>(Arrays.asList(str.toString().split("\n")));
 	}
 	
 	public ArrayList<String> getFilesContents(ArrayList<String> filenames) throws SortException {
@@ -183,16 +272,26 @@ public class SortApplication implements Sort {
 	}
 	
 	public String sort(String toSort) {
+		// System.out.println("Sorting");
 		ParseRes res = parseCmd(toSort);
 		ArrayList<String> files = res.filenames;
 		boolean isNumericSort = res.isNumericSort;
+		// System.out.println(toSort);
+		// System.out.println(isNumericSort);
+		
 		ArrayList<ArrayList<StrObj>> objLsts = new ArrayList<>();
 		ArrayList<String> lines = new ArrayList<>();
-		try {
-			lines = getFilesContents(files);
-		} catch (SortException e) {
-			// not supposed to happen since run() does the file validation
-			e.printStackTrace();
+		
+		if (files.size() == 0) {
+			// no files: read from stdin
+			lines = getStdinContents();
+		} else {
+			try {
+				lines = getFilesContents(files);
+			} catch (SortException e) {
+				// not supposed to happen since run() does the file validation
+				e.printStackTrace();
+			}
 		}
 		
 		for (String line : lines) {
@@ -288,6 +387,10 @@ public class SortApplication implements Sort {
 		if (Character.isUpperCase(c)) return StrObj.Type.CAPITAL;
 		if (Character.isDigit(c)) return StrObj.Type.NUMBERS;
 		return StrObj.Type.SPECIAL;
+	}
+	
+	public void setStdin(InputStream stdin) {
+		this.stdin = stdin;
 	}
 	
 	public ArrayList<StrObj> convertStringToStrObjLst(String line, boolean isNumericSort) {

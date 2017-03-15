@@ -12,6 +12,7 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
+import sg.edu.nus.comp.cs4218.exception.OutputstreamNotValidException;
 import sg.edu.nus.comp.cs4218.exception.SortException;
 
 public class ExtraSortApplicationTest { 
@@ -139,14 +140,14 @@ public class ExtraSortApplicationTest {
 	}
 
 	@Test(expected = SortException.class)
-	public void testSort() throws SortException {
+	public void testSort() throws SortException, OutputstreamNotValidException {
 		args[0] = "-n";
 		args[1] = fileName;
 		ssa.run(args,null,null);
 	}
 	
 	@Test(expected = SortException.class)
-	public void testNull() throws SortException {
+	public void testNull() throws SortException, OutputstreamNotValidException {
 		ssa.run(null,null,System.out);
 	}
 	
@@ -315,17 +316,20 @@ public class ExtraSortApplicationTest {
 	}
 	
 	@Test
-	public void testNumericOpt() throws SortException {
-		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		final PrintStream pStream = new PrintStream(baos);
-		System.setOut(pStream);
-		args = new String[3];
-		args[0] = "-n";
-		args[1] = testMethodsFile;
-		args[2] = numericFile;
-		ssa.run(args, null, System.out);
-		System.out.flush();
-		assertEquals("\n+\n1\n1\n2\n2\n5\n10\nA\nB\na\nb\n", baos.toString());
+	public void testNumericOpt() throws SortException, OutputstreamNotValidException {
+		try {
+			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			args = new String[3];
+			args[0] = "-n";
+			args[1] = testMethodsFile;
+			args[2] = numericFile;
+			ssa.run(args, stdin, System.out);
+			System.out.flush();
+			assertEquals("\n+\n1\n1\n2\n2\n5\n10\nA\nB\na\nb\n", baos.toString());
+		} catch (Exception e) {
+			
+		}
+		
 	}
 	
 }

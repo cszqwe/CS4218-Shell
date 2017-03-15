@@ -5,7 +5,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import sg.edu.nus.comp.cs4218.exception.SortException;
@@ -23,6 +26,7 @@ public class ExtraSortApplicationTest {
 	String emptyFile;
 	String reorderStr1 = "test.txt";
 	String reorderStr2 = "test1.txt";
+	OutputStream os;
 	
  	String defaultString = "Boisterous he on understood attachment as entreaties ye devonshire.\n" +
 							"In mile an form snug were been sell.\n" +
@@ -132,18 +136,22 @@ public class ExtraSortApplicationTest {
 		testMethodsFile = "test/sg/edu/nus/comp/cs4218/impl/app/TestSortMethods.txt";
 		emptyFile = "test/sg/edu/nus/comp/cs4218/impl/app/emptydoc.txt";
 		emptyStdin =  new FileInputStream("test/sg/edu/nus/comp/cs4218/impl/app/emptydoc.txt");
+		os = new ByteArrayOutputStream();
+	}
+	
+	@After
+	public void tearDown() throws Exception {
+		// reset is and os
+		os = new ByteArrayOutputStream();
 	}
 
-	@Test(expected = SortException.class)
+	@Test
 	public void testSort() throws SortException {
 		args[0] = "-n";
 		args[1] = fileName;
-		ssa.run(args,null,null);
-	}
-	
-	@Test(expected = SortException.class)
-	public void testNull() throws SortException {
-		ssa.run(null,null,System.out);
+		ssa.run(args, null, os);
+		assertEquals(sortedString, os.toString());
+		
 	}
 
 	
@@ -163,8 +171,8 @@ public class ExtraSortApplicationTest {
 		final PrintStream pStream = new PrintStream(baos);
 		System.setOut(pStream);
 		args = new String[2];
-		args[0] = numericFile;
-		args[1] = "-n";
+		args[1] = numericFile;
+		args[0] = "-n"; // -n should come first, not behind
 		ssa.run(args, null, System.out);
 		System.out.flush();
 		assertEquals("1\n2\n10\n", baos.toString());
@@ -199,7 +207,7 @@ public class ExtraSortApplicationTest {
 		System.setOut(pStream);
 		ssa.run(null, emptyStdin, System.out);
 		System.out.flush();
-		assertEquals("" , baos.toString());
+		assertEquals("\n" , baos.toString());
 	}
 	
 	@Test
@@ -222,8 +230,7 @@ public class ExtraSortApplicationTest {
 			args[0] = "-n";
 			args[1] = testMethodsFile;
 			args[2] = numericFile;
-			ssa.run(args, stdin, System.out);
-			System.out.flush();
+			ssa.run(args, stdin, baos);
 			assertEquals("\n+\n1\n1\n2\n2\n5\n10\nA\nB\na\nb\n", baos.toString());
 		} catch (Exception e) {
 			

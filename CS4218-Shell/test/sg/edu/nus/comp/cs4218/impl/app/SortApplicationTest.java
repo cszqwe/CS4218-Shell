@@ -431,5 +431,75 @@ public class SortApplicationTest {
 		}
 		assertEquals(expected, exc.getMessage());
 	}
+	
+	@Test
+	public void testSortOptionBehind() {
+		String[] args = {"fileTest2.txt", "-n"}; // first file is valid: if first is invalid, that one will show as no such file
+		String expected = "sort: cannot read: -n: No such file";
+		Exception exc = new Exception();
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			exc = e;
+		}
+		assertEquals(expected, exc.getMessage());
+	}
+	
+	@Test
+	public void testSortFileInNestedDir() {
+		String[] args = {"test/sg/edu/nus/comp/cs4218/impl/app/testdoc.txt"};
+		String expected = "\n\n\n\n\nAlone visit use these smart rooms ham.\n" +
+				"Alteration connection to so as collecting me.\n" +
+				"Alteration put use diminution can considered sentiments interested discretion.\n" +
+				"An dispatched impossible of of melancholy favourable.\n" +
+				"An seeing feebly stairs am branch income me unable.\n" +
+				"Are sentiments apartments decisively the especially alteration.\n" +
+				"As dissuade cheerful overcame so of friendly he indulged unpacked.\n" +
+				"As mr started arrival subject by believe.\n" +
+				"At principle perfectly by sweetness do.\n" +
+				"Boisterous he on understood attachment as entreaties ye devonshire.\n" +
+				"By doubtful disposed do juvenile an.\n" +
+				"Celebrated contrasted discretion him sympathize her collecting occasional.\n" +
+				"Consider may dwelling old him her surprise finished families graceful.\n" +
+				"Course sir people worthy horses add entire suffer.\n" +
+				"Difficult in delivered extensive at direction allowance.\n" +
+				"Do answered bachelor occasion in of offended no concerns.\n" +
+				"Extremely ham any his departure for contained curiosity defective.\n" +
+				"Fat new smallness few supposing suspicion two.\n" +
+				"Gave led past poor met fine was new.\n" +
+				"Hastened admitted joy nor absolute gay its.\n" +
+				"How one dull get busy dare far.\n" +
+				"In mile an form snug were been sell.\n" +
+				"Incommode so intention defective at convinced.\n" +
+				"Is at purse tried jokes china ready decay an.\n" +
+				"Lasting showing expense greater on colonel no.\n" +
+				"Led income months itself and houses you. After nor you leave might share court balls.\n" +
+				"Mrs interested now his affronting inquietude contrasted cultivated.\n" +
+				"No comfort do written conduct at prevent manners on.\n" +
+				"No waiting in on enjoyed placing it inquiry.\n" +
+				"Now curiosity you explained immediate why behaviour.\n" +
+				"One built fat you out manor books.\n" +
+				"Or by to he going think order event music.\n" +
+				"Our quiet not heart along scale sense timed.\n" +
+				"Prepared do an dissuade be so whatever steepest.\n" +
+				"Procured shutters mr it feelings.\n" +
+				"Small its shy way had woody downs power.\n" +
+				"Strictly numerous outlived kindness whatever on we no on addition.\n" +
+				"Supply worthy warmth branch of no ye.\n" +
+				"Though wished merits or be.\n" +
+				"Thrown shy denote ten ladies though ask saw.\n" +
+				"To denoting admitted speaking learning my exercise so in.\n" +
+				"To or three offer house begin taken am at.\n" +
+				"Voice tried known to as my to.\n" +
+				"Way now instrument had eat diminution melancholy expression sentiments stimulated.\n" +
+				"Yet her beyond looked either day wished nay.\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+		
+	}
 
 }

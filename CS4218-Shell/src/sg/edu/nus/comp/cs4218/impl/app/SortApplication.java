@@ -8,7 +8,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 // import CharGroup.Type;
 
@@ -20,8 +21,11 @@ import sg.edu.nus.comp.cs4218.exception.OutputstreamNotValidException;
 
 public class SortApplication implements Sort {
 	
+	InputStream stdin;
+	
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws SortException, OutputstreamNotValidException {
+		this.stdin = stdin;
 		String output = "";
 		boolean isNumericSort = false;
 		ArrayList<String> lines = new ArrayList<>();
@@ -70,7 +74,11 @@ public class SortApplication implements Sort {
 		
 		String cmd = "sort";
 		for (String arg : args) {
-			cmd = cmd.concat(" " + arg);
+			if (arg.contains(" ")) {
+				cmd = cmd.concat(" \"" + arg + "\"");
+			} else {
+				cmd = cmd.concat(" " + arg);
+			}
 		}
 		
 		// invoke appropriate method
@@ -124,7 +132,23 @@ public class SortApplication implements Sort {
 		ArrayList<String> filenames = new ArrayList<>();
 		boolean isNumericSort = false;
 		
-		String[] args = cmd.split(" ");
+		ArrayList<String> matchList = new ArrayList<>();
+		Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
+		Matcher regexMatcher = regex.matcher(cmd);
+		while (regexMatcher.find()) {
+		    if (regexMatcher.group(1) != null) {
+		        // Add double-quoted string without the quotes
+		        matchList.add(regexMatcher.group(1));
+		    } else if (regexMatcher.group(2) != null) {
+		        // Add single-quoted string without the quotes
+		        matchList.add(regexMatcher.group(2));
+		    } else {
+		        // Add unquoted word
+		        matchList.add(regexMatcher.group());
+		    }
+		}
+		
+		String[] args = matchList.toArray(new String[matchList.size()]);
 		if (args[1].equals("-n")) isNumericSort = true;
 		
 		int i = 1;
@@ -139,7 +163,6 @@ public class SortApplication implements Sort {
 	}
 	
 	public ArrayList<String> getFilesContents(ArrayList<String> filenames) throws SortException {
-		System.out.println(filenames.size() + " files");
 		ArrayList<String> lines = new ArrayList<>();
 		
 		for (String filename : filenames) {

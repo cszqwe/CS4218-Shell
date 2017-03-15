@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import sg.edu.nus.comp.cs4218.Application;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
-import sg.edu.nus.comp.cs4218.exception.OutputstreamNotValidException;
+import sg.edu.nus.comp.cs4218.exception.PwdException;
 
 public class PwdApplication implements Application {
 
@@ -17,7 +17,7 @@ public class PwdApplication implements Application {
 		try {
 			stdout.write(Environment.currentDirectory.getBytes());
 		} catch (IOException e) {
-			throw new OutputstreamNotValidException("Output stream not work");
+			throw new PwdException("Output stream not work");
 		}
 	}
 

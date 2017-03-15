@@ -67,12 +67,15 @@ public class SortApplication implements Sort {
 		// for (String arg : args) System.out.print(arg + " ");
 		// System.out.println("");
 		
-		String wholeCommand = "sort ";
+		String cmd = "sort ";
 		
 		if (args != null) {
-			for (int i = 0; i< args.length; i++){
-				// System.out.println(args[i]);
-				wholeCommand = wholeCommand + args[i] + " ";
+			for (String arg : args) {
+				if (arg.contains(" ")) {
+					cmd = cmd.concat(" \"" + arg + "\"");
+				} else {
+					cmd = cmd.concat(" " + arg);
+				}
 			}
 			
 			if (args.length > 0) {
@@ -86,18 +89,17 @@ public class SortApplication implements Sort {
 					}
 				}
 			}
+			
+			if (isNumericSort) {
+				// if (stdin != null) System.out.println("Numeric sort on stdin");
+				filepaths = new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(args, 1, args.length)));
+			} else {
+				// if (stdin != null) System.out.println("Non-numeric sort on stdin");
+				filepaths = new ArrayList<String>(Arrays.asList(args));
+			}
 		}
-		
 		
 		// if (stdin != null) System.out.println("Sorting stdin reached here");
-		
-		if (isNumericSort) {
-			// if (stdin != null) System.out.println("Numeric sort on stdin");
-			filepaths = new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(args, 1, args.length)));
-		} else {
-			// if (stdin != null) System.out.println("Non-numeric sort on stdin");
-			filepaths = new ArrayList<String>(Arrays.asList(args));
-		}
 		
 		if (filepaths.size() == 0) {
 			// System.out.println("No file(s): read from stdin");
@@ -117,15 +119,6 @@ public class SortApplication implements Sort {
 				else if (Character.isUpperCase(c)) isCapitalFound = true;
 				else if (Character.isDigit(c)) isNumbersFound = true;
 				else isSpecialFound = true;
-			}
-		}
-		
-		String cmd = "sort";
-		for (String arg : args) {
-			if (arg.contains(" ")) {
-				cmd = cmd.concat(" \"" + arg + "\"");
-			} else {
-				cmd = cmd.concat(" " + arg);
 			}
 		}
 		

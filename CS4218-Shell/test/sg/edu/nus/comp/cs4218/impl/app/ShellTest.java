@@ -132,43 +132,43 @@ public class ShellTest {
 	@Test
 	//Test the fail case of calling command functions
 	public void testPipeTwoCommands() throws AbstractApplicationException, ShellException {
-		assertEquals(shell.pipeTwoCommands("echo 1 | echo 2"),"2\n");
+		assertEquals("2\n", shell.pipeTwoCommands("echo 1 | echo 2"));
 	}
 	
 	@Test
 	//Test the fail case of calling command functions
 	public void testPipeMultipleCommands() throws AbstractApplicationException, ShellException {
-		assertEquals(shell.pipeMultipleCommands("echo 1 | echo 2| echo 3"), "3\n");
+		assertEquals("3\n", shell.pipeMultipleCommands("echo 1 | echo 2| echo 3"));
 	}
 	
 	@Test
 	//Test the fail case of calling command functions
 	public void testPipeWithException() throws AbstractApplicationException, ShellException {
-		assertEquals(shell.pipeWithException("echo 1 | echo 2| ech 3 |echo 4 "), "shell: ech: Invalid app.");
+		assertEquals("shell: ech: Invalid app.", shell.pipeWithException("echo 1 | echo 2| ech 3 |echo 4 "));
 	}
 	
 	@Test
 	//Test the fail case of calling command functions
 	public void testGlobNoPath() throws AbstractApplicationException, ShellException {
-		assertEquals(shell.globNoPaths("cat globbingTests/*"), "globbingTests is no directory.");
+		assertEquals("globbingTests is no directory.", shell.globNoPaths("cat globbingTests/*"));
 	}
 	
 	@Test
 	//Test the fail case of calling command functions
 	public void testGlobOneFile(){
-		assertEquals(shell.globOneFile("cat globbingTest/test.txt*"), "line 1\r\nline 2\r\nline 3\r\nline 4");
+		assertEquals("line 1\r\nline 2\r\nline 3\r\nline 4", shell.globOneFile("cat globbingTest/test.txt*"));
 	}
 	
 	@Test
 	//Test the fail case of calling command functions
 	public void testGlobMultipleFile(){
-		assertEquals(shell.globFilesDirectories("cat globbingTest/*").length(), 127);
+		assertEquals(127, shell.globFilesDirectories("cat globbingTest/*").length());
 	}
 
 	@Test
 	//Test the fail case of calling command functions
 	public void testGlobWithException(){
-		assertEquals(shell.globWithException("cat globbingTests/*"), "globbingTests is no directory.");
+		assertEquals("globbingTests is no directory.", shell.globWithException("cat globbingTests/*"));
 	}
 
 	@Test

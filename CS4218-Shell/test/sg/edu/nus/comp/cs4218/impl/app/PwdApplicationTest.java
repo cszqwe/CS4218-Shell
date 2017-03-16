@@ -32,19 +32,11 @@ public class PwdApplicationTest {
 		pwd = Environment.currentDirectory; // for backup
 	}
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
 	@Before
 	public void setUp() throws Exception {
 		Environment.currentDirectory = pwd; // reset
 		is = null;
 		os = new ByteArrayOutputStream();
-	}
-
-	@After
-	public void tearDown() throws Exception {
 	}
 
 	@Test

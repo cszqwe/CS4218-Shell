@@ -357,6 +357,9 @@ public class ExtraGrepApplicationTest {
 		System.out.flush();
 	}
 
+	
+	// Integration tests
+	
 	@Test
 	//Test the case of calling command functions
 	public void commandSubTest1() throws AbstractApplicationException, ShellException {
@@ -403,6 +406,16 @@ public class ExtraGrepApplicationTest {
 		os = new ByteArrayOutputStream();
 		String cmdline = "head -n 2 test.txt | grep line";
 		String expected = "line 1\nline 2\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+
+	@Test
+	//Test the case of pipe
+	public void pipeTest3() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "date | grep SGT";
+		String expected = java.util.Calendar.getInstance().getTime().toString() + "\n"; // assumption: tester is doing this in Singapore
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(os.toString(), expected);
 	}	

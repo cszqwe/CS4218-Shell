@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Date;
 
 import org.junit.After;
 import org.junit.Before;
@@ -466,6 +467,15 @@ public class ExtraSortApplicationTest {
 		ShellImpl shell = new ShellImpl();
 		String args = "sort -n sortAppTestAll.txt | tail -n 5";
 		String expected = "come here\ncommand unknown\ngain 30 more exp\nok\nokay\n";
+		shell.parseAndEvaluate(args, os);
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortPipeToSort() throws AbstractApplicationException, ShellException {
+		ShellImpl shell = new ShellImpl();
+		String args = "date | sort -n";
+		String expected = java.util.Calendar.getInstance().getTime().toString() + "\n";
 		shell.parseAndEvaluate(args, os);
 		assertEquals(expected, os.toString());
 	}

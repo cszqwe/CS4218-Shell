@@ -29,14 +29,6 @@ public class SortApplicationTest {
 		os = new ByteArrayOutputStream();
 	}
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
 	@After
 	public void tearDown() throws Exception {
 		// reset is and os

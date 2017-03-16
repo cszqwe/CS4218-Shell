@@ -23,19 +23,6 @@ public class ShellTestEF1 {
 		shell = new ShellImpl();
 	}
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() throws Exception {
-
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
 	@Test
 	//Test the globbing function.
 	public void testGlobbing() throws AbstractApplicationException, ShellException {

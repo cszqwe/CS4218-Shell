@@ -33,11 +33,6 @@ public class CatApplicationTest {
 		catApplication = new CatApplication();
 	}
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-		
-	}
-
 	@Before
 	public void setUp() throws Exception {
 		is = null;

@@ -501,5 +501,402 @@ public class SortApplicationTest {
 		assertEquals(expected, os.toString());
 		
 	}
+	
+	@Test
+	public void testSortIsFailure() {
+		String[] args = {};
+		String expected = "sort: InputStream failed";
+		Exception exc = new Exception();
+		try {
+			is = new FileInputStream("sortTestBasic.txt");
+			is.close();
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			exc = e;
+		}
+		assertEquals(expected, exc.getMessage());
+	}
+	
+	@Test
+	public void testSortOsFailure() {
+		String[] args = {};
+		String expected = "sort: Output stream not working";
+		Exception exc = new Exception();
+		try {
+			is = new FileInputStream("sortTestBasic.txt");
+			os.close();
+			sortApp.run(args, is, os);
+			System.out.println("passes");
+		} catch (Exception e) {
+			exc = e;
+			System.out.println(e);
+		}
+		assertEquals(expected, exc.getMessage());
+	}
+	
+	// tests for each combination of char types
+	// same files and expected results as those in interface unit test
+	
+	@Test
+	public void testSortStringsSimple() {
+		String[] args = {"sortAppTestSimple.txt"};
+		String expected = "a\naaa\naaaa\nabc\nbaaa\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsSimpleNumerically() {
+		String[] args = {"-n", "sortAppTestSimple.txt"};
+		String expected = "a\naaa\naaaa\nabc\nbaaa\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsCapital() {
+		String[] args = {"sortAppTestCapital.txt"};
+		String expected = "BATMAN\nSEVENELEVEN\nSUPER\nSUPERMAN\nSUPERMARKET\nSUPPER\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsCapitalNumerically() {
+		String[] args = {"-n", "sortAppTestCapital.txt"};
+		String expected = "BATMAN\nSEVENELEVEN\nSUPER\nSUPERMAN\nSUPERMARKET\nSUPPER\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsNumbers() {
+		String[] args = {"sortAppTestNumbers.txt"};
+		String expected = "001\n01\n1\n10\n2\n210\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsNumbersNumerically() {
+		String[] args = {"-n", "sortAppTestNumbers.txt"};
+		String expected = "001\n01\n1\n2\n10\n210\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsSpecialChars() {
+		String[] args = {"sortAppTestSpecialChars.txt"};
+		String expected = "\n \n  \n!?@#>\n%)*^%\n%^!\n??\n????\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsSpecialCharsNumerically() {
+		String[] args = {"-n", "sortAppTestSpecialChars.txt"};
+		String expected = "\n \n  \n!?@#>\n%)*^%\n%^!\n??\n????\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsSimpleCapital() {
+		String[] args = {"sortAppTestSimpleCapital.txt"};
+		String expected = "AA\nAAAA\nAAAAA\naBCd\naaaa\nbcD\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsSimpleCapitalNumerically() {
+		String[] args = {"-n", "sortAppTestSimpleCapital.txt"};
+		String expected = "AA\nAAAA\nAAAAA\naBCd\naaaa\nbcD\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsSimpleNumbers() {
+		String[] args = {"sortAppTestSimpleNumbers.txt"};
+		String expected = "03\n1\n10th\n1ine\n3rd\nline\nline1\nline10\nline3\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsSimpleNumbersNumerically() {
+		String[] args = {"-n", "sortAppTestSimpleNumbers.txt"};
+		String expected = "1\n1ine\n03\n3rd\n10th\nline\nline1\nline10\nline3\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsSimpleSpecialChars() {
+		String[] args = {"sortAppTestSimpleSpecialChars.txt"};
+		String expected = "\n \n? why\n?!%^@\nport^\nsore throat\nsort!\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsSimpleSpecialCharsNumerically() {
+		String[] args = {"-n", "sortAppTestSimpleSpecialChars.txt"};
+		String expected = "\n \n? why\n?!%^@\nport^\nsore throat\nsort!\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsCapitalNumbers() {
+		String[] args = {"sortAppTestCapitalNumbers.txt"};
+		String expected = "50\n500\n6X\n6X\nSTRING10\nSTRING5\nSTRING50\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsCapitalNumbersNumerically() {
+		String[] args = {"-n", "sortAppTestCapitalNumbers.txt"};
+		String expected = "6X\n6X\n50\n500\nSTRING10\nSTRING5\nSTRING50\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsCapitalSpecialChars() {
+		String[] args = {"sortAppTestCapitalSpecialChars.txt"};
+		String expected = "\n\n  \n!(@THIGH\n@THIGH\nTHIGH\nTHIS IS SPA\nTHIS IS SPARTA!\nTHIS-IS-MADNESS\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsCapitalSpecialCharsNumerically() {
+		String[] args = {"-n", "sortAppTestCapitalSpecialChars.txt"};
+		String expected = "\n\n  \n!(@THIGH\n@THIGH\nTHIGH\nTHIS IS SPA\nTHIS IS SPARTA!\nTHIS-IS-MADNESS\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsNumbersSpecialChars() {
+		String[] args = {"sortAppTestNumbersSpecialChars.txt"};
+		String expected = "$(@&34\n$(@&7\n<   >\n<-0->\n12$(@&34\n2$(@&34\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsNumbersSpecialCharsNumerically() {
+		String[] args = {"-n", "sortAppTestNumbersSpecialChars.txt"};
+		String expected = "$(@&34\n$(@&7\n<   >\n<-0->\n2$(@&34\n12$(@&34\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsSimpleCapitalNumbers() {
+		String[] args = {"sortAppTestSimpleCapitalNumbers.txt"};
+		String expected = "21stCentury\n30TH\n30th\n3rdPlace\nM24Chaffee\nM40Rifle\nM4Sherman\nm4\nmnm\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsSimpleCapitalNumbersNumerically() {
+		String[] args = {"-n", "sortAppTestSimpleCapitalNumbers.txt"};
+		String expected = "3rdPlace\n21stCentury\n30TH\n30th\nM24Chaffee\nM40Rifle\nM4Sherman\nm4\nmnm\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsSimpleCapitalSpecialChars() {
+		String[] args = {"sortAppTestSimpleCapitalSpecialChars.txt"};
+		String expected = " Hello, World!\n!! Hello\nHELLO WORLD\nHella lot of tests!\nHello World!\nHello World!\nHello World@!\nHello world!\nHello, World!\nHello,World!\nhello?\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsSimpleCapitalSpecialCharsNumerically() {
+		String[] args = {"-n", "sortAppTestSimpleCapitalSpecialChars.txt"};
+		String expected = " Hello, World!\n!! Hello\nHELLO WORLD\nHella lot of tests!\nHello World!\nHello World!\nHello World@!\nHello world!\nHello, World!\nHello,World!\nhello?\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsSimpleNumbersSpecialChars() {
+		String[] args = {"sortAppTestSimpleNumbersSpecialChars.txt"};
+		String expected = "!arg==\"-n\"\n&arg\n4=3\n40=3\n6=3\narg==\"-n\"\narg=3\nargs[40]\nargs[7]\narray.get(2)\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsSimpleNumbersSpecialCharsNumerically() {
+		String[] args = {"-n", "sortAppTestSimpleNumbersSpecialChars.txt"};
+		String expected = "!arg==\"-n\"\n&arg\n4=3\n6=3\n40=3\narg==\"-n\"\narg=3\nargs[40]\nargs[7]\narray.get(2)\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsCapitalNumbersSpecialChars() {
+		String[] args = {"sortAppTestCapitalNumbersSpecialChars.txt"};
+		String expected = "!0AA\n!AAA\n%AAA\n10AAA\n2A\n2AAA\n2BAA\nAAA10\nAAA2\nAAAA2\nAAB2\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsCapitalNumbersSpecialCharsNumerically() {
+		String[] args = {"-n", "sortAppTestCapitalNumbersSpecialChars.txt"};
+		String expected = "!0AA\n!AAA\n%AAA\n2A\n2AAA\n2BAA\n10AAA\nAAA10\nAAA2\nAAAA2\nAAB2\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsAll() {
+		String[] args = {"sortAppTestAll.txt"};
+		String expected = "\n  \n! hit\n!@#%\n//WARNING//\n/4run\n/ru28!*#\n/run script\n3 damage dealt\n30 damage dealt\n6 damage\n6 damage dealt\nGain 30 more exp\nGain0205's message:\nGained [30] gold\nGained [6] exp\ncome here\ncommand unknown\ngain 30 more exp\nok\nokay\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortStringsAllNumerically() {
+		String[] args = {"-n", "sortAppTestAll.txt"};
+		String expected = "\n  \n! hit\n!@#%\n//WARNING//\n/4run\n/ru28!*#\n/run script\n3 damage dealt\n6 damage\n6 damage dealt\n30 damage dealt\nGain 30 more exp\nGain0205's message:\nGained [30] gold\nGained [6] exp\ncome here\ncommand unknown\ngain 30 more exp\nok\nokay\n";
+		try {
+			sortApp.run(args, is, os);
+		} catch (Exception e) {
+			
+		}
+		assertEquals(expected, os.toString());
+	}
+	
+	
 
 }

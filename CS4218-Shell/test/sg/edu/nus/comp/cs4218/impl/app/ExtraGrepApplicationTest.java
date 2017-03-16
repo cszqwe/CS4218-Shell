@@ -356,19 +356,24 @@ public class ExtraGrepApplicationTest {
 
 	@Test
 	//Test the fail case of calling command functions
-	public void commandSubTest() throws AbstractApplicationException, ShellException {
+	public void commandSubTest1() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
-		String cmdline = "grep line `cat test.txt | head -n 1`";
-		String expected = "line 1\r\nline 2\r\nline 3\r\nline 4";
-		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
-		os = new ByteArrayOutputStream();
-		cmdline = "cat test.txt | head -n 2 | tail -n 1";
-		expected = "line 2\n";
+		String cmdline = "grep `echo line` test.txt";
+		String expected = "line 1\nline 2\nline 3\nline 4\n";
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(os.toString(), expected);
 	}
 	
-	
+
+	@Test
+	//Test the fail case of calling command functions
+	public void commandSubTest2() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep `echo line | cat` test.txt";
+		String expected = "line 1\nline 2\nline 3\nline 4\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+
 	
 }

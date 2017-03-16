@@ -140,7 +140,7 @@ public class ExtraCalApplicationTest {
 				+ "25 26 27 28 29 30 31  29 30                 27 28 29 30 31      \n"; 
 		
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test

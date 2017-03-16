@@ -506,7 +506,7 @@ public class ExtraSedApplicationTest {
 	
 	@Test
 	public void testACornerCase() throws SedException, IOException {
-		assertEquals(sed.replaceSubstringWithInvalidReplacement("sed |||"),"The command sed ||| has invalid Replacement");
+		assertEquals("The command sed ||| has invalid Replacement", sed.replaceSubstringWithInvalidReplacement("sed |||"));
 	}	
 	
 	@Test
@@ -526,7 +526,7 @@ public class ExtraSedApplicationTest {
 		String cmdline = "head test.txt | sed `echo s/l/L/`";
 		String expected = "Line 1\nLine 2\nLine 3\nLine 4\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test (expected = CatException.class)
@@ -536,7 +536,7 @@ public class ExtraSedApplicationTest {
 		String cmdline = "grep `echo line | cat test5.txt` test.txt | sed `echo s/l/L/`";
 		String expected = "line 1\nline 2\nline 3\nline 4\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test
@@ -546,7 +546,7 @@ public class ExtraSedApplicationTest {
 		String cmdline = "sed s/[l]/L/g test.txt | cat";
 		String expected = "Line 1\r\nLine 2\r\nLine 3\r\nLine 4";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test
@@ -556,7 +556,7 @@ public class ExtraSedApplicationTest {
 		String cmdline = "head -n 2 test.txt | sed s/[l]/L/g";
 		String expected = "Line 1\nLine 2";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}	
 
 	@Test (expected = HeadException.class)
@@ -586,7 +586,7 @@ public class ExtraSedApplicationTest {
 		String cmdline = "grep `echo line | head` `echo test.txt` | sed s/[l]/L/g";
 		String expected = "Line 1\nLine 2\nLine 3\nLine 4";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test (expected = SortException.class)
@@ -596,7 +596,7 @@ public class ExtraSedApplicationTest {
 		String cmdline = "grep `echo line | cat test.txt` `sort test5.txt` | sed s/[l]/L/g";
 		String expected = "line 1\nline 2\nline 3\nline 4\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -606,7 +606,7 @@ public class ExtraSedApplicationTest {
 		String cmdline = "grep line test.txt | tail -n 2 | grep 'line 4' | sed s/[l]/L/g";
 		String expected = "Line 4";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test
@@ -616,7 +616,7 @@ public class ExtraSedApplicationTest {
 		String cmdline = "grep 'line 2' test.txt | grep 'line' | grep 'li' | sed s/[l]/L/";
 		String expected = "Line 2\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test (expected = GrepException.class)
@@ -626,7 +626,7 @@ public class ExtraSedApplicationTest {
 		String cmdline = "grep `echo line | cat test.txt` `sort test.txt` | grep | grep line2| sed s";
 		String expected = "line 1\nline 2\nline 3\nline 4\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test
@@ -636,7 +636,7 @@ public class ExtraSedApplicationTest {
 		String cmdline = "sed s/[l]/L/g test test.txt";
 		String expected = "sed: File is not readable";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -646,7 +646,7 @@ public class ExtraSedApplicationTest {
 		String cmdline = "sed s/[l]/L/g 'test.txt'";
 		String expected = "Line 1\r\nLine 2\r\nLine 3\r\nLine 4";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}	
 	
 	@Test (expected = SedException.class)
@@ -656,7 +656,7 @@ public class ExtraSedApplicationTest {
 		String cmdline = "'sed' 'line 2' test.txt | 'grep' [";
 		String expected = "line 2\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -669,7 +669,7 @@ public class ExtraSedApplicationTest {
 		shell.parseAndEvaluate(cmdline, os);
 		os = new ByteArrayOutputStream();
 		shell.parseAndEvaluate(cmdline2, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -682,7 +682,7 @@ public class ExtraSedApplicationTest {
 		shell.parseAndEvaluate(cmdline, os);
 		os = new ByteArrayOutputStream();
 		shell.parseAndEvaluate(cmdline2, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -695,7 +695,7 @@ public class ExtraSedApplicationTest {
 		shell.parseAndEvaluate(cmdline, os);
 		os = new ByteArrayOutputStream();
 		shell.parseAndEvaluate(cmdline2, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 	
 	
@@ -709,6 +709,6 @@ public class ExtraSedApplicationTest {
 		shell.parseAndEvaluate(cmdline, os);
 		os = new ByteArrayOutputStream();
 		shell.parseAndEvaluate(cmdline2, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}	
 }

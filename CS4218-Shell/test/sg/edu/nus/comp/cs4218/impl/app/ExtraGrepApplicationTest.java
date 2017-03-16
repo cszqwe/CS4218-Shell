@@ -367,7 +367,7 @@ public class ExtraGrepApplicationTest {
 		String cmdline = "grep `echo line` test.txt";
 		String expected = "line 1\nline 2\nline 3\nline 4\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test
@@ -377,7 +377,7 @@ public class ExtraGrepApplicationTest {
 		String cmdline = "grep `echo line | head` test.txt";
 		String expected = "line 1\nline 2\nline 3\nline 4\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test (expected = CatException.class)
@@ -387,7 +387,7 @@ public class ExtraGrepApplicationTest {
 		String cmdline = "grep `echo line | cat test5.txt` test.txt";
 		String expected = "line 1\nline 2\nline 3\nline 4\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test
@@ -397,7 +397,7 @@ public class ExtraGrepApplicationTest {
 		String cmdline = "sed s/[l]/L/g test.txt | grep Line";
 		String expected = "Line 1\nLine 2\nLine 3\nLine 4\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test
@@ -407,7 +407,7 @@ public class ExtraGrepApplicationTest {
 		String cmdline = "head -n 2 test.txt | grep line";
 		String expected = "line 1\nline 2\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test
@@ -417,7 +417,7 @@ public class ExtraGrepApplicationTest {
 		String cmdline = "date | grep SGT";
 		String expected = java.util.Calendar.getInstance().getTime().toString() + "\n"; // assumption: tester is doing this in Singapore
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}	
 
 	@Test (expected = HeadException.class)
@@ -427,7 +427,7 @@ public class ExtraGrepApplicationTest {
 		String cmdline = "head -n 2 tesasdt.txt | grep line";
 		String expected = "line 1\nline 2\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}	
 	
 	@Test
@@ -437,7 +437,7 @@ public class ExtraGrepApplicationTest {
 		String cmdline = "grep `echo line` `echo test.txt`";
 		String expected = "line 1\nline 2\nline 3\nline 4\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test
@@ -447,7 +447,7 @@ public class ExtraGrepApplicationTest {
 		String cmdline = "grep `echo line | head` `echo test.txt`";
 		String expected = "line 1\nline 2\nline 3\nline 4\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test (expected = SortException.class)
@@ -457,7 +457,7 @@ public class ExtraGrepApplicationTest {
 		String cmdline = "grep `echo line | cat test.txt` `sort test5.txt`";
 		String expected = "line 1\nline 2\nline 3\nline 4\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -467,7 +467,7 @@ public class ExtraGrepApplicationTest {
 		String cmdline = "grep line test.txt | tail -n 2 | grep 'line 4'";
 		String expected = "line 4\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test
@@ -477,7 +477,7 @@ public class ExtraGrepApplicationTest {
 		String cmdline = "grep 'line 2' test.txt | grep 'line' | grep 'li'";
 		String expected = "line 2\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test (expected = GrepException.class)
@@ -487,7 +487,7 @@ public class ExtraGrepApplicationTest {
 		String cmdline = "grep `echo line | cat test.txt` `sort test.txt` | grep | grep line2";
 		String expected = "line 1\nline 2\nline 3\nline 4\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test
@@ -497,7 +497,7 @@ public class ExtraGrepApplicationTest {
 		String cmdline = "grep line 2 test.txt";
 		String expected = "grep: 2: No such file\nline 1\nline 2\nline 3\nline 4\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -507,7 +507,7 @@ public class ExtraGrepApplicationTest {
 		String cmdline = "grep \"line 2\" test.txt";
 		String expected = "line 2\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -517,7 +517,7 @@ public class ExtraGrepApplicationTest {
 		String cmdline = "grep 'line 2' test.txt";
 		String expected = "line 2\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 	
 	
@@ -528,7 +528,7 @@ public class ExtraGrepApplicationTest {
 		String cmdline = "'grep' 'line 2' test.txt | 'grep' [";
 		String expected = "line 2\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -541,7 +541,7 @@ public class ExtraGrepApplicationTest {
 		shell.parseAndEvaluate(cmdline, os);
 		os = new ByteArrayOutputStream();
 		shell.parseAndEvaluate(cmdline2, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -554,7 +554,7 @@ public class ExtraGrepApplicationTest {
 		shell.parseAndEvaluate(cmdline, os);
 		os = new ByteArrayOutputStream();
 		shell.parseAndEvaluate(cmdline2, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -567,7 +567,7 @@ public class ExtraGrepApplicationTest {
 		shell.parseAndEvaluate(cmdline, os);
 		os = new ByteArrayOutputStream();
 		shell.parseAndEvaluate(cmdline2, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 	
 	
@@ -581,6 +581,6 @@ public class ExtraGrepApplicationTest {
 		shell.parseAndEvaluate(cmdline, os);
 		os = new ByteArrayOutputStream();
 		shell.parseAndEvaluate(cmdline2, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}	
 }

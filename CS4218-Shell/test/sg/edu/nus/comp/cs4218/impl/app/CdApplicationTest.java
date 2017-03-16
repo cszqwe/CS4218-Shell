@@ -41,10 +41,10 @@ public class CdApplicationTest {
 		String args[] = {"cd Test_folder"};
 		try {
 			cdApp.run(args, null, null);
-			assertEquals(origPwd + "\\cd Test_folder", Environment.currentDirectory);
 		} catch (AbstractApplicationException e) {
 			
 		}
+		assertEquals(origPwd + "\\cd Test_folder", Environment.currentDirectory);
 		
 	}
 	
@@ -53,11 +53,11 @@ public class CdApplicationTest {
 		String args[] = {"nonexistent"};
 		try {
 			cdApp.run(args, null, null);
-			assertEquals(origPwd, Environment.currentDirectory);
 			
 		} catch (AbstractApplicationException e) {
 			
 		}
+		assertEquals(origPwd, Environment.currentDirectory);
 	}
 	
 	@Test
@@ -65,10 +65,10 @@ public class CdApplicationTest {
 		String args[] = {"cd Test_folder\\nested-folder"};
 		try {
 			cdApp.run(args, null, null);
-			assertEquals(origPwd + "\\cd Test_folder\\nested-folder", Environment.currentDirectory);
 		} catch (AbstractApplicationException e) {
 			
 		}
+		assertEquals(origPwd + "\\cd Test_folder\\nested-folder", Environment.currentDirectory);
 	}
 	
 	@Test
@@ -76,10 +76,10 @@ public class CdApplicationTest {
 		String args[] = {"cd Test_folder", "asdf"};
 		try {
 			cdApp.run(args, null, null);
-			assertEquals(origPwd + "\\cd Test_folder", Environment.currentDirectory);
 		} catch (AbstractApplicationException e) {
 			
 		}
+		assertEquals(origPwd + "\\cd Test_folder", Environment.currentDirectory);
 	}
 	
 	@Test
@@ -87,10 +87,10 @@ public class CdApplicationTest {
 		String args[] = {"Nonexistent", "asdf"};
 		try {
 			cdApp.run(args, null, null);
-			assertEquals(origPwd, Environment.currentDirectory);
 		} catch (AbstractApplicationException e) {
 			
 		}
+		assertEquals(origPwd, Environment.currentDirectory);
 	}
 	
 	@Test
@@ -98,10 +98,10 @@ public class CdApplicationTest {
 		String args[] = {"Test.txt"};
 		try {
 			cdApp.run(args, null, null);
-			assertEquals(origPwd, Environment.currentDirectory);
 		} catch (AbstractApplicationException e) {
 			
 		}
+		assertEquals(origPwd, Environment.currentDirectory);
 	}
 	
 	@Test
@@ -109,10 +109,10 @@ public class CdApplicationTest {
 		String[] args = {};
 		try {
 			cdApp.run(args, null, null);
-			assertEquals(origPwd, Environment.currentDirectory);
 		} catch (AbstractApplicationException e) {
 			
 		}
+		assertEquals(origPwd, Environment.currentDirectory);
 	}
 	
 	@Test
@@ -120,10 +120,10 @@ public class CdApplicationTest {
 		String[] args = null;
 		try {
 			cdApp.run(args, null, null);
-			assertEquals(origPwd, Environment.currentDirectory);
 		} catch (AbstractApplicationException e) {
 			
 		}
+		assertEquals(origPwd, Environment.currentDirectory);
 	}
 	
 	@Test
@@ -131,10 +131,10 @@ public class CdApplicationTest {
 		String[] args = {""};
 		try {
 			cdApp.run(args, null, null);
-			assertEquals(origPwd, Environment.currentDirectory);
 		} catch (AbstractApplicationException e) {
 			
 		}
+		assertEquals(origPwd, Environment.currentDirectory);
 	}
 
 }

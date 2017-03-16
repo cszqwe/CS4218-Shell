@@ -16,10 +16,17 @@ import sg.edu.nus.comp.cs4218.impl.app.PwdApplication;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 
 public class PwdApplicationTest {
+	static PwdApplication pwdApp;
+	static InputStream is;
+	static OutputStream os;
+	static String pwd;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		
+		pwdApp = new PwdApplication();
+		is = null;
+		os = new ByteArrayOutputStream();
+		pwd = Environment.currentDirectory; // for backup
 	}
 
 	@AfterClass
@@ -28,6 +35,8 @@ public class PwdApplicationTest {
 
 	@Before
 	public void setUp() throws Exception {
+		is = null;
+		os = new ByteArrayOutputStream();
 	}
 
 	@After
@@ -35,27 +44,39 @@ public class PwdApplicationTest {
 	}
 
 	@Test
-	public void testPwd() {
-		String origPwd = Environment.currentDirectory; // for backup
-		
-		String CURRENTDIR = "Workspace\\CS4218-Shell";
-		Environment.currentDirectory = CURRENTDIR;
-		InputStream is = null;
-		OutputStream os = new ByteArrayOutputStream();
-		PwdApplication pwdApp = new PwdApplication();
+	public void testPwdBasic() {
 		String args[] = {};
-		String output = "";
 		try {
 			pwdApp.run(args, is, os);
-			output = os.toString();
-			
 		} catch (AbstractApplicationException e) {
 			
 		}
-		assertEquals(output, CURRENTDIR);
+		assertEquals(pwd, os.toString());
 		
-		Environment.currentDirectory = origPwd; // reset pwd
-		// no other test cases possible as far as we could think of: hence does not use setup, teardown, etc
+	}
+	
+	@Test
+	public void testPwdWithAdditionalArgs() {
+		String args[] = {"unnecessary args"};
+		// expected behavior: pwd works as long as the command "pwd" is valid, and does not care about args
+		try {
+			pwdApp.run(args, is, os);
+		} catch (AbstractApplicationException e) {
+			
+		}
+		assertEquals(pwd, os.toString());
+	}
+	
+	@Test
+	public void testPwdWithNullArgs() {
+		String args[] = null;
+		// expected behavior: pwd works as long as the command "pwd" is valid, and does not care about args
+		try {
+			pwdApp.run(args, is, os);
+		} catch (AbstractApplicationException e) {
+			
+		}
+		assertEquals(pwd, os.toString());
 	}
 
 }

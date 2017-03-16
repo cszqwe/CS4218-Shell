@@ -37,10 +37,16 @@ public class SedApplication implements Sed{
 		}
 		if (args[0].charAt(0) != 's') throw new SedException("Wrong usage");
 		String splitSymbol = ""+args[0].charAt(1);
-		String[] strs = args[0].split(splitSymbol);
+		String[] strs = args[0].split(Pattern.quote(splitSymbol));
+		if (args[0].length() == 4 && args[0].charAt(1) == args[0].charAt(2) && args[0].charAt(1) == args[0].charAt(3)){
+			throw new SedException("No valid expression given");
+		} 
 		boolean isGlobal = false;
 		if (strs.length != 3 && strs.length != 4){
 			throw new SedException("Wrong usage");
+		}
+		if (strs[1].equals("") || strs[2].equals("")){
+			throw new SedException("Expression cannot be empty");
 		}
 		if (strs.length == 4 && strs[3].equals("g")){
 			isGlobal = true;
@@ -86,7 +92,7 @@ public class SedApplication implements Sed{
 		
 		try {
 			stdout.write(output.getBytes());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new SedException("Output stream not working");
 		}
 

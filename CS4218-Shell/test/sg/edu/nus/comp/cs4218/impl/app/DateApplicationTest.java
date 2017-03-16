@@ -18,16 +18,11 @@ import sg.edu.nus.comp.cs4218.impl.app.DateApplication;
 public class DateApplicationTest {
 	static DateApplication dateApp;
 	static OutputStream os;
-	static ByteArrayOutputStream print;
-	static PrintStream origOut;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		dateApp = new DateApplication();
 		os = new ByteArrayOutputStream();
-		print = new ByteArrayOutputStream();
-		origOut = System.out;
-		System.setOut(new PrintStream(print));
 	}
 
 	@AfterClass
@@ -40,13 +35,13 @@ public class DateApplicationTest {
 
 	@After
 	public void tearDown() throws Exception {
-	    System.setOut(origOut); // reset System to output to original PrintStream
+		os = new ByteArrayOutputStream();
 	}
 
 	@Test
 	public void testDateBasic() {
 		Date date = java.util.Calendar.getInstance().getTime();  
-	    String expected = date.toString() + "\n\n";
+	    String expected = date.toString();
 	    String[] args = {};
 	    
 	    try {
@@ -54,14 +49,14 @@ public class DateApplicationTest {
 	    } catch (Exception e) {
 	    	
 	    }
-	    assertEquals(expected.trim(), print.toString().trim());
+	    assertEquals(expected, os.toString());
 	    
 	}
 	
 	@Test
 	public void testDateArgs() {
 		Date date = java.util.Calendar.getInstance().getTime();  
-	    String expected = date.toString() + "\n\n";
+	    String expected = date.toString();
 	    String[] args = {"arg1", "arg2"};
 	    
 	    try {
@@ -69,14 +64,14 @@ public class DateApplicationTest {
 	    } catch (Exception e) {
 	    	
 	    }
-	    assertEquals(expected.trim(), print.toString().trim());
+	    assertEquals(expected.trim(), os.toString().trim());
 	    // Date does not use args
 	}
 	
 	@Test
 	public void testDateNullArgs() {
 		Date date = java.util.Calendar.getInstance().getTime();  
-	    String expected = date.toString() + "\n\n";
+	    String expected = date.toString();
 	    String[] args = null;
 	    
 	    try {
@@ -84,22 +79,22 @@ public class DateApplicationTest {
 	    } catch (Exception e) {
 	    	
 	    }
-	    assertEquals(expected.trim(), print.toString().trim());
+	    assertEquals(expected.trim(), os.toString().trim());
 	    // Same reason as above
 	}
 	
 	@Test
 	public void testDateNullStdout() {
-		Date date = java.util.Calendar.getInstance().getTime();  
-	    String expected = date.toString() + "\n\n";
+	    String expected = "date: Null Pointer Exception";
 	    String[] args = {};
+	    Exception exc = new Exception();
 	    
 	    try {
 	    	dateApp.run(args, null, null);
 	    } catch (Exception e) {
-	    	
+	    	exc = e;
 	    }
-	    assertEquals(expected.trim(), print.toString().trim());
+	    assertEquals(expected, exc.getMessage());
 	    // Date does not use stdout to display its result: as project description says "print" the current time and date, Date uses System.out
 	}
 

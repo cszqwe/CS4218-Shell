@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -208,43 +209,42 @@ public class ExtraWcApplicationTest {
 		assertEquals(expectedResult, res);
 	}
 
-	/**
 	@Test
 	public void testWcReadFromStdin() throws WcException {
 		String[] args = {};
-		stdin = new InputStream("hello world");
+		stdin = new ByteArrayInputStream("hello world".getBytes());
 		wcApp.run(args, stdin, stdout);
-		String expected = String.format("      11       2       0%s", LINE_SEPARATOR);
+		String expected = String.format("11 2 1 %s", LINE_SEPARATOR);
 		assertEquals(expected, stdout.toString());
 	}
 
 	@Test
 	public void testWcReadFromStdinWithFlag() throws WcException {
 		String[] args = { "-m" };
-		stdin = new WritableInputStream("hello world");
+		stdin = new ByteArrayInputStream("hello world".getBytes());
 		wcApp.run(args, stdin, stdout);
-		String expected = String.format("      11%s", LINE_SEPARATOR);
+		String expected = String.format("11 %s", LINE_SEPARATOR);
 		assertEquals(expected, stdout.toString());
 	}
 
 	@Test(expected = WcException.class)
 	public void testWcReadFromStdinWithInvalidFlag() throws WcException {
 		String[] args = { "-x" };
-		stdin = new WritableInputStream("hello world");
+		stdin = new ByteArrayInputStream("hello world".getBytes());
 		wcApp.run(args, stdin, stdout);
 	}
 
 	@Test
 	public void testWcWithBothStdinAndFile() throws WcException {
 		String[] args = { TEST_FILE_SINGLE_WORD };
-		stdin = new WritableInputStream("not single word");
-		String singleWordFileExpected = String.format("       5       1       0 %s%s", TEST_FILE_SINGLE_WORD,
+		stdin = new ByteArrayInputStream("not single word".getBytes());
+		String singleWordFileExpected = String.format("5 1 1 %s%s", TEST_FILE_SINGLE_WORD,
 				LINE_SEPARATOR);
 		wcApp.run(args, stdin, stdout);
 		assertEquals(singleWordFileExpected, stdout.toString());
 	}
 	
-	**/
+	
 	@Test
 	public void testWcWithFileNameContainSpace() throws WcException {
 		String[] args = { TEST_FILE_NAME_HAS_SPACE };
@@ -395,90 +395,4 @@ public class ExtraWcApplicationTest {
 	}
 	
 	
-	
-	/**
-	 * These tests are on interfaces
-	 
-	@Test
-	public void testPrintCharacterCountInFile() {
-		String expected = String.format("%8d %s%s", TITLE_FILES_TOTAL_BYTES, TEST_FILE_TITLES, LINE_SEPARATOR);
-		String result = wcApp.printCharacterCountInFile(String.format("wc -m %s", TEST_FILE_TITLES));
-		assertEquals(expected, result);
-	}
-
-	@Test
-	public void testPrintCharacterCountInInvalidFile() {
-		String result = wcApp.printCharacterCountInFile("wc -m invalid.txt");
-		assertEquals("wc: Could not read file", result);
-	}
-
-	@Test
-	public void testPrintWordCountInFile() {
-		String expected = String.format("     717 %s%s", TEST_FILE_TITLES, LINE_SEPARATOR);
-		String result = wcApp.printWordCountInFile(String.format("wc -w %s", TEST_FILE_TITLES));
-		assertEquals(expected, result);
-	}
-
-	@Test
-	public void testPrintWordCountInInvalidFile() {
-		String result = wcApp.printWordCountInFile("wc -m invalid.txt");
-		assertEquals("wc: Could not read file", result);
-	}
-
-	@Test
-	public void testPrintNewlineCountInFile() {
-		String expected = String.format("     250 %s%s", TEST_FILE_TITLES, LINE_SEPARATOR);
-		String result = wcApp.printNewlineCountInFile(String.format("wc -l %s", TEST_FILE_TITLES));
-		assertEquals(expected, result);
-	}
-
-	@Test
-	public void testPrintNewlineCountInInvalidFile() {
-		String expected = String.format("wc: Could not read file", LINE_SEPARATOR);
-		String result = wcApp.printNewlineCountInFile("wc -m invalid.txt");
-		assertEquals(expected, result);
-	}
-
-	@Test
-	public void printAllCountsInFile() {
-		String expected = String.format("%8d     717     250 %s%s", TITLE_FILES_TOTAL_BYTES, TEST_FILE_TITLES,
-				LINE_SEPARATOR);
-		String result = wcApp.printAllCountsInFile(String.format("wc %s", TEST_FILE_TITLES));
-		assertEquals(expected, result);
-	}
-
-	@Test
-	public void printAllCountsInInvalidFile() {
-		String result = wcApp.printAllCountsInFile("wc -m invalid.txt");
-		assertEquals("wc: Could not read file", result);
-	}
-
-	@Test
-	public void printCharacterCountInStdin() {
-		String expected = String.format("%8d%s", TITLE_FILES_TOTAL_BYTES, LINE_SEPARATOR);
-		String result = wcApp.printCharacterCountInStdin(String.format("cat %s | wc -m", TEST_FILE_TITLES));
-		assertEquals(expected, result);
-	}
-
-	@Test
-	public void printWordCountInStdin() {
-		String expected = String.format("     717%s", LINE_SEPARATOR);
-		String result = wcApp.printWordCountInStdin(String.format("cat %s | wc -w", TEST_FILE_TITLES));
-		assertEquals(expected, result);
-	}
-
-	@Test
-	public void printNewlineCountInStdin() {
-		String expected = String.format("     250%s", LINE_SEPARATOR);
-		String result = wcApp.printNewlineCountInStdin(String.format("cat %s | wc -l", TEST_FILE_TITLES));
-		assertEquals(expected, result);
-	}
-
-	@Test
-	public void printAllCountsInStdin() {
-		String expected = String.format("%8d     717     250%s", TITLE_FILES_TOTAL_BYTES, LINE_SEPARATOR);
-		String result = wcApp.printAllCountsInStdin(String.format("cat %s | wc", TEST_FILE_TITLES));
-		assertEquals(expected, result);
-	}
-	**/
 }

@@ -15,6 +15,7 @@ import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.app.PwdApplication;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.PwdException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 
 public class PwdApplicationTest {
@@ -51,7 +52,7 @@ public class PwdApplicationTest {
 		String args[] = {};
 		try {
 			pwdApp.run(args, is, os);
-		} catch (AbstractApplicationException e) {
+		} catch (PwdException e) {
 			
 		}
 		assertEquals(pwd, os.toString());
@@ -64,7 +65,7 @@ public class PwdApplicationTest {
 		// expected behavior: pwd works as long as the command "pwd" is valid, and does not care about args
 		try {
 			pwdApp.run(args, is, os);
-		} catch (AbstractApplicationException e) {
+		} catch (PwdException e) {
 			
 		}
 		assertEquals(pwd, os.toString());
@@ -76,10 +77,23 @@ public class PwdApplicationTest {
 		// expected behavior: pwd works as long as the command "pwd" is valid, and does not care about args
 		try {
 			pwdApp.run(args, is, os);
-		} catch (AbstractApplicationException e) {
+		} catch (PwdException e) {
 			
 		}
 		assertEquals(pwd, os.toString());
+	}
+	
+	@Test
+	public void testPwdWithNullStdout() {
+		String args[] = {};
+		String expected = "pwd: Null Pointer Exception";
+		Exception exc = new Exception();
+		try {
+			pwdApp.run(args, is, null);
+		} catch (PwdException e) {
+			exc = e;
+		}
+		assertEquals(expected, exc.getMessage());
 	}
 	
 	// Integration test

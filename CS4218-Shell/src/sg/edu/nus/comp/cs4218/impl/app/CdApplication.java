@@ -7,12 +7,12 @@ import java.io.IOException;
 
 import sg.edu.nus.comp.cs4218.Application;
 import sg.edu.nus.comp.cs4218.Environment;
-import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.CdException;
 
 public class CdApplication implements Application {
 
 	@Override
-	public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
+	public void run(String[] args, InputStream stdin, OutputStream stdout) throws CdException {
 		if (args != null && args.length > 0) { // does not support going to home directory when no args are provided: ignore command
 			String path = Environment.currentDirectory + '\\' + args[0];
 			// if there are more arguments, they are ignored
@@ -26,8 +26,11 @@ public class CdApplication implements Application {
 					e.printStackTrace();
 				}
 			} else {
-				//This one would be printed to the system.out instead of stdout as CD does not expect any output.
-				System.out.println("Directory not found");
+				try {
+					stdout.write("Directory not found".getBytes());
+				} catch (Exception e) {
+					throw new CdException("Output stream not working");
+				}
 			}
 		}
 	}

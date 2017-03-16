@@ -504,6 +504,11 @@ public class ExtraSedApplicationTest {
 	}	
 	
 	@Test
+	public void testACornerCase() throws SedException, IOException {
+		assertEquals(sed.replaceSubstringWithInvalidReplacement("sed |||"),"The command sed ||| has invalid Replacement");
+	}	
+	
+	@Test
 	//Test the case of calling command functions
 	public void commandSubTest1() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();

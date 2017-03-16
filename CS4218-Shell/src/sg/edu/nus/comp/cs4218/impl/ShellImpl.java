@@ -883,8 +883,9 @@ public class ShellImpl implements Shell {
 	@Override
 	public String pipeTwoCommands(String args) {
 		try {
-			parseAndEvaluate(args, System.out);
-			return System.out.toString();
+			OutputStream out = new ByteArrayOutputStream();
+			parseAndEvaluate(args, out);
+			return out.toString();
 		} catch (AbstractApplicationException | ShellException e) {
 			return e.getMessage();
 		}
@@ -893,8 +894,9 @@ public class ShellImpl implements Shell {
 	@Override
 	public String pipeMultipleCommands(String args) {
 		try {
-			parseAndEvaluate(args, System.out);
-			return System.out.toString();
+			OutputStream out = new ByteArrayOutputStream();
+			parseAndEvaluate(args, out);
+			return out.toString();
 		} catch (AbstractApplicationException | ShellException e) {
 			return e.getMessage();
 		}
@@ -903,8 +905,9 @@ public class ShellImpl implements Shell {
 	@Override
 	public String pipeWithException(String args) {
 		try {
-			parseAndEvaluate(args, System.out);
-			return System.out.toString();
+			OutputStream out = new ByteArrayOutputStream();
+			parseAndEvaluate(args, out);
+			return out.toString();
 		} catch (AbstractApplicationException | ShellException e) {
 			return e.getMessage();
 		}
@@ -913,9 +916,10 @@ public class ShellImpl implements Shell {
 	@Override
 	public String globNoPaths(String args) {
 		try {
-			parseAndEvaluate(args, System.out);
-			return System.out.toString();
-		} catch (AbstractApplicationException | ShellException e) {
+			OutputStream out = new ByteArrayOutputStream();
+			parseAndEvaluate(args, out);
+			return out.toString();
+		} catch (Exception e) {
 			return e.getMessage();
 		}
 	}
@@ -923,8 +927,9 @@ public class ShellImpl implements Shell {
 	@Override
 	public String globOneFile(String args) {
 		try {
-			parseAndEvaluate(args, System.out);
-			return System.out.toString();
+			OutputStream out = new ByteArrayOutputStream();
+			parseAndEvaluate(args, out);
+			return out.toString();
 		} catch (AbstractApplicationException | ShellException e) {
 			return e.getMessage();
 		}
@@ -933,8 +938,9 @@ public class ShellImpl implements Shell {
 	@Override
 	public String globFilesDirectories(String args) {
 		try {
-			parseAndEvaluate(args, System.out);
-			return System.out.toString();
+			OutputStream out = new ByteArrayOutputStream();
+			parseAndEvaluate(args, out);
+			return out.toString();
 		} catch (AbstractApplicationException | ShellException e) {
 			return e.getMessage();
 		}
@@ -943,9 +949,10 @@ public class ShellImpl implements Shell {
 	@Override
 	public String globWithException(String args) {
 		try {
-			parseAndEvaluate(args, System.out);
-			return System.out.toString();
-		} catch (AbstractApplicationException | ShellException e) {
+			OutputStream out = new ByteArrayOutputStream();
+			parseAndEvaluate(args, out);
+			return out.toString();
+		} catch (Exception e) {
 			return e.getMessage();
 		}
 	}
@@ -953,8 +960,9 @@ public class ShellImpl implements Shell {
 	@Override
 	public String redirectInput(String args) {
 		try {
-			parseAndEvaluate(args, System.out);
-			return System.out.toString();
+			OutputStream out = new ByteArrayOutputStream();
+			parseAndEvaluate(args, out);
+			return out.toString();
 		} catch (AbstractApplicationException | ShellException e) {
 			return e.getMessage();
 		}
@@ -963,8 +971,9 @@ public class ShellImpl implements Shell {
 	@Override
 	public String redirectOutput(String args) {
 		try {
-			parseAndEvaluate(args, System.out);
-			return System.out.toString();
+			OutputStream out = new ByteArrayOutputStream();
+			parseAndEvaluate(args, out);
+			return out.toString();
 		} catch (AbstractApplicationException | ShellException e) {
 			return e.getMessage();
 		}
@@ -973,8 +982,9 @@ public class ShellImpl implements Shell {
 	@Override
 	public String redirectInputWithNoFile(String args) {
 		try {
-			parseAndEvaluate(args, System.out);
-			return System.out.toString();
+			OutputStream out = new ByteArrayOutputStream();
+			parseAndEvaluate(args, out);
+			return out.toString();
 		} catch (AbstractApplicationException | ShellException e) {
 			return e.getMessage();
 		}
@@ -983,8 +993,9 @@ public class ShellImpl implements Shell {
 	@Override
 	public String redirectOutputWithNoFile(String args) {
 		try {
-			parseAndEvaluate(args, System.out);
-			return System.out.toString();
+			OutputStream out = new ByteArrayOutputStream();
+			parseAndEvaluate(args, out);
+			return out.toString();
 		} catch (AbstractApplicationException | ShellException e) {
 			return e.getMessage();
 		}
@@ -993,8 +1004,9 @@ public class ShellImpl implements Shell {
 	@Override
 	public String redirectInputWithException(String args) {
 		try {
-			parseAndEvaluate(args, System.out);
-			return System.out.toString();
+			OutputStream out = new ByteArrayOutputStream();
+			parseAndEvaluate(args, out);
+			return out.toString();
 		} catch (AbstractApplicationException | ShellException e) {
 			return e.getMessage();
 		}
@@ -1003,8 +1015,9 @@ public class ShellImpl implements Shell {
 	@Override
 	public String redirectOutputWithException(String args) {
 		try {
-			parseAndEvaluate(args, System.out);
-			return System.out.toString();
+			OutputStream out = new ByteArrayOutputStream();
+			parseAndEvaluate(args, out);
+			return out.toString();
 		} catch (AbstractApplicationException | ShellException e) {
 			return e.getMessage();
 		}
@@ -1013,8 +1026,9 @@ public class ShellImpl implements Shell {
 	@Override
 	public String performCommandSubstitution(String args) {
 		try {
-			parseAndEvaluate(args, System.out);
-			return System.out.toString();
+			OutputStream out = new ByteArrayOutputStream();
+			parseAndEvaluate(args, out);
+			return out.toString();
 		} catch (AbstractApplicationException | ShellException e) {
 			return e.getMessage();
 		}
@@ -1023,10 +1037,16 @@ public class ShellImpl implements Shell {
 	@Override
 	public String performCommandSubstitutionWithException(String args) {
 		try {
-			parseAndEvaluate(args, System.out);
-			return System.out.toString();
+			OutputStream out = new ByteArrayOutputStream();
+			parseAndEvaluate(args, out);
+			return out.toString();
 		} catch (AbstractApplicationException | ShellException e) {
 			return e.getMessage();
 		}
 	}
+	
+
+	
+	
+	
 }

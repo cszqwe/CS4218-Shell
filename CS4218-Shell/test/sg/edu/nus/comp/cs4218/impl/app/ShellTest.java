@@ -140,5 +140,95 @@ public class ShellTest {
 		assertEquals(os.toString(), expected);
 	}
 	
+	@Test
+	//Test the fail case of calling command functions
+	public void testPipeTwoCommands() throws AbstractApplicationException, ShellException {
+		assertEquals(shell.pipeTwoCommands("echo 1 | echo 2"),"2\n");
+	}
+	
+	@Test
+	//Test the fail case of calling command functions
+	public void testPipeMultipleCommands() throws AbstractApplicationException, ShellException {
+		assertEquals(shell.pipeMultipleCommands("echo 1 | echo 2| echo 3"), "3\n");
+	}
+	
+	@Test
+	//Test the fail case of calling command functions
+	public void testPipeWithException() throws AbstractApplicationException, ShellException {
+		assertEquals(shell.pipeWithException("echo 1 | echo 2| ech 3 |echo 4 "), "shell: ech: Invalid app.");
+	}
+	
+	@Test
+	//Test the fail case of calling command functions
+	public void testGlobNoPath() throws AbstractApplicationException, ShellException {
+		assertEquals(shell.globNoPaths("cat globbingTests/*"), "globbingTests is no directory.");
+	}
+	
+	@Test
+	//Test the fail case of calling command functions
+	public void testGlobOneFile(){
+		assertEquals(shell.globOneFile("cat globbingTest/test.txt*"), "line 1\r\nline 2\r\nline 3\r\nline 4");
+	}
+	
+	@Test
+	//Test the fail case of calling command functions
+	public void testGlobMultipleFile(){
+		assertEquals(shell.globFilesDirectories("cat globbingTest/*").length(), 127);
+	}
+
+	@Test
+	//Test the fail case of calling command functions
+	public void testGlobWithException(){
+		assertEquals(shell.globWithException("cat globbingTests/*"), "globbingTests is no directory.");
+	}
+
+	@Test
+	//Test the fail case of calling command functions
+	public void testRedirectInput(){
+		assertEquals("line 1\r\nline 2\r\nline 3\r\nline 4", shell.redirectInput("cat < test.txt")) ;
+	}
+
+	@Test
+	//Test the fail case of calling command functions
+	public void testRedirectOutput(){
+		assertEquals("",shell.redirectOutput( "cat < test.txt > testredirectout.txt"));
+	}
+
+	@Test
+	//Test the fail case of calling command functions
+	public void testrediRectInputWithNoFile(){
+		assertEquals("shell: ",shell.redirectInputWithNoFile( "cat <"));
+	}
+
+	@Test
+	//Test the fail case of calling command functions
+	public void testrediRectOutputWithNoFile(){
+		assertEquals("shell: ",shell.redirectOutputWithNoFile( "cat >"));
+	}
+
+	@Test
+	//Test the fail case of calling command functions
+	public void testrediRectIntputWithException(){
+		assertEquals("shell: ",shell.redirectInputWithException( "cat <"));
+	}
+		
+	@Test
+	//Test the fail case of calling command functions
+	public void testrediRectOutputWithException(){
+		assertEquals("shell: ",shell.redirectOutputWithException( "cat >"));
+	}
+	
+	@Test
+	//Test the fail case of calling command functions
+	public void performCommandSubstitution(){
+		assertEquals("line 1\r\nline 2\r\nline 3\r\nline 4",shell.performCommandSubstitution("cat `echo test.txt`"));
+	}
+	
+	@Test
+	//Test the fail case of calling command functions
+	public void performCommandSubstitutionWithException(){
+		assertEquals("shell: eco: Invalid app.",shell.performCommandSubstitutionWithException("cat `eco test.txt`"));
+	}
+	
 	
 }

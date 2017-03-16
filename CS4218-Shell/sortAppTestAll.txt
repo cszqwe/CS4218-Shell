@@ -1,0 +1,21 @@
+30 damage dealt
+Gained [30] gold
+Gained [6] exp
+6 damage dealt
+//WARNING//
+/run script
+  
+/ru28!*#
+! hit
+6 damage
+/4run
+command unknown
+
+Gain 30 more exp
+Gain0205's message:
+come here
+gain 30 more exp
+!@#%
+ok
+okay
+3 damage dealt

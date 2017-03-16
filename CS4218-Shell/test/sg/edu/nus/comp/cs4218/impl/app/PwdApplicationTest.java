@@ -44,14 +44,15 @@ public class PwdApplicationTest {
 		OutputStream os = new ByteArrayOutputStream();
 		PwdApplication pwdApp = new PwdApplication();
 		String args[] = {};
+		String output = "";
 		try {
 			pwdApp.run(args, is, os);
-			String output = os.toString();
-			assertEquals(output, CURRENTDIR);
+			output = os.toString();
 			
 		} catch (AbstractApplicationException e) {
 			
 		}
+		assertEquals(output, CURRENTDIR);
 		
 		Environment.currentDirectory = origPwd; // reset pwd
 		// no other test cases possible as far as we could think of: hence does not use setup, teardown, etc

@@ -302,6 +302,13 @@ public class SortApplication implements Sort {
 		return output;
 	}
 
+	
+	/**
+	 * For efficiency, all sort interfaces just invoke one single sort algorithm.
+	 * Hence the interfaces themselves don't care whether the text passed to them actually contains
+	 * the set of char types they supposedly process. 
+	 * 
+	 */
 	@Override
 	public String sortStringsSimple(String toSort) {
 		return sort(toSort);

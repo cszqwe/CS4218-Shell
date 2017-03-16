@@ -760,18 +760,6 @@ public class WcApplicationTest {
 	}
 	
 	@Test
-	//Integrated Test
-	public void testOverAllFromStdin() throws AbstractApplicationException, ShellException {
-		os = new ByteArrayOutputStream();
-		ShellImpl shell = new ShellImpl();
-		String args = "cat test.txt | wc";
-		String expected = "27 8 4 \n";
-		shell.parseAndEvaluate(args,os);
-		assertEquals(expected, os.toString());
-		
-	}
-	
-	@Test
 	public void testOverAllFromFile() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		ShellImpl shell = new ShellImpl();

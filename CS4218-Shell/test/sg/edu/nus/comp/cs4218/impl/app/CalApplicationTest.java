@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.CalException;
 import sg.edu.nus.comp.cs4218.exception.CalException;
 
 import org.junit.After;
@@ -30,6 +30,7 @@ public class CalApplicationTest {
 	public static void setUpBeforeClass() throws Exception {
 		calApp = new CalApplication();
 		is = null;
+		os = new ByteArrayOutputStream();
 		
 	}
 
@@ -39,11 +40,11 @@ public class CalApplicationTest {
 
 	@Before
 	public void setUp() throws Exception {
-		os = new ByteArrayOutputStream();
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		os = new ByteArrayOutputStream();
 	}
 	
 	// Cal -m month year
@@ -61,7 +62,7 @@ public class CalApplicationTest {
 			calApp.run(args, is, os);
 			String output = os.toString();
 			assertEquals(expected, output);
-		} catch (AbstractApplicationException e) {
+		} catch (CalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -83,7 +84,7 @@ public class CalApplicationTest {
 			calApp.run(args, is, os);
 			String output = os.toString();
 			assertEquals(expected, output);
-		} catch (AbstractApplicationException e) {
+		} catch (CalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -128,7 +129,7 @@ public class CalApplicationTest {
 			calApp.run(args, is, os);
 			String output = os.toString();
 			assertEquals(expected, output);
-		} catch (AbstractApplicationException e) {
+		} catch (CalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -174,7 +175,7 @@ public class CalApplicationTest {
 			calApp.run(args, is, os);
 			String output = os.toString();
 			assertEquals(expected, output);
-		} catch (AbstractApplicationException e) {
+		} catch (CalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -195,7 +196,7 @@ public class CalApplicationTest {
 			calApp.run(args, is, os);
 			String output = os.toString();
 			assertEquals(expected, output);
-		} catch (AbstractApplicationException e) {
+		} catch (CalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -217,7 +218,7 @@ public class CalApplicationTest {
 			calApp.run(args, is, os);
 			String output = os.toString();
 			assertEquals(expected, output);
-		} catch (AbstractApplicationException e) {
+		} catch (CalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -235,7 +236,7 @@ public class CalApplicationTest {
 			fail("CalException should be thrown!");
 			// String output = os.toString();
 			// assertEquals(expected, output);
-		} catch (AbstractApplicationException e) {
+		} catch (CalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -250,7 +251,7 @@ public class CalApplicationTest {
 			fail("CalException should be thrown!");
 			// String output = os.toString();
 			// assertEquals(expected, output);
-		} catch (AbstractApplicationException e) {
+		} catch (CalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -265,7 +266,7 @@ public class CalApplicationTest {
 			fail("Exception should be thrown!");
 			// String output = os.toString();
 			// assertEquals(expected, output);
-		} catch (AbstractApplicationException e) {
+		} catch (CalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -274,16 +275,20 @@ public class CalApplicationTest {
 	// cal 0 1999
 	@Test
 	public void testCalSundayFirstMonthAndYearInvalidMonth() {
-		String args[] = "0 2000".split(" ");      
+		String args[] = "0 2000".split(" ");
+		Exception exc = new Exception();
+		String expected = "cal: month must be between 1 and 12";
+		
 		try {
 			calApp.run(args, is, os);
-			fail("Exception should be thrown!");
+			// fail("Exception should be thrown!");
 			// String output = os.toString();
 			// assertEquals(expected, output);
-		} catch (AbstractApplicationException e) {
+		} catch (CalException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			exc = e;
 		}
+		assertEquals(expected, exc.getMessage());
 	}
 	
 	// cal 6 zx
@@ -295,7 +300,7 @@ public class CalApplicationTest {
 			fail("Exception should be thrown!");
 			// String output = os.toString();
 			// assertEquals(expected, output);
-		} catch (AbstractApplicationException e) {
+		} catch (CalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -310,7 +315,7 @@ public class CalApplicationTest {
 			fail("Exception should be thrown!");
 			// String output = os.toString();
 			// assertEquals(expected, output);
-		} catch (AbstractApplicationException e) {
+		} catch (CalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -325,7 +330,7 @@ public class CalApplicationTest {
 			fail("Exception should be thrown!");
 			// String output = os.toString();
 			// assertEquals(expected, output);
-		} catch (AbstractApplicationException e) {
+		} catch (CalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -340,7 +345,7 @@ public class CalApplicationTest {
 			fail("Exception should be thrown!");
 			// String output = os.toString();
 			// assertEquals(expected, output);
-		} catch (AbstractApplicationException e) {
+		} catch (CalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -355,7 +360,7 @@ public class CalApplicationTest {
 			fail("Exception should be thrown!");
 			// String output = os.toString();
 			// assertEquals(expected, output);
-		} catch (AbstractApplicationException e) {
+		} catch (CalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

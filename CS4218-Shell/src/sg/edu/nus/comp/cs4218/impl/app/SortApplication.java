@@ -444,8 +444,8 @@ public class SortApplication implements Sort {
 				return 1;
 			} else if (aNum < bNum) {
 				return -1;
-			} else {
-				if (a.contents.equals(b.contents)) {
+			} else { // numerical values are the same
+				if (a.contents.equals(b.contents)) { // both numerical value and string contents identical
 					return 0;
 				} else {
 					for (int i = 0; i < Math.max(a.contents.length(), b.contents.length()); i++) {
@@ -456,7 +456,11 @@ public class SortApplication implements Sort {
 							return 1;
 						} else if (aChar < bChar) {
 							return -1;
-						} else {
+						}
+						/** this is redundant: if same value but different string then
+						 * it means one has additional zeroes in front of the other 
+						 * hence program will never reach this code block
+						else {
 							if (i == a.contents.length()-1 && i == b.contents.length()-1) {
 								return 0;
 							} else if (i == a.contents.length()-1) {
@@ -467,6 +471,7 @@ public class SortApplication implements Sort {
 								continue;
 							}
 						}
+						**/
 					}
 					
 				}

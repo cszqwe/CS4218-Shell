@@ -201,11 +201,8 @@ public class ExtraWcApplicationTest {
 		String titlesFileExpected = String.format("4129 717 251 %s%s", TEST_FILE_TITLES, LINE_SEPARATOR);
 		String expectedResult = String.format("%s%s%s", emptyFileExpected, singleWordFileExpected, titlesFileExpected);
 		
-		System.out.println(expectedResult);
-		System.out.println("");
 		String res = stdout.toString();
 		assertEquals(expectedResult, res);
-		System.out.println(res);
 	}
 
 	/**

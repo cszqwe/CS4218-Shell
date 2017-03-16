@@ -46,7 +46,9 @@ public class EchoApplication implements Application {
 				for (int i = 0; i < args.length; i++) {
 					stdout.write(args[i].getBytes());
 					//Output a space between different args
-					if (i != args.length -1) stdout.write(" ".getBytes());
+					if (i != args.length -1) {
+						stdout.write(" ".getBytes());
+					}
 				}
 				//This is different from cat, cat would not print such an extra newline into the stdout.
 				stdout.write("\n".getBytes());

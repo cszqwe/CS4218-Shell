@@ -30,14 +30,14 @@ public class TailApplication implements Application {
         int cnt = 0;
 		// Read file
 		try {
-			FileReader fr = new FileReader(path);
-			BufferedReader br = new BufferedReader(fr);
+			FileReader fileReader = new FileReader(path);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			
 			int currLineCount = 0;
 			String sCurrentLine;
 			
 			try {
-				while ((sCurrentLine = br.readLine()) != null) {
+				while ((sCurrentLine = bufferedReader.readLine()) != null) {
 					cnt++;
 				}
 			} catch (IOException e) {
@@ -55,15 +55,15 @@ public class TailApplication implements Application {
 	public static void readFile(OutputStream stdout) {
 		// Read file
 		try {
-			FileReader fr = new FileReader(path);
-			BufferedReader br = new BufferedReader(fr);
+			FileReader fileReader = new FileReader(path);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			int lineCount = getFileLineCounts(path);
 			int currLineCount = 0;
 			int firstWantedLine = lineCount - numOfLines;
 			String sCurrentLine;
 			
 			try {
-				while ((sCurrentLine = br.readLine()) != null) {
+				while ((sCurrentLine = bufferedReader.readLine()) != null) {
 					if (currLineCount >= firstWantedLine){
 						stdout.write(sCurrentLine.getBytes());
 						stdout.write("\n".getBytes());
@@ -109,7 +109,9 @@ public class TailApplication implements Application {
 				fileName = cmdArgs[2];
 				path = Environment.currentDirectory + "\\" + fileName;
 				isFileReadable = checkIfFileIsReadable(path);
-				if (!isFileReadable) throw new HeadException("File not found");
+				if (!isFileReadable) {
+					throw new HeadException("File not found");
+				}
 
 			} 
 			// command: head test.txt
@@ -118,7 +120,9 @@ public class TailApplication implements Application {
 				fileName = cmdArgs[0];
 				path = Environment.currentDirectory + "\\" + fileName;
 				isFileReadable = checkIfFileIsReadable(path);
-				if (!isFileReadable) throw new HeadException("File not found");
+				if (!isFileReadable) {
+					throw new HeadException("File not found");
+				}
 
 			} else if(cmdArgs.length == 2){ 
 				
@@ -131,8 +135,8 @@ public class TailApplication implements Application {
 					throw err;
 				}
 			}else{
-				AbstractApplicationException e =  new TailException("Invalid usage of head");
-				throw e;
+				AbstractApplicationException err =  new TailException("Invalid usage of head");
+				throw err;
 			}
 		} // TODO: read from stdin
 		else {
@@ -149,12 +153,12 @@ public class TailApplication implements Application {
 	
 	public static void readFromStdin(InputStream stdin, OutputStream stdout) throws HeadException {
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(stdin)); 
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stdin)); 
 			String strCurrent;
 			ArrayList<String> answers = new ArrayList<String>();
 			answers.clear();
 			int cnt = numOfLines;
-			while ((strCurrent = in.readLine()) != null) {
+			while ((strCurrent = bufferedReader.readLine()) != null) {
 				
 				//if (strCurrent.equals("end")) break;  //This statement is used for testing only.
 				answers.add(strCurrent);
@@ -186,7 +190,7 @@ public class TailApplication implements Application {
 	 */
 	boolean checkIfFileIsReadable(String filePath) throws TailException {
 		try {
-			FileReader fr = new FileReader(filePath);
+			FileReader fileReader = new FileReader(filePath);
 			return true;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

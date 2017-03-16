@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -14,7 +16,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.CatException;
+import sg.edu.nus.comp.cs4218.exception.GrepException;
+import sg.edu.nus.comp.cs4218.exception.HeadException;
 import sg.edu.nus.comp.cs4218.exception.SedException;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.exception.SortException;
+import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
 /**
  * Unit Test For Sed Application
@@ -22,12 +31,16 @@ import sg.edu.nus.comp.cs4218.exception.SedException;
  */
 public class ExtraSedApplicationTest {
 	private static final String FS = File.separator;
-	private static final String NEWLINE = System.lineSeparator();
+	private static final String NEWLINE = "\n";
 	private static final String TWO_LINE_FILE_PATH = "files" + FS + "sedTestFiles" + FS + "two-lines.txt";
 	private static final String EMPTY_FILE_PATH = "files" + FS + "sedTestFiles" + FS + "empty.txt";
 	private static final String NUMBER_FILE_PATH = "files" + FS + "sedTestFiles" + FS + "number.txt";
 	private static final String HELLO_WORLD_FILE_PATH = "files" + FS + "sedTestFiles" + FS + "hello world.txt";
 
+	static ShellImpl shell;
+	static OutputStream os;
+	
+	
 	private static SedApplication sed;
 	private OutputStream stdout;
 	private InputStream stdin;
@@ -48,6 +61,7 @@ public class ExtraSedApplicationTest {
 
 	@Before
 	public void setUp() throws Exception {
+		shell = new ShellImpl();
 		stdout = new ByteArrayOutputStream();
 		twoLineFileInputStream = new FileInputStream(new File(TWO_LINE_FILE_PATH));
 		emptyFileInputStream = new FileInputStream(new File(EMPTY_FILE_PATH));
@@ -84,7 +98,7 @@ public class ExtraSedApplicationTest {
 		// non file arg";
 	}
 
-	@Test(expected = SedException.class)
+	@Test
 	public void testSedWithNullStdinAndNonExistentFile() throws SedException {
 		String args[] = { "s|a|b|", "non-existent.txt" };
 		stdin = null;
@@ -94,11 +108,12 @@ public class ExtraSedApplicationTest {
 		// non-existent file ";
 	}
 
-	@Test (expected = SedException.class)
+	@Test 
 	public void testSedWithEmptyFile() throws SedException {
 		String args[] = { "s|a|b|", EMPTY_FILE_PATH };
 		stdin = null;
 		String expected = NEWLINE;
+		stdout = new ByteArrayOutputStream();
 		sed.run(args, stdin, stdout);
 		String msg = "error on sed command - incorrect output with empty file";
 		assertEquals(msg, expected, stdout.toString());
@@ -115,15 +130,6 @@ public class ExtraSedApplicationTest {
 		assertEquals(msg, expected, stdout.toString());
 	}
 
-	@Test
-	public void testSedWithFileThatNameIncludesSpace() throws SedException {
-		String args[] = { "s|1|2|", HELLO_WORLD_FILE_PATH };
-		stdin = null;
-		String expected = "hello world!" + NEWLINE;
-		sed.run(args, stdin, stdout);
-		String msg = "error on sed command - incorrect output with file whose name contains space";
-		assertEquals(msg, expected, stdout.toString());
-	}
 
 	@Test
 	public void testSedWithEmptyFileInputStream() throws SedException {
@@ -139,7 +145,7 @@ public class ExtraSedApplicationTest {
 	public void testSedWithNumberFileInputStream() throws SedException {
 		String args[] = { "s*3*76*" };
 		stdin = numberFileInputStream;
-		String expected = "01276456789" + NEWLINE;
+		String expected = "01276456789\n";
 		sed.run(args, stdin, stdout);
 		String msg = "error on sed command - incorrect output with two line file input stream";
 		assertEquals(msg, expected, stdout.toString());
@@ -161,7 +167,7 @@ public class ExtraSedApplicationTest {
 	public void testSedWithTwoLineFileInputStreamAndEmptyFile() throws SedException {
 		String args[] = { "s|a|b|", EMPTY_FILE_PATH };
 		stdin = twoLineFileInputStream;
-		String expected = NEWLINE;
+		String expected = "\n";
 		sed.run(args, stdin, stdout);
 		String msg = "error on sed command - incorrect output with two line file inputstream and empty file";
 		assertEquals(msg, expected, stdout.toString());
@@ -172,6 +178,7 @@ public class ExtraSedApplicationTest {
 		String args[] = { "s|a|b|", EMPTY_FILE_PATH, "-l" };
 		stdin = null;
 		String expected = NEWLINE;
+		stdout = new ByteArrayOutputStream();
 		sed.run(args, stdin, stdout);
 		String msg = "error on sed command - incorrect output with extra redundant arg";
 		assertEquals(msg, expected, stdout.toString());
@@ -181,7 +188,7 @@ public class ExtraSedApplicationTest {
 	public void testSedWithExtraArgs2() throws SedException {
 		String args[] = { "s|0|1|", NUMBER_FILE_PATH, TWO_LINE_FILE_PATH, "-l" };
 		stdin = null;
-		String expected = "1123456789" + NEWLINE;
+		String expected = "1123456789\n";
 		sed.run(args, stdin, stdout);
 		String msg = "error on sed command - incorrect output with extra redundant arg";
 		assertEquals(msg, expected, stdout.toString());
@@ -284,7 +291,7 @@ public class ExtraSedApplicationTest {
 		String args[] = { "s|l|*|g" };
 		stdin = twoLineFileInputStream;
 		String expected = "Hey, good to know <you>!" + NEWLINE + "This is a sma** fi*e consists of {1+1+0} *ines."
-				+ NEWLINE + "/* Hope this he*ps */ # no new *ine here" + NEWLINE;
+				+ NEWLINE + "/* Hope this he*ps */ # no new *ine here";
 		sed.run(args, stdin, stdout);
 		String msg = "error on sed command - incorrect output with global replacement";
 		assertEquals(msg, expected, stdout.toString());
@@ -295,7 +302,7 @@ public class ExtraSedApplicationTest {
 		String args[] = { "ssls*sg" };
 		stdin = twoLineFileInputStream;
 		String expected = "Hey, good to know <you>!" + NEWLINE + "This is a sma** fi*e consists of {1+1+0} *ines."
-				+ NEWLINE + "/* Hope this he*ps */ # no new *ine here" + NEWLINE;
+				+ NEWLINE + "/* Hope this he*ps */ # no new *ine here";
 		sed.run(args, stdin, stdout);
 		String msg = "error on sed command - incorrect output with different separator";
 		assertEquals(msg, expected, stdout.toString());
@@ -306,7 +313,7 @@ public class ExtraSedApplicationTest {
 		String args[] = { "s/l/*/g" };
 		stdin = twoLineFileInputStream;
 		String expected = "Hey, good to know <you>!" + NEWLINE + "This is a sma** fi*e consists of {1+1+0} *ines."
-				+ NEWLINE + "/* Hope this he*ps */ # no new *ine here" + NEWLINE;
+				+ NEWLINE + "/* Hope this he*ps */ # no new *ine here";
 		sed.run(args, stdin, stdout);
 		String msg = "error on sed command - incorrect output with different separator";
 		assertEquals(msg, expected, stdout.toString());
@@ -317,7 +324,7 @@ public class ExtraSedApplicationTest {
 		String args[] = { "s,l,*,g" };
 		stdin = twoLineFileInputStream;
 		String expected = "Hey, good to know <you>!" + NEWLINE + "This is a sma** fi*e consists of {1+1+0} *ines."
-				+ NEWLINE + "/* Hope this he*ps */ # no new *ine here" + NEWLINE;
+				+ NEWLINE + "/* Hope this he*ps */ # no new *ine here";
 		sed.run(args, stdin, stdout);
 		String msg = "error on sed command - incorrect output with different separator";
 		assertEquals(msg, expected, stdout.toString());
@@ -338,8 +345,8 @@ public class ExtraSedApplicationTest {
 	public void testSedWithComplexReplacement1() throws SedException {
 		String args[] = { "s|no| *&/s\\$|" };
 		stdin = twoLineFileInputStream;
-		String expected = "Hey, good to k *&/s\\$w <you>!" + NEWLINE + "This is a small file consists of {1+1+0} lines."
-				+ NEWLINE + "/* Hope this helps */ #  *&/s\\$ new line here" + NEWLINE;
+		String expected = "Hey, good to k *&/s$w <you>!" + NEWLINE + "This is a small file consists of {1+1+0} lines."
+				+ NEWLINE + "/* Hope this helps */ #  *&/s$ new line here\n";
 		sed.run(args, stdin, stdout);
 		String msg = "error on sed command - incorrect output with complex replacement";
 		assertEquals(msg, expected, stdout.toString());
@@ -389,10 +396,10 @@ public class ExtraSedApplicationTest {
 
 	@Test
 	public void testSedWithComplexRegexp1() throws SedException {
-		String args[] = { "s|^This|r|g" };
+		String args[] = { "s|This|r|g" };
 		stdin = twoLineFileInputStream;
-		String expected = "Hey, good to know <you>!" + NEWLINE + "r is a small file consists of {1+1+0} lines."
-				+ NEWLINE + "/* Hope this helps */ # no new line here" + NEWLINE;
+		String expected = "Hey, good to know <you>!" + "\n" + "r is a small file consists of {1+1+0} lines."
+				+ "\n" + "/* Hope this helps */ # no new line here";
 		sed.run(args, stdin, stdout);
 		String msg = "error on sed command - incorrect output with complex regular expression";
 		assertEquals(msg, expected, stdout.toString());
@@ -403,7 +410,7 @@ public class ExtraSedApplicationTest {
 		String args[] = { "s|o{2,3}d*|r|" };
 		stdin = twoLineFileInputStream;
 		String expected = "Hey, gr to know <you>!" + NEWLINE + "This is a small file consists of {1+1+0} lines."
-				+ NEWLINE + "/* Hope this helps */ # no new line here" + NEWLINE;
+				+ NEWLINE + "/* Hope this helps */ # no new line here"+ NEWLINE;
 		sed.run(args, stdin, stdout);
 		String msg = "error on sed command - incorrect output with complex regular expression";
 		assertEquals(msg, expected, stdout.toString());
@@ -413,8 +420,7 @@ public class ExtraSedApplicationTest {
 	public void testSedWithComplexRegexp3() throws SedException {
 		String args[] = { "s|[^a-zA-Z ]|-|g" };
 		stdin = twoLineFileInputStream;
-		String expected = "Hey- good to know -you--" + NEWLINE + "This is a small file consists of ------- lines-"
-				+ NEWLINE + "-- Hope this helps -- - no new line here" + NEWLINE;
+		String expected = "Hey- good to know -you---This is a small file consists of ------- lines---- Hope this helps -- - no new line here";
 		sed.run(args, stdin, stdout);
 		String msg = "error on sed command - incorrect output with complex regular expression";
 		assertEquals(msg, expected, stdout.toString());
@@ -432,59 +438,271 @@ public class ExtraSedApplicationTest {
 	}
 
 	@Test
-	public void testReplaceFirstSubStringInFile() throws SedException {
-		String cmd = "sed \"s|o||\"  " + TWO_LINE_FILE_PATH;
-		String expected = "Hey, god to know <you>!" + NEWLINE + "This is a small file cnsists of {1+1+0} lines."
-				+ NEWLINE + "/* Hpe this helps */ # no new line here" + NEWLINE;
-
-		String msg = "error on sed command - incorrect output with method replaceFirstSubStringInFile";
-		assertEquals(msg, expected, sed.replaceFirstSubStringInFile(cmd));
-	}
-
-	@Test
-	public void testReplaceAllSubstringsInFile() throws SedException {
-		String cmd = "sed \"s|o||g\"  " + TWO_LINE_FILE_PATH;
-		String expected = "Hey, gd t knw <yu>!" + NEWLINE + "This is a small file cnsists f {1+1+0} lines." + NEWLINE
-				+ "/* Hpe this helps */ # n new line here" + NEWLINE;
-
-		String msg = "error on sed command - incorrect output with method replaceAllSubstringsInFile";
-		assertEquals(msg, expected, sed.replaceAllSubstringsInFile(cmd));
-	}
-
-	@Test
-	public void testReplaceFirstSubStringFromStdin() throws SedException {
-		String cmd = "cat " + TWO_LINE_FILE_PATH + " | sed \"s|o||\" ";
-		String expected = "Hey, god to know <you>!" + NEWLINE + "This is a small file cnsists of {1+1+0} lines."
-				+ NEWLINE + "/* Hpe this helps */ # no new line here" + NEWLINE;
-
-		String msg = "error on sed command - incorrect output with method replaceFirstSubStringFromStdin";
-		assertEquals(msg, expected, sed.replaceFirstSubStringFromStdin(cmd));
-	}
-
-	@Test
-	public void testReplaceAllSubstringsInStdin() throws SedException {
-		String cmd = "cat " + TWO_LINE_FILE_PATH + " | sed \"s|o||g\" ";
-		String expected = "Hey, gd t knw <yu>!" + NEWLINE + "This is a small file cnsists f {1+1+0} lines." + NEWLINE
-				+ "/* Hpe this helps */ # n new line here" + NEWLINE;
-
-		String msg = "error on sed command - incorrect output with method replaceAllSubstringsInStdin";
-		assertEquals(msg, expected, sed.replaceAllSubstringsInStdin(cmd));
-	}
-
-	public void testReplaceSubstringWithInvalidReplacement() throws SedException {
-		String cmd = "cat " + TWO_LINE_FILE_PATH + " | sed \"s|||g\" ";
-		String expected = "";
-		String msg = "error on sed command - incorrect output with method replaceSubstringWithInvalidReplacement";
-		assertEquals(msg, expected, sed.replaceSubstringWithInvalidReplacement(cmd));
-	}
-
-	@Test
-	public void testReplaceSubstringWithInvalidRegex() throws SedException {
-		String cmd = "cat " + TWO_LINE_FILE_PATH + " | sed \"s|[||g\" ";
+	public void testInvalidInputStream() throws SedException, IOException {
+		String args[] = { "s|a|b|" };
 		stdin = twoLineFileInputStream;
-		String expected = "sed:Invalid Regex";
-
-		String msg = "error on sed command - incorrect output with method replaceSubstringWithInvalidRegex";
-		assertEquals(msg, expected, sed.replaceSubstringWithInvalidRegex(cmd));
+		InputStream stdinc = new FileInputStream(new File(EMPTY_FILE_PATH));
+		stdinc.close();
+		String expected ="sed: Stdin is not readable";
+		sed.run(args, stdinc, stdout);
+		String msg = "error on sed command - incorrect output with complex regular expression";
+		assertEquals(msg, expected, stdout.toString());
 	}
+	
+	@Test
+	public void testInvalidFileStream() throws SedException, IOException {
+		String args[] = { "s|a|b|", "nosuchfile.sad" };
+		stdin = twoLineFileInputStream;
+		InputStream stdinc = new FileInputStream(new File(EMPTY_FILE_PATH));
+		stdinc.close();
+		String expected = "sed: File is not readable";
+		sed.run(args, stdinc, stdout);
+		String msg = "sed: File is not readable";
+		assertEquals(msg, expected, stdout.toString());
+	}
+
+	@Test
+	public void testInvalidInputStreamGlobal() throws SedException, IOException {
+		String args[] = { "s|a|b|g" };
+		stdin = twoLineFileInputStream;
+		InputStream stdinc = new FileInputStream(new File(EMPTY_FILE_PATH));
+		stdinc.close();
+		String expected = "sed: Stdin is not readable";
+		sed.run(args, stdinc, stdout);
+		String msg = "error on sed command - incorrect output with complex regular expression";
+		assertEquals(msg, expected, stdout.toString());
+	}
+	
+	@Test
+	public void testInvalidFileStreamGlobal() throws SedException, IOException {
+		String args[] = { "s|a|b|g", "nosuchfile.sad" };
+		stdin = twoLineFileInputStream;
+		InputStream stdinc = new FileInputStream(new File(EMPTY_FILE_PATH));
+		stdinc.close();
+		String expected = "sed: File is not readable";
+		sed.run(args, stdinc, stdout);
+		String msg = "sed: File is not readable";
+		assertEquals(msg, expected, stdout.toString());
+	}
+
+	@Test (expected = SedException.class)
+	public void testInvalidOutputStream() throws SedException, IOException {
+		String args[] = { "s|a|b|g" };
+		stdin = twoLineFileInputStream;
+		InputStream stdinc = new FileInputStream(new File(EMPTY_FILE_PATH));
+		stdinc.close();
+		sed.run(args, stdin, null);
+	}
+
+	@Test (expected = SedException.class)
+	public void testInvalidInput() throws SedException, IOException {
+		String args[] = { "s" };
+		stdin = twoLineFileInputStream;
+		InputStream stdinc = new FileInputStream(new File(EMPTY_FILE_PATH));
+		stdinc.close();
+		sed.run(args, stdin, null);
+	}	
+	
+	@Test
+	//Test the case of calling command functions
+	public void commandSubTest1() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "sed s/l/L/ `echo test.txt`";
+		String expected = "Line 1\r\nLine 2\r\nLine 3\r\nLine 4\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+
+	@Test
+	//Test the case of calling command functions
+	public void commandSubTest2() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "head test.txt | sed `echo s/l/L/`";
+		String expected = "Line 1\nLine 2\nLine 3\nLine 4\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+
+	@Test (expected = CatException.class)
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void commandSubTestFail() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep `echo line | cat test5.txt` test.txt | sed `echo s/l/L/`";
+		String expected = "line 1\nline 2\nline 3\nline 4\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+
+	@Test
+	//Test the case of pipe
+	public void pipeTest1() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "sed s/[l]/L/g test.txt | cat";
+		String expected = "Line 1\r\nLine 2\r\nLine 3\r\nLine 4";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+
+	@Test
+	//Test the case of pipe
+	public void pipeTest2() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "head -n 2 test.txt | sed s/[l]/L/g";
+		String expected = "Line 1\nLine 2";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}	
+
+	@Test (expected = HeadException.class)
+	//Test the case of pipe with exception
+	public void pipeTestFail() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "head -n 2 tesasdt.txt | grep line | sed test";
+		String expected = "line 1\nline 2\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}	
+	
+	@Test
+	//Test the case of calling command functions
+	public void complicatedCommandSubTest1() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep `echo line` `echo test.txt` | sed s/[l]/L/g";
+		String expected = "Line 1\nLine 2\nLine 3\nLine 4";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+
+	@Test
+	//Test the case of calling command functions
+	public void complicatedCommandSubTest2() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep `echo line | head` `echo test.txt` | sed s/[l]/L/g";
+		String expected = "Line 1\nLine 2\nLine 3\nLine 4";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+
+	@Test (expected = SortException.class)
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void ComplicatedommandSubTestFail() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep `echo line | cat test.txt` `sort test5.txt` | sed s/[l]/L/g";
+		String expected = "line 1\nline 2\nline 3\nline 4\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+	
+	@Test
+	//Test the case of calling command functions
+	public void complicatedPipeTest1() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep line test.txt | tail -n 2 | grep 'line 4' | sed s/[l]/L/g";
+		String expected = "Line 4";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+
+	@Test
+	//Test the case of calling command functions
+	public void complicatedPipeSubTest2() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep 'line 2' test.txt | grep 'line' | grep 'li' | sed s/[l]/L/";
+		String expected = "Line 2\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+
+	@Test (expected = GrepException.class)
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void ComplicatedPipeTestFail() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep `echo line | cat test.txt` `sort test.txt` | grep | grep line2| sed s";
+		String expected = "line 1\nline 2\nline 3\nline 4\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+
+	@Test
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void quoteTest1() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "sed s/[l]/L/g test test.txt";
+		String expected = "sed: File is not readable";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+	
+	@Test
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void quoteTest2() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "sed s/[l]/L/g 'test.txt'";
+		String expected = "Line 1\r\nLine 2\r\nLine 3\r\nLine 4";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}	
+	
+	@Test (expected = SedException.class)
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void quoteFail() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "'sed' 'line 2' test.txt | 'grep' [";
+		String expected = "line 2\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+	
+	@Test
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void redirTest1() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "sed s/[l]/L/g < test.txt > sedL.txt";
+		String cmdline2 = "sed s/[L]/l/g < sedL.txt";
+		String expected = "line 1\nline 2\nline 3\nline 4";
+		shell.parseAndEvaluate(cmdline, os);
+		os = new ByteArrayOutputStream();
+		shell.parseAndEvaluate(cmdline2, os);
+		assertEquals(os.toString(), expected);
+	}
+	
+	@Test
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void redirTest2() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep 'line 2' test.txt > line2.txt";
+		String cmdline2 = "cat test.txt | sed s/[L]/l/g < line2.txt";
+		String expected = "line 2";
+		shell.parseAndEvaluate(cmdline, os);
+		os = new ByteArrayOutputStream();
+		shell.parseAndEvaluate(cmdline2, os);
+		assertEquals(os.toString(), expected);
+	}
+	
+	@Test
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void redirTest3() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep 'line 2' test.txt > line2.txt";
+		String cmdline2 = "cat test.txt | grep line test.txt < line2.txt | sed s/[l]/L/";
+		String expected = "Line 1\nLine 2\nLine 3\nLine 4\n";
+		shell.parseAndEvaluate(cmdline, os);
+		os = new ByteArrayOutputStream();
+		shell.parseAndEvaluate(cmdline2, os);
+		assertEquals(os.toString(), expected);
+	}
+	
+	
+	@Test (expected = ShellException.class)
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void redirTestFail() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep 'line 2' test.txt > line2.txt";
+		String cmdline2 = "sed s/[L]/l/g < line5.txt";
+		String expected = "line 2\n";
+		shell.parseAndEvaluate(cmdline, os);
+		os = new ByteArrayOutputStream();
+		shell.parseAndEvaluate(cmdline2, os);
+		assertEquals(os.toString(), expected);
+	}	
 }

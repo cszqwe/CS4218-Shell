@@ -27,55 +27,61 @@ public class SedApplication implements Sed{
 		String output = "";
 		
 		if (args == null) {
-			if (stdin == null || stdout == null) {
 				throw new SedException("Null Pointer Exception");
-			}
 		}
 		String wholeCommand = "sed ";
 		for (int i = 0; i< args.length; i++){
 			wholeCommand = wholeCommand + args[i] + " ";
 		}
+		if (args[0].length() < 5) throw new SedException("Wrong usage");
 		if (args[0].charAt(0) != 's') throw new SedException("Wrong usage");
-		String splitSymbol = ""+args[0].charAt(1);
+		args[0] = args[0].substring(1);
+		String splitSymbol = ""+args[0].charAt(0);
 		String[] strs = args[0].split(Pattern.quote(splitSymbol));
-		if (args[0].length() == 4 && args[0].charAt(1) == args[0].charAt(2) && args[0].charAt(1) == args[0].charAt(3)){
-			throw new SedException("No valid expression given");
-		} 
+
 		boolean isGlobal = false;
+		int sybolNumber = 0;
+		for (int i = 0; i < args[0].length(); i++){
+			if (args[0].charAt(i) == splitSymbol.charAt(0)){
+				sybolNumber ++;
+			}
+		}
+		if (strs.length == 2 && sybolNumber == 3){
+			String[] newstrs = new String[3];
+			newstrs[0] = strs[0];
+			newstrs[1] = strs[1];
+			newstrs[2] = "";
+			strs = newstrs;
+		}
 		if (strs.length != 3 && strs.length != 4){
 			throw new SedException("Wrong usage");
 		}
-		if (strs[1].equals("") || strs[2].equals("")){
+		if (strs[1].equals("")){
 			throw new SedException("Expression cannot be empty");
 		}
 		if (strs.length == 4 && strs[3].equals("g")){
 			isGlobal = true;
 		}
+		if (strs.length == 4 && !strs[3].equals("g")){
+			throw new SedException("Incorrect usage, last parameter should be g");
+		}
 		String originalExp = strs[1];
 		String newExp = strs[2];
 		boolean validReg = true;
-		boolean validNew = true;
 		try{
 			Pattern.compile(originalExp);
 		}catch (Exception e){
 			validReg = false;
 		}
-		try{
-			Pattern.compile(newExp);
-		}catch (Exception e){
-			validNew = false;
-		}
 	
 		if (!validReg){
-			replaceSubstringWithInvalidRegex(wholeCommand);
+			
+			throw new SedException(replaceSubstringWithInvalidRegex(wholeCommand));
 		}
 		
-		if (!validNew){
-			replaceSubstringWithInvalidReplacement(wholeCommand);
-		}
 
 		//If there is a file
-		if (args.length == 2){
+		if (args.length >= 2){
 			//If there is a /g.
 			if (isGlobal){
 				output = replaceAllSubstringsInFile(wholeCommand);
@@ -83,6 +89,9 @@ public class SedApplication implements Sed{
 				output = replaceFirstSubStringInFile(wholeCommand);	
 			}
 		}else{
+			if (stdin == null){
+				throw new SedException("No valid input stream");
+			}
 			if (isGlobal){
 				output = replaceAllSubstringsInStdin(wholeCommand);
 			}else{
@@ -106,8 +115,8 @@ public class SedApplication implements Sed{
 	 * 
 	 */
 	public String getReg(String args){
-		String[] allArgs = args.trim().split(" ");
-		return allArgs[1].split(allArgs[1].charAt(1)+"")[1];
+		args = args.substring(5);
+		return args.split(Pattern.quote(args.charAt(0)+""))[1];
 	}
 	
 	/**
@@ -119,8 +128,8 @@ public class SedApplication implements Sed{
 	 * 
 	 */
 	public String getReplacement(String args){
-		String[] allArgs = args.trim().split(" ");
-		return allArgs[1].split(allArgs[1].charAt(1)+"")[2];
+		args = args.substring(5);
+		return args.split(Pattern.quote(args.charAt(0)+""))[2];
 	}
 	
 	/**
@@ -129,9 +138,10 @@ public class SedApplication implements Sed{
 	 * 
 	 * @return
 	 * 		The content stdin.
+	 * @throws SedException 
 	 * 
 	 */
-	public String getContentFromStdin(String args){
+	public String getContentFromStdin(String args) throws SedException{
         BufferedReader in = new BufferedReader(new InputStreamReader(stdin));
         StringBuilder str = new StringBuilder();      
         String line = null; 
@@ -145,14 +155,8 @@ public class SedApplication implements Sed{
        			first = false;
        		}
        	}      
-        } catch (IOException e) {      
-            e.printStackTrace();      
-        } finally {      
-           try {      
-                in.close();      
-            } catch (IOException e) {      
-                e.printStackTrace();      
-            }      
+        } catch (Exception e) {      
+            throw new SedException("Stdin is not readable");      
         }
        return str.toString();
 	}
@@ -169,17 +173,13 @@ public class SedApplication implements Sed{
 		String file = args.trim().split(" ")[2];
 		Path filePath = Paths.get(Environment.currentDirectory).resolve(file);
 		String contents;
-		if (Files.exists(filePath) && Files.isReadable(filePath) && !Files.isDirectory(filePath)) {
-				try {
-					contents = new String(Files.readAllBytes(filePath));
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					throw new SedException("File is not readable");
-				}
-			
-		} else {
-			throw new SedException("No such file");
+		try {
+			contents = new String(Files.readAllBytes(filePath));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			throw new SedException("File is not readable");
 		}
+			
 		return contents;
 	}
 	
@@ -193,7 +193,12 @@ public class SedApplication implements Sed{
 		}catch (Exception e){
 			return (e.getMessage());
 		}
-		contents = contents.replaceFirst(regex, replacement);
+		String[] alllines = contents.split(Pattern.quote("\n"));
+		contents = "";
+		for (String str: alllines){
+			contents += str.replaceFirst(regex, replacement);
+			contents += "\n";
+		}
 		return contents;
 	}
 
@@ -221,7 +226,12 @@ public class SedApplication implements Sed{
 		}catch (Exception e){
 			return (e.getMessage());
 		}
-		contents = contents.replaceFirst(regex, replacement);
+		String[] alllines = contents.split(Pattern.quote("\n"));
+		contents = "";
+		for (String str: alllines){
+			contents += str.replaceFirst(regex, replacement);
+			contents += "\n";
+		}
 		return contents;
 	}
 

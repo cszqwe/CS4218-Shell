@@ -46,7 +46,7 @@ public class SedApplicationTest {
 	public void testReplaceFirstSubStringInFile() {
 		os = new ByteArrayOutputStream();
 		String args = "sed s/[1234]/test/ test.txt";
-		String expected = "line test\r\nline 2\r\nline 3\r\nline 4";
+		String expected = "line test\r\nline test\r\nline test\r\nline test\n";
 		String result = sedApp.replaceFirstSubStringInFile(args);
 		assertEquals(expected, result);
 	}

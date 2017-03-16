@@ -77,50 +77,80 @@ public class CalApplication implements Cal {
 			} else {
 				// cal year
 				try {
+					// Catch illegal year argument
+					Integer.parseInt(args[0]);
 					stdout.write(printCalForYear(args[0]).getBytes());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				} catch (NumberFormatException e) {
+					// e.printStackTrace();
+					throw new CalException("Usage: cal -m or cal <year>");
 				}
 			}
 		} else if (args.length == 2) {
 			// cal -m year
 			if (args[0].equals("-m")) {
 				try {
+					// Catch illegal year argument
+					Integer.parseInt(args[1]);
 					stdout.write(printCalForYearMondayFirst(args[1]).getBytes());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+					throw new CalException("Usage: cal -m or cal <year>");
 				}
 			} else {
 				// cal month year
-				int monthInt = Integer.parseInt(args[0]); 
+				try {
+					int monthInt = Integer.parseInt(args[0]); 
+
+					if (monthInt > 12 || monthInt < 1) {
+						throw new CalException("month must be between 1 and 12");
+					} else {
+						try {
+							Integer.parseInt(args[1]); 
+							stdout.write(printCalForMonthYear(args[0], args[1]).getBytes());
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (NumberFormatException e) {
+							e.printStackTrace();
+							throw new CalException("Usage: cal -m or cal <year>");
+						} 
+					}
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+					throw new CalException("Usage: cal -m or cal <year>");
+				} 	
+			}
+		} else if (args.length == 3) {
+			// cal -m month year
+			if (!args[0].equals("-m")) {
+				throw new CalException("First argument must be '-m'");
+			}
+			try {
+				int monthInt = Integer.parseInt(args[1]);
 				if (monthInt > 12 || monthInt < 1) {
 					throw new CalException("month must be between 1 and 12");
 				} else {
 					try {
-						stdout.write(printCalForMonthYear(args[0], args[1]).getBytes());
+						Integer.parseInt(args[2]);
+						stdout.write(printCalForMonthYearMondayFirst(args[1], args[2]).getBytes());
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+						throw new CalException("Usage: cal -m <month> <year>");
+					} 
 				}
-				
-			}
-		} else if (args.length == 3) {
-			// cal -m month year
-			int monthInt = Integer.parseInt(args[1]);
-			if (monthInt > 12 || monthInt < 1) {
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
 				throw new CalException("month must be between 1 and 12");
-			} else {
-				try {
-					stdout.write(printCalForMonthYearMondayFirst(args[1], args[2]).getBytes());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			
+			} 
 		} else {
 			throw new CalException("Cal should have between 1 to 3 arguments");
 		}
@@ -410,7 +440,10 @@ public class CalApplication implements Cal {
 					}
 				}
 			}
-			if (i+1 != 4) {
+			if (i+1 == 4) {
+				result += "\n";
+			}
+			else if (i+1 != 4) {
 				result += "\n\n";
 			}
 		}

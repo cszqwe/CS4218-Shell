@@ -32,7 +32,7 @@ public class ShellTest {
 		String cmdline = "cat test.txt";
 		String expected = "line 1\r\nline 2\r\nline 3\r\nline 4";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test
@@ -40,12 +40,14 @@ public class ShellTest {
 	public void testNotValidCommand() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "notvalidcommand aaa aaa";
+		Exception exc = new Exception();
 		try{
 			shell.parseAndEvaluate(cmdline, os);
 	
 		}catch (Exception e){
-			assertEquals("shell: notvalidcommand: Invalid app.",e.getMessage());
+			exc = e;
 		}
+		assertEquals("shell: notvalidcommand: Invalid app.",exc.getMessage());
 	}
 	
 	@Test
@@ -55,7 +57,7 @@ public class ShellTest {
 		String cmdline = "echo \"asd\"asd";
 		String expected = "asdasd\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test
@@ -65,7 +67,7 @@ public class ShellTest {
 		String cmdline = "echo \'asd\'asd";
 		String expected = "asdasd\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 		os = new ByteArrayOutputStream();
 		cmdline = "echo \'\"asd\"\'asd";
 		expected = "\"asd\"asd\n";
@@ -81,7 +83,7 @@ public class ShellTest {
 		String cmdline = "echo `echo \'asd\'asd`";
 		String expected = "asdasd\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 		os = new ByteArrayOutputStream();
 		//A one commented by single quote
 		cmdline = "echo \'`echo asd`\'asd";
@@ -119,12 +121,12 @@ public class ShellTest {
 		String cmdline = "cat test.txt | cat | cat | cat | cat | cat";
 		String expected = "line 1\r\nline 2\r\nline 3\r\nline 4";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 		os = new ByteArrayOutputStream();
 		cmdline = "cat test.txt | head -n 2 | tail -n 1";
 		expected = "line 2\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test

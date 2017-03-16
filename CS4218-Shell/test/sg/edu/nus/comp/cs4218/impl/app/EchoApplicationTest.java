@@ -33,29 +33,33 @@ public class EchoApplicationTest {
 		String args[] = {"test", "values", "args"};
 		try {
 			echoApp.run(args, null, os);
-			assertEquals("test values args\n", os.toString());
 		} catch (EchoException e) {
 			
 		}
+		assertEquals("test values args\n", os.toString());
 	}
 	
 	@Test
 	public void testEchoNoArgs() {
+		Exception exc = new Exception();
 		try {
 			echoApp.run(null, null, os);
 		} catch (EchoException e) {
-			assertEquals("echo: Null arguments", e.getMessage());
+			exc = e;
 		}
+		assertEquals("echo: Null arguments", exc.getMessage());
 	}
 
 	@Test
 	public void testEchoNoStdout() {
+		Exception exc = new Exception();
 		String args[] = {"test"};
 		try {
 			echoApp.run(args, null, null);
 		} catch (EchoException e) {
-			assertEquals("echo: OutputStream not provided", e.getMessage());
+			exc = e;
 		}
+		assertEquals("echo: OutputStream not provided", exc.getMessage());
 	}
 
 	@Test
@@ -63,10 +67,10 @@ public class EchoApplicationTest {
 		String args[] = {};
 		try {
 			echoApp.run(args, null, os);
-			assertEquals("\n\n", os.toString());
 		} catch (EchoException e) {
 			
 		}
+		assertEquals("\n\n", os.toString());
 	}
 
 	@Test
@@ -74,10 +78,10 @@ public class EchoApplicationTest {
 		String args[] = {"test"};
 		try {
 			echoApp.run(args, null, os);
-			assertEquals("test\n", os.toString());
 		} catch (EchoException e) {
 			
 		}
+		assertEquals("test\n", os.toString());
 	}
 
 }

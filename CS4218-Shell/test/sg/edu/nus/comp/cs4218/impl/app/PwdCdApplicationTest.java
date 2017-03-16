@@ -73,7 +73,6 @@ public class PwdCdApplicationTest {
 		} catch (Exception e) {
 			
 		}
-		System.out.println(Environment.currentDirectory);
 		assertEquals(pwdBackup + "\\cd Test_folder", Environment.currentDirectory);
 		os = new ByteArrayOutputStream();
 		

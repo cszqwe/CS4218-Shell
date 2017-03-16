@@ -47,13 +47,15 @@ public class CatApplicationTest {
 	@Test
 	public void testCatEmptyArgs() {
 		String[] args = "".split(" ");
+		Exception exc = new Exception();
 		try {
 			catApplication.run(args, is, os);
 		} catch (CatException e) {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
-			assertEquals("cat: This is a directory", e.getMessage());
+			exc = e;
 		}
+		assertEquals("cat: This is a directory", exc.getMessage());
 	}
 	
 	@Test
@@ -62,24 +64,26 @@ public class CatApplicationTest {
 		String expected = "line 1\r\nline 2\r\nline 3\r\nline 4";
 		try {
 			catApplication.run(args, is, os);
-			String output = os.toString();
-			assertEquals(expected, output);
 		} catch (CatException e) {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
 		}
+		String output = os.toString();
+		assertEquals(expected, output);
 	}
 	
 	@Test
 	public void testCatWithInvalidFile() {
 		String[] args = "blah.txt".split(" ");
+		Exception exc = new Exception();
 		try {
 			catApplication.run(args, is, os);
 		} catch (CatException e) {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
-			assertEquals("cat: Could not read file", e.getMessage());
+			exc = e;
 		}
+		assertEquals("cat: Could not read file", exc.getMessage());
 	}
 	
 	@Test
@@ -88,12 +92,12 @@ public class CatApplicationTest {
 		String expected = "";
 		try {
 			catApplication.run(args, is, os);
-			String output = os.toString();
-			assertEquals(expected, output);
 		} catch (CatException e) {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
 		}
+		String output = os.toString();
+		assertEquals(expected, output);
 	}
 	
 	@Test
@@ -102,12 +106,12 @@ public class CatApplicationTest {
 		String expected = "     ";
 		try {
 			catApplication.run(args, is, os);
-			String output = os.toString();
-			assertEquals(expected, output);
 		} catch (CatException e) {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
 		}
+		String output = os.toString();
+		assertEquals(expected, output);
 	}
 	
 	@Test
@@ -116,12 +120,12 @@ public class CatApplicationTest {
 		String expected = "\r\n\r\n\r\n\r\n";
 		try {
 			catApplication.run(args, is, os);
-			String output = os.toString();
-			assertEquals(expected, output);
 		} catch (CatException e) {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
 		}
+		String output = os.toString();
+		assertEquals(expected, output);
 	}
 	
 	@Test
@@ -130,16 +134,16 @@ public class CatApplicationTest {
 		String expected = "\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n";
 		try {
 			catApplication.run(args, is, os);
-			String output = os.toString();
-			assertEquals(expected, output);
 		} catch (CatException e) {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
 		}
+		String output = os.toString();
+		assertEquals(expected, output);
 	}
 
 	@Test
-	//Integrated Test
+	//Integration Test
 	public void testOverAllFromStdin() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		ShellImpl shell = new ShellImpl();

@@ -34,10 +34,10 @@ public class GrepApplicationTest {
 		os = new ByteArrayOutputStream();
 		try {
 			grepApp.run(args, is, os);
-			assertEquals(expected, os.toString());
 		} catch (Exception e) {
 			
 		}
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -47,10 +47,10 @@ public class GrepApplicationTest {
 		os = new ByteArrayOutputStream();
 		try {
 			grepApp.run(args, is, os);
-			assertEquals(expected, os.toString());
 		} catch (Exception e) {
 			
 		}
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -60,10 +60,10 @@ public class GrepApplicationTest {
 		os = new ByteArrayOutputStream();
 		try {
 			grepApp.run(args, is, os);
-			assertEquals(expected, os.toString());
 		} catch (Exception e) {
 			
 		}
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -73,10 +73,10 @@ public class GrepApplicationTest {
 		os = new ByteArrayOutputStream();
 		try {
 			grepApp.run(args, is, os);
-			assertEquals(expected, os.toString().trim());
 		} catch (Exception e) {
 			
 		}
+		assertEquals(expected, os.toString().trim());
 	}
 	
 	@Test
@@ -86,10 +86,10 @@ public class GrepApplicationTest {
 		os = new ByteArrayOutputStream();
 		try {
 			grepApp.run(args, is, os);
-			assertEquals(expected, os.toString());
 		} catch (Exception e) {
 			
 		}
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -99,10 +99,10 @@ public class GrepApplicationTest {
 		os = new ByteArrayOutputStream();
 		try {
 			grepApp.run(args, is, os);
-			assertEquals(expected, os.toString());
 		} catch (Exception e) {
 			
 		}
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -112,10 +112,10 @@ public class GrepApplicationTest {
 		os = new ByteArrayOutputStream();
 		try {
 			grepApp.run(args, is, os);
-			assertEquals(expected, os.toString());
 		} catch (Exception e) {
 			
 		}
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -125,10 +125,10 @@ public class GrepApplicationTest {
 		os = new ByteArrayOutputStream();
 		try {
 			grepApp.run(args, is, os);
-			assertEquals(expected, os.toString());
 		} catch (Exception e) {
 			
 		}
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -138,10 +138,10 @@ public class GrepApplicationTest {
 		os = new ByteArrayOutputStream();
 		try {
 			grepApp.run(args, is, os);
-			assertEquals(expected, os.toString());
 		} catch (Exception e) {
 			
 		}
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -151,10 +151,10 @@ public class GrepApplicationTest {
 		os = new ByteArrayOutputStream();
 		try {
 			grepApp.run(args, is, os);
-			assertEquals(expected, os.toString());
 		} catch (Exception e) {
 			
 		}
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test
@@ -164,10 +164,10 @@ public class GrepApplicationTest {
 		os = new ByteArrayOutputStream();
 		try {
 			grepApp.run(args, is, os);
-			assertEquals(expected, os.toString());
 		} catch (Exception e) {
 			
 		}
+		assertEquals(expected, os.toString());
 	}
 	
 	@Test

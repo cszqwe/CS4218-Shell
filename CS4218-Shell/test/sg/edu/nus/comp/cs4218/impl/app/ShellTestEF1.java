@@ -41,34 +41,45 @@ public class ShellTestEF1 {
 	//Test the redirect function
 	public void testRedirection() throws AbstractApplicationException, ShellException {
 		assertEquals(ShellImpl.processRedirectInput("cat < test.txt"), "cat");
+		Exception exc1 = new Exception();
+		Exception exc2 = new Exception();
 		try{
 			ShellImpl.processRedirectInput("cat < test.txt < test2.txt");			
 		}catch (Exception e){
-			assertEquals(e.getMessage(), "shell: More than one redirect input");
+			exc1 = e;
 		}
+		assertEquals(exc1.getMessage(), "shell: More than one redirect input");
+		
 		try{
 			ShellImpl.processRedirectInput("cat < test3.txt");			
 		}catch (Exception e){
-			assertEquals(e.getMessage(), "shell: Could not read file");
+			exc2 = e;
 		}
+		assertEquals(exc2.getMessage(), "shell: Could not read file");
+		
 		os = new ByteArrayOutputStream();
+		
 		String cmdlineS = "cat < test.txt";
 		shell.parseAndEvaluate(cmdlineS, os);
 		assertEquals("line 1\r\nline 2\r\nline 3\r\nline 4", os.toString());		
 		os = new ByteArrayOutputStream();
+		
 		String cmdline1 = "cat test.txt > redirectionTest.txt";
 		String expected = "line 1\r\nline 2\r\nline 3\r\nline 4";
 		String cmdline = "cat < redirectionTest.txt";
 		shell.parseAndEvaluate(cmdline1, os);
 		os = new ByteArrayOutputStream();
+		
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
+		
 		String cmdline2 = "echo ThisIsATestFile > echoReOut.txt";
 		shell.parseAndEvaluate(cmdline2, os);
 		String cmdline3 = "cat echoReOut.txt";
 		os = new ByteArrayOutputStream();
+		
 		shell.parseAndEvaluate(cmdline3, os);
-		assertEquals(os.toString(), "ThisIsATestFile\n");
+		assertEquals("ThisIsATestFile\n", os.toString());
 		
 	}
 	

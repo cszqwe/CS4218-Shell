@@ -12,6 +12,9 @@ import org.junit.Test;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.exception.WcException;
+import sg.edu.nus.comp.cs4218.exception.CatException;
+import sg.edu.nus.comp.cs4218.exception.HeadException;
+import sg.edu.nus.comp.cs4218.exception.GrepException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
 public class ExtraWcApplicationTest {
@@ -254,8 +257,9 @@ public class ExtraWcApplicationTest {
 
 	// Integration testing
 	
+	// With pipelines
 	@Test
-	public void testWcAllFromCat() throws AbstractApplicationException, ShellException {
+	public void testWcAllFromPipe() throws AbstractApplicationException, ShellException {
 		stdout = new ByteArrayOutputStream();
 		ShellImpl shell = new ShellImpl();
 		String args = "cat test.txt | wc";
@@ -265,14 +269,131 @@ public class ExtraWcApplicationTest {
 	}
 	
 	@Test
-	public void testWcCharsFromCat() throws AbstractApplicationException, ShellException {
+	public void testWcCharsFromPipe() throws AbstractApplicationException, ShellException {
 		stdout = new ByteArrayOutputStream();
 		ShellImpl shell = new ShellImpl();
-		String args = "cat test.txt | wc -m";
-		String expected = "27 \n";
+		String args = "sort sortTestBasic.txt | wc -m";
+		String expected = "42 \n";
+		shell.parseAndEvaluate(args, stdout);
+		assertEquals(expected, stdout.toString());
+		
+		stdout = new ByteArrayOutputStream();
+		args = "wc -m sortTestBasic.txt";
+		expected = "42 sortTestBasic.txt\n";
+		shell.parseAndEvaluate(args, stdout);
+		assertEquals(expected, stdout.toString()); // both char count should be the same since sort only sorts the file
+	}
+	
+	@Test
+	public void testWcOverlappingOptionsFromPipe() throws AbstractApplicationException, ShellException {
+		stdout = new ByteArrayOutputStream();
+		ShellImpl shell = new ShellImpl();
+		String args = "head -n 2 fileTest.txt | wc -m -ml -w -wml";
+		String expected = "63 13 2 \n";
 		shell.parseAndEvaluate(args, stdout);
 		assertEquals(expected, stdout.toString());
 	}
+	
+	// Test with pipeline where second app throws exception
+	@Test (expected = WcException.class)
+	public void testPipeWcException() throws AbstractApplicationException, ShellException {
+		stdout = new ByteArrayOutputStream();
+		ShellImpl shell = new ShellImpl();
+		String args = "head test2.txt | wc -x";
+		shell.parseAndEvaluate(args, stdout);
+	}
+	
+	// Test with pipeline where the first app throws exception
+	@Test (expected = CatException.class)
+	public void testPipePrevException() throws AbstractApplicationException, ShellException {
+		stdout = new ByteArrayOutputStream();
+		ShellImpl shell = new ShellImpl();
+		String args = "cat nonexistent.txt | wc";
+		shell.parseAndEvaluate(args, stdout);
+	}
+	
+	// Test with pipeline where both apps throw exception
+	// Expected behavior: exception thrown by first app should be caught
+	@Test (expected = HeadException.class)
+	public void testPipeBothException() throws AbstractApplicationException, ShellException {
+		stdout = new ByteArrayOutputStream();
+		ShellImpl shell = new ShellImpl();
+		String args = "head nonexistent.txt | wc -ap";
+		shell.parseAndEvaluate(args, stdout);
+	}
+	
+	// Test with two pipelines, with wc being the last cmd
+	@Test
+	public void testDoublePipeWcLast() throws AbstractApplicationException, ShellException {
+		stdout = new ByteArrayOutputStream();
+		ShellImpl shell = new ShellImpl();
+		String args = "grep IS sortAppTestCapitalSpecialChars.txt | tail -n 2 | wc -w -m";
+		String expected = "27 6 \n";
+		shell.parseAndEvaluate(args, stdout);
+		assertEquals(expected, stdout.toString());
+	}
+	
+	// Test with two pipelines, with wc being the last cmd
+	@Test
+	public void testDoublePipeWcMiddle() throws AbstractApplicationException, ShellException {
+		stdout = new ByteArrayOutputStream();
+		ShellImpl shell = new ShellImpl();
+		String args = "grep IS sortAppTestCapitalSpecialChars.txt | tail -n 2 | wc -m -l";
+		String expected = "27 2 \n";
+		shell.parseAndEvaluate(args, stdout);
+		assertEquals(expected, stdout.toString());
+	}
+	
+	// Test with command substitution
+	@Test
+	public void testCmdSubstitution() throws AbstractApplicationException, ShellException {
+		// Negative case
+		stdout = new ByteArrayOutputStream();
+		ShellImpl shell = new ShellImpl();
+		String args = "wc `cat test.txt`";
+		String expected = "wc: line: No such file\n"
+				+ "wc: 1line: No such file\n"
+				+ "wc: 2line: No such file\n"
+				+ "wc: 3line: No such file\n"
+				+ "wc: 4: No such file\n";
+		shell.parseAndEvaluate(args, stdout);
+		assertEquals(expected, stdout.toString());
+	}
+	
+	@Test
+	public void testDoubleCmdSubstitution() throws AbstractApplicationException, ShellException {
+		stdout = new ByteArrayOutputStream();
+		ShellImpl shell = new ShellImpl();
+		String args = "wc `cat cmdSubFile3.txt` `head cmdSubFile2.txt` test.txt";
+		String expected = "27 8 4 test.txt\n";
+		shell.parseAndEvaluate(args, stdout);
+		assertEquals(expected, stdout.toString());
+	}
+	
+	@Test
+	public void testDoubleCmdSubstitutionFilename() throws AbstractApplicationException, ShellException {
+		stdout = new ByteArrayOutputStream();
+		ShellImpl shell = new ShellImpl();
+		String args = "wc `cat cmdSubFile3.txt` `head cmdSubFile.txt`";
+		String expected = "38 7 sortAppTestCapitalNumbers.txt\n";
+		shell.parseAndEvaluate(args, stdout);
+		assertEquals(expected, stdout.toString());
+	}
+	
+	@Test
+	public void testCmdSubstitutionAndPipe() throws AbstractApplicationException, ShellException {
+		stdout = new ByteArrayOutputStream();
+		ShellImpl shell = new ShellImpl();
+		String args = "wc `cat test.txt` | sort";
+		String expected = "wc: 1line: No such file\n"
+				+ "wc: 2line: No such file\n"
+				+ "wc: 3line: No such file\n"
+				+ "wc: 4: No such file\n"
+				+ "wc: line: No such file\n";
+		shell.parseAndEvaluate(args, stdout);
+		assertEquals(expected, stdout.toString());
+	}
+	
 	
 	
 	/**

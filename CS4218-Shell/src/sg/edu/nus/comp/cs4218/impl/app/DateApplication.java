@@ -17,7 +17,7 @@ public class DateApplication implements Date {
 
 	@Override
 	public String printCurrentDate(String args) {
-		SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy", java.util.Locale.US);
+		SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", java.util.Locale.US);
 		return sdf.format(new java.util.Date());
 	}
 

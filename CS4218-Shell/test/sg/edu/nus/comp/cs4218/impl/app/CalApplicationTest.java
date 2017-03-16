@@ -86,7 +86,7 @@ public class CalApplicationTest {
 	@Test
 	public void testCalMondayFirstWithYearOnly() throws CalException {
 		String args[] = "-m 1993".split(" ");
-		String expected =	""
+		String expected =	"                              1993\n"
 				+ "      January               February               March        \n"
 				+ "Mo Tu We Th Fr Sa Su  Mo Tu We Th Fr Sa Su  Mo Tu We Th Fr Sa Su\n"
 				+ "            1  2  3   1  2  3  4  5  6  7   1  2  3  4  5  6  7 \n"
@@ -127,7 +127,7 @@ public class CalApplicationTest {
 	@Test
 	public void testCalSundayFirstWithYearOnly() throws CalException {
 		String args[] = "1993".split(" ");
-		String expected =	""
+		String expected =	"                              1993\n"
 				+ "      January               February               March        \n"
 				+ "Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa\n"
 				+ "               1  2      1  2  3  4  5  6      1  2  3  4  5  6 \n"

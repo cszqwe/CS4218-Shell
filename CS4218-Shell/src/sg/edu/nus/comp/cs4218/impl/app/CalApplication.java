@@ -89,7 +89,8 @@ public class CalApplication implements Cal {
 				try {
 					// Catch illegal year argument
 					Integer.parseInt(args[1]);
-					stdout.write(printCalForYearMondayFirst(args[1]).getBytes());
+					String ans = printCalForYearMondayFirst(args[1]);
+					stdout.write(ans.getBytes());
 				} catch (Exception e){
 					throw new CalException("Usage: cal -m or cal <year>");
 				}
@@ -345,9 +346,9 @@ public class CalApplication implements Cal {
 		return result;
 	}
 	
-	public String processResultArray(String[][] arrayResult) {
+	public String processResultArray(String[][] arrayResult, String year) {
 		// Build the result row by row
-		String result = "";
+		String result = "                              "+year+"\n";
 		// String january = arrayResult[0][0];
 		boolean padLastRow = false;
 
@@ -447,7 +448,6 @@ public class CalApplication implements Cal {
 	@Override
 	public String printCalForYear(String year) {
 		// firstLine e.g. December 2009
-		String masterResult = "";
 		String[][] masterResultArray = new String[4][3];
 		String result = "";
 		String firstLine = "";
@@ -472,8 +472,6 @@ public class CalApplication implements Cal {
 			    
 			    // Get first day of the month
 			    DateFormat sdf = new SimpleDateFormat("EEEE");
-			    String firstDayOfMonth = sdf.format(calDate);
-			    // System.out.println("first day of month: " + firstDayOfMonth);
 			    
 			    // Get the starting position
 			    int startingPos = cal.get(Calendar.DAY_OF_WEEK) - 1;
@@ -492,7 +490,7 @@ public class CalApplication implements Cal {
 			}
 		}
 		// return masterResult;
-		return processResultArray(masterResultArray);
+		return processResultArray(masterResultArray, year);
 	}
 
 	/**
@@ -591,6 +589,6 @@ public class CalApplication implements Cal {
 			}
 		}
 		// return masterResult;
-		return processResultArray(masterResultArray);
+		return processResultArray(masterResultArray, year);
 	}
 }

@@ -834,7 +834,7 @@ public class ShellImpl implements Shell {
 	public void parseAndEvaluate(String cmdline, OutputStream stdout)
 			throws AbstractApplicationException, ShellException {
 		String[] allStmts = processPipe(cmdline);
-		PipedInputStream in = new PipedInputStream();  
+		PipedInputStream in = new PipedInputStream(100000);  
 		PipedOutputStream out;
 		try{
 			out = new PipedOutputStream(in);  
@@ -860,7 +860,7 @@ public class ShellImpl implements Shell {
 			if (i == allStmts.length -1){
 				actualOut = stdout;
 			}else{
-				tmpIn = new PipedInputStream();
+				tmpIn = new PipedInputStream(1000000);
 				try{
 					tmpout = new PipedOutputStream(tmpIn);  
 				}catch (Exception e){

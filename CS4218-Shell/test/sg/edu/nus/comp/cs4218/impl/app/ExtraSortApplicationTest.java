@@ -11,7 +11,12 @@ import java.io.PrintStream;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.HeadException;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.exception.SortException;
+import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
 public class ExtraSortApplicationTest { 
   
@@ -452,6 +457,35 @@ public class ExtraSortApplicationTest {
 		String input = "sort -n sortAppTestAll.txt";
 		String expected = "\n  \n! hit\n!@#%\n//WARNING//\n/4run\n/ru28!*#\n/run script\n3 damage dealt\n6 damage\n6 damage dealt\n30 damage dealt\nGain 30 more exp\nGain0205's message:\nGained [30] gold\nGained [6] exp\ncome here\ncommand unknown\ngain 30 more exp\nok\nokay\n";
 		assertEquals(expected, ssa.sortStringsSimple(input));
+	}
+	
+	// Integration testing
+	
+	@Test
+	public void testSortCmdSubstitution() throws AbstractApplicationException, ShellException {
+		ShellImpl shell = new ShellImpl();
+		String args = "sort -n `cat cmdSubFile.txt`"; // cmdSubFile contains a filename broken by lines, which allows sort to take in the filename as arg
+		String expected = "6X\n6X\n50\n500\nSTRING10\nSTRING5\nSTRING50\n";
+		shell.parseAndEvaluate(args, os);
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortDoublePipeSortLast() throws AbstractApplicationException, ShellException {
+		ShellImpl shell = new ShellImpl();
+		String args = "cat test.txt | head -n 2 | sort -n";
+		String expected = "line 1\nline 2\n";
+		shell.parseAndEvaluate(args, os);
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
+	public void testSortDoubleCmdSubstitution() throws AbstractApplicationException, ShellException {
+		ShellImpl shell = new ShellImpl();
+		String args = "sort `cat cmdSubFile.txt` `head cmdSubFile4.txt`";
+		String expected = "001\n01\n1\n10\n2\n210\n50\n500\n6X\n6X\nSTRING10\nSTRING5\nSTRING50\n";
+		shell.parseAndEvaluate(args, os);
+		assertEquals(expected, os.toString());
 	}
 	
 }

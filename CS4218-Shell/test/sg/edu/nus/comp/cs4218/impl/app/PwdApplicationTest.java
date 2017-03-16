@@ -12,8 +12,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.app.PwdApplication;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
 
 public class PwdApplicationTest {
 	static PwdApplication pwdApp;
@@ -35,6 +37,7 @@ public class PwdApplicationTest {
 
 	@Before
 	public void setUp() throws Exception {
+		Environment.currentDirectory = pwd; // reset
 		is = null;
 		os = new ByteArrayOutputStream();
 	}
@@ -77,6 +80,26 @@ public class PwdApplicationTest {
 			
 		}
 		assertEquals(pwd, os.toString());
+	}
+	
+	// Integration test
+	@Test
+	public void testPwdCmdPipe() throws AbstractApplicationException, ShellException {
+		Environment.currentDirectory = "CS4218_team15_2017\\CS4218-Shell"; // because pwd may differ for other computers
+		ShellImpl shell = new ShellImpl();
+		String args = "pwd | wc";
+		shell.parseAndEvaluate(args, os);
+		assertEquals("31 1 1 \n", os.toString());
+	}
+	
+	@Test
+	public void testPwdCmdSubstitutionWithCd() throws AbstractApplicationException, ShellException {
+		// our implementation of cd does not support absolute path inputs
+		// hence fails although this is a valid piping
+		ShellImpl shell = new ShellImpl();
+		String args = "cd `pwd`";
+		shell.parseAndEvaluate(args, os);
+		assertEquals(Environment.currentDirectory, pwd);
 	}
 
 }

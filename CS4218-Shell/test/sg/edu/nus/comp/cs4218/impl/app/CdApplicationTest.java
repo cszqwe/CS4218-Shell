@@ -1,6 +1,9 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -9,11 +12,14 @@ import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.app.CdApplication;
 
 public class CdApplicationTest {
 	static String origPwd;
 	static CdApplication cdApp;
+	OutputStream os;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -29,6 +35,7 @@ public class CdApplicationTest {
 	@Before
 	public void setUp() throws Exception {
 		origPwd = Environment.currentDirectory; // for assertion and backup
+		os = new ByteArrayOutputStream();
 	}
 
 	@After
@@ -136,5 +143,36 @@ public class CdApplicationTest {
 		}
 		assertEquals(origPwd, Environment.currentDirectory);
 	}
+	
+	// Integration tests
+	
+	@Test
+	public void testCdCmdPipe() throws AbstractApplicationException, ShellException {
+		// Negative test case: while cd does not throw exception, it does not read from stdin
+		ShellImpl shell = new ShellImpl();
+		String args = "echo Files | cd";
+		shell.parseAndEvaluate(args, os);
+		assertEquals(origPwd, Environment.currentDirectory);
+	}
+	
+	@Test
+	public void testCdCmdSubstitution() throws AbstractApplicationException, ShellException {
+		// Positive test case: unlike pipe, cmd substitution passes the contents as args, allowing cd to change directory
+		ShellImpl shell = new ShellImpl();
+		String args = "cd `echo Files`";
+		shell.parseAndEvaluate(args, os);
+		assertEquals(origPwd + "\\Files", Environment.currentDirectory);
+	}
+	
+	@Test
+	public void testCdDoublePipeCdMiddle() throws AbstractApplicationException, ShellException {
+		// Negative test case: while cd does not throw exception, the contents of stdout in first app do not get transferred to stdin of third app
+		ShellImpl shell = new ShellImpl();
+		String args = "cat test.txt | cd | wc -m -l";
+		shell.parseAndEvaluate(args, os);
+		assertEquals("0 0 \n", os.toString());
+	}
+	
+	
 
 }

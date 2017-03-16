@@ -32,10 +32,8 @@ public class SortApplication implements Sort {
 		// this.stdin = stdin;
 		String output = "";
 		
-		if (args == null) {
-			if (stdin == null || stdout == null) {
-				throw new SortException("Null Pointer Exception");
-			}
+		if (args == null && (stdin == null || stdout == null)) {
+			throw new SortException("Null Pointer Exception");
 		}
 		
 		if (stdin != null) {
@@ -435,9 +433,37 @@ public class SortApplication implements Sort {
 			int aNum = Integer.parseInt(a.contents);
 			int bNum = Integer.parseInt(b.contents);
 			
-			if (aNum > bNum) return 1;
-			else if (aNum == bNum) return 0;
-			else return -1;
+			if (aNum > bNum) {
+				return 1;
+			} else if (aNum < bNum) {
+				return -1;
+			} else {
+				if (a.contents.equals(b.contents)) {
+					return 0;
+				} else {
+					for (int i = 0; i < Math.max(a.contents.length(), b.contents.length()); i++) {
+						int aChar = (int) a.contents.charAt(i);
+						int bChar = (int) b.contents.charAt(i);
+						
+						if (aChar > bChar) {
+							return 1;
+						} else if (aChar < bChar) {
+							return -1;
+						} else {
+							if (i == a.contents.length()-1 && i == b.contents.length()-1) {
+								return 0;
+							} else if (i == a.contents.length()-1) {
+								return -1;
+							} else if (i == b.contents.length()-1) {
+								return 1;
+							} else {
+								continue;
+							}
+						}
+					}
+					
+				}
+			}
 			// no need to worry about sorting numerically or not: already taken care in string splitting stage
 		} else if (a.type == b.type) {
 			// if the chars are of same type, just compare using the ASCII values
@@ -460,6 +486,8 @@ public class SortApplication implements Sort {
 			else if (aType == bType) return 0;
 			else return -1;
 		}
+		return 1; // should not reach this line, but it has to be included
+		// this line will not be covered by tests
 	}
 	
 	public int compareLines(ArrayList<StrObj> lst1, ArrayList<StrObj> lst2) {

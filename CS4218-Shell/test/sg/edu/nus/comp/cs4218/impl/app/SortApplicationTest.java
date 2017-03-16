@@ -152,8 +152,8 @@ public class SortApplicationTest {
 				"\n" + 
 				" \n" +
 				"   \n" +
-				"2 lines have spaces\n" +
 				"02!\n" + 
+				"2 lines have spaces\n" +
 				"0021\n" +
 				"21>x<\n" +
 				"230\n" +

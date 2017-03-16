@@ -17,6 +17,7 @@ import sg.edu.nus.comp.cs4218.exception.CatException;
 import sg.edu.nus.comp.cs4218.exception.GrepException;
 import sg.edu.nus.comp.cs4218.exception.HeadException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.exception.SortException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.app.GrepApplication;
 
@@ -436,14 +437,137 @@ public class ExtraGrepApplicationTest {
 		assertEquals(os.toString(), expected);
 	}
 
-	@Test (expected = CatException.class)
+	@Test (expected = SortException.class)
 	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
 	public void ComplicatedommandSubTestFail() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
-		String cmdline = "grep `echo line | cat test5.txt` test.txt";
+		String cmdline = "grep `echo line | cat test.txt` `sort test5.txt`";
 		String expected = "line 1\nline 2\nline 3\nline 4\n";
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(os.toString(), expected);
 	}
 	
+	@Test
+	//Test the case of calling command functions
+	public void complicatedPipeTest1() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep line test.txt | tail -n 2 | grep 'line 4'";
+		String expected = "line 4\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+
+	@Test
+	//Test the case of calling command functions
+	public void complicatedPipeSubTest2() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep 'line 2' test.txt | grep 'line' | grep 'li'";
+		String expected = "line 2\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+
+	@Test (expected = GrepException.class)
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void ComplicatedPipeTestFail() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep `echo line | cat test.txt` `sort test.txt` | grep | grep line2";
+		String expected = "line 1\nline 2\nline 3\nline 4\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+
+	@Test
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void quoteTest1() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep line 2 test.txt";
+		String expected = "grep: 2: No such file\nline 1\nline 2\nline 3\nline 4\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+	
+	@Test
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void quoteTest2() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep \"line 2\" test.txt";
+		String expected = "line 2\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+	
+	@Test
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void quoteTest3() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep 'line 2' test.txt";
+		String expected = "line 2\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+	
+	
+	@Test (expected = GrepException.class)
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void quoteFail() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "'grep' 'line 2' test.txt | 'grep' [";
+		String expected = "line 2\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+	
+	@Test
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void redirTest1() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep 'line 2' test.txt > line2.txt";
+		String cmdline2 = "grep line < line2.txt";
+		String expected = "line 2\n";
+		shell.parseAndEvaluate(cmdline, os);
+		os = new ByteArrayOutputStream();
+		shell.parseAndEvaluate(cmdline2, os);
+		assertEquals(os.toString(), expected);
+	}
+	
+	@Test
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void redirTest2() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep 'line 2' test.txt > line2.txt";
+		String cmdline2 = "cat test.txt | grep line < line2.txt";
+		String expected = "line 2\n";
+		shell.parseAndEvaluate(cmdline, os);
+		os = new ByteArrayOutputStream();
+		shell.parseAndEvaluate(cmdline2, os);
+		assertEquals(os.toString(), expected);
+	}
+	
+	@Test
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void redirTest3() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep 'line 2' test.txt > line2.txt";
+		String cmdline2 = "cat test.txt | grep line test.txt < line2.txt";
+		String expected = "line 1\nline 2\nline 3\nline 4\n";
+		shell.parseAndEvaluate(cmdline, os);
+		os = new ByteArrayOutputStream();
+		shell.parseAndEvaluate(cmdline2, os);
+		assertEquals(os.toString(), expected);
+	}
+	
+	
+	@Test (expected = ShellException.class)
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void redirTestFail() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep 'line 2' test.txt > line2.txt";
+		String cmdline2 = "grep line < line5.txt";
+		String expected = "line 2\n";
+		shell.parseAndEvaluate(cmdline, os);
+		os = new ByteArrayOutputStream();
+		shell.parseAndEvaluate(cmdline2, os);
+		assertEquals(os.toString(), expected);
+	}	
 }

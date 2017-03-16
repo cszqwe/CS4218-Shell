@@ -268,6 +268,15 @@ public class ExtraWcApplicationTest {
 		assertEquals(expected, stdout.toString());
 	}
 	
+	public void testWcLinesFromPipe() throws AbstractApplicationException, ShellException {
+		stdout = new ByteArrayOutputStream();
+		ShellImpl shell = new ShellImpl();
+		String args = "date | wc -l";
+		String expected = "1 \n";
+		shell.parseAndEvaluate(args, stdout);
+		assertEquals(expected, stdout.toString());
+	}
+	
 	@Test
 	public void testWcCharsFromPipe() throws AbstractApplicationException, ShellException {
 		stdout = new ByteArrayOutputStream();

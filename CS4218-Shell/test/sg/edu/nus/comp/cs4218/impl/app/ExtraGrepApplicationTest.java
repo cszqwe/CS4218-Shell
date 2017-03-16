@@ -414,7 +414,7 @@ public class ExtraGrepApplicationTest {
 	//Test the case of pipe
 	public void pipeTest3() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
-		String cmdline = "date | grep SGT";
+		String cmdline = "date | grep T";
 		String expected = java.util.Calendar.getInstance().getTime().toString() + "\n"; // assumption: tester is doing this in Singapore
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(expected, os.toString());

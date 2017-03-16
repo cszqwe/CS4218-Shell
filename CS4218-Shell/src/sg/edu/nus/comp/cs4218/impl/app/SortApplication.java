@@ -58,14 +58,12 @@ public class SortApplication implements Sort {
 				}
 			}
 			
-			if (args.length > 0) {
-				if (args[0].charAt(0) == '-') {
-					for (int i = 1; i < args[0].length(); i++) {
-						if (args[0].charAt(i) == 'n') {
-							isNumericSort = true;
-						} else {
-							throw new SortException("invalid option -- '" + args[0].charAt(i) + "'");
-						}
+			if (args.length > 0 && args[0].charAt(0) == '-') {
+				for (int i = 1; i < args[0].length(); i++) {
+					if (args[0].charAt(i) == 'n') {
+						isNumericSort = true;
+					} else {
+						throw new SortException("invalid option -- '" + args[0].charAt(i) + "'");
 					}
 				}
 			}
@@ -81,12 +79,14 @@ public class SortApplication implements Sort {
 		
 		// if (stdin != null) System.out.println("Sorting stdin reached here");
 		
-		if (filepaths.size() == 0) {
+		if (filepaths.isEmpty()) {
 			// System.out.println("No file(s): read from stdin");
 			// if (isNumericSort) System.out.println("Numeric sort");
 			// else System.out.println("Non-numeric sort");
 
-			if (stdin != null) {
+			if (stdin == null) {
+				throw new SortException("Null Point Exception");
+			} else {
 				// copy stdin so that it can be accessed >1 times
 				// System.out.println("stdin detected");
 				baos = new ByteArrayOutputStream();
@@ -102,8 +102,6 @@ public class SortApplication implements Sort {
 					// System.out.println("Copy stdin failed");
 				}
 				this.stdin = new ByteArrayInputStream(baos.toByteArray());
-			} else {
-				throw new SortException("Null Point Exception");
 			}
 			lines = getStdinContents();
 		} else {
@@ -114,11 +112,16 @@ public class SortApplication implements Sort {
 		
 		for (String line : lines) {
 			for (int i = 0; i < line.length(); i++) {
-				char c = line.charAt(i);
-				if (Character.isLowerCase(c)) isSimpleFound = true;
-				else if (Character.isUpperCase(c)) isCapitalFound = true;
-				else if (Character.isDigit(c)) isNumbersFound = true;
-				else isSpecialFound = true;
+				char character = line.charAt(i);
+				if (Character.isLowerCase(character)) {
+					isSimpleFound = true;
+				} else if (Character.isUpperCase(character)) {
+					isCapitalFound = true;
+				} else if (Character.isDigit(character)) {
+					isNumbersFound = true;
+				} else {
+					isSpecialFound = true;
+				}
 			}
 		}
 		
@@ -203,15 +206,17 @@ public class SortApplication implements Sort {
 		
 		String[] args = matchList.toArray(new String[matchList.size()]);
 		// for (String arg : args) System.out.println("\"" + arg + "\"");
-		if (args.length > 1) {
-			if (args[1].equals("-n")) isNumericSort = true;
+		if (args.length > 1 && args[1].equals("-n")) {
+			isNumericSort = true;
 		}
 		
-		int i = 1;
-		if (isNumericSort) i = 2;
+		int idx = 1;
+		if (isNumericSort) {
+			idx = 2;
+		}
 		
-		for (; i < args.length; i++) {
-			filenames.add(args[i]);
+		for (; idx < args.length; idx++) {
+			filenames.add(args[idx]);
 		}
 		
 		ParseRes res = new ParseRes(filenames, isNumericSort);
@@ -220,26 +225,27 @@ public class SortApplication implements Sort {
 	}
 	
 	public ArrayList<String> getStdinContents() {
-		InputStream is = new ByteArrayInputStream(baos.toByteArray());
+		InputStream inputStream = new ByteArrayInputStream(baos.toByteArray());
 		// System.out.println("Reading from stdin");
-        BufferedReader in = new BufferedReader(new InputStreamReader(is));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         StringBuilder str = new StringBuilder();      
         String line = null; 
         boolean first = true;
         try {
-        	while ((line = in.readLine()) != null) {
-        		if (!first)
-        			str.append("\n" + line);      
-        		else {
+        	while ((line = bufferedReader.readLine()) != null) {
+        		if (first) {
         			str.append(line);
         			first = false;
+        		}
+        		else {
+        			str.append("\n" + line);   
         		}
         	}      
         } catch (IOException e) {      
             e.printStackTrace();      
         } finally {      
         	try {      
-        		in.close();      
+        		bufferedReader.close();      
             } catch (IOException e) {      
                 e.printStackTrace();      
             }      
@@ -279,7 +285,7 @@ public class SortApplication implements Sort {
 		ArrayList<ArrayList<StrObj>> objLsts = new ArrayList<>();
 		ArrayList<String> lines = new ArrayList<>();
 		
-		if (files.size() == 0) {
+		if (files.isEmpty()) {
 			// no files: read from stdin
 			lines = getStdinContents();
 		} else {
@@ -386,10 +392,16 @@ public class SortApplication implements Sort {
 		return sort(toSort);
 	}
 	
-	public StrObj.Type getType(char c) {
-		if (Character.isLowerCase(c)) return StrObj.Type.SIMPLE;
-		if (Character.isUpperCase(c)) return StrObj.Type.CAPITAL;
-		if (Character.isDigit(c)) return StrObj.Type.NUMBERS;
+	public StrObj.Type getType(char character) {
+		if (Character.isLowerCase(character)) {
+			return StrObj.Type.SIMPLE;
+		}
+		if (Character.isUpperCase(character)) {
+			return StrObj.Type.CAPITAL;
+		}
+		if (Character.isDigit(character)) {
+			return StrObj.Type.NUMBERS;
+		}
 		return StrObj.Type.SPECIAL;
 	}
 	
@@ -400,35 +412,35 @@ public class SortApplication implements Sort {
 	public ArrayList<StrObj> convertStringToStrObjLst(String line, boolean isNumericSort) {
 		ArrayList<StrObj> objLst = new ArrayList<>();
 		
-		if (line.equals("")) {
+		if ("".equals(line)) {
 			StrObj mtObj = new StrObj(StrObj.Type.SPECIAL, "");
 			objLst.add(mtObj);
 			return objLst;
 		}
 		
-		boolean isProcessingFirstNums = Character.isDigit(line.charAt(0)); // true if line starts with digit, false otherwise
+		boolean isFirstNums = Character.isDigit(line.charAt(0)); // true if line starts with digit, false otherwise
 		String firstNums = "";
 		
 		for (int i = 0; i < line.length(); i++) {
-			char c = line.charAt(i);
-			StrObj.Type cType = getType(c);
+			char character = line.charAt(i);
+			StrObj.Type cType = getType(character);
 			
-			if (isNumericSort && isProcessingFirstNums) {
+			if (isNumericSort && isFirstNums) {
 				if (cType == StrObj.Type.NUMBERS) {
-					firstNums = firstNums.concat(Character.toString(c));
+					firstNums = firstNums.concat(Character.toString(character));
 					if (i == line.length()-1) { // line ends with first number
 						StrObj group = new StrObj(StrObj.Type.NUMBERS, firstNums);
 						objLst.add(group);
 					}
 					continue;
 				} else {
-					isProcessingFirstNums = false;
+					isFirstNums = false;
 					StrObj group = new StrObj(StrObj.Type.NUMBERS, firstNums);
 					objLst.add(group);
 				}
 			}
 			
-			StrObj group = new StrObj(cType, Character.toString(c));
+			StrObj group = new StrObj(cType, Character.toString(character));
 			objLst.add(group);
 			
 		}
@@ -436,69 +448,69 @@ public class SortApplication implements Sort {
 		return objLst;
 	}
 	
-	public int compareStrObjs(StrObj a, StrObj b) {
-		if (a.type == StrObj.Type.NUMBERS && b.type == StrObj.Type.NUMBERS) {
+	public int compareStrObjs(StrObj strA, StrObj strB) {
+		if (strA.type == StrObj.Type.NUMBERS && strB.type == StrObj.Type.NUMBERS) {
 			// if both are numbers, compare their numeric values
-			int aNum = Integer.parseInt(a.contents);
-			int bNum = Integer.parseInt(b.contents);
+			int aNum = Integer.parseInt(strA.contents);
+			int bNum = Integer.parseInt(strB.contents);
 			
 			if (aNum > bNum) {
 				return 1;
 			} else if (aNum < bNum) {
 				return -1;
 			} else { // numerical values are the same
-				if (a.contents.equals(b.contents)) { // both numerical value and string contents identical
+				if (strA.contents.equals(strB.contents)) { // both numerical value and string contents identical
 					return 0;
 				} else {
-					for (int i = 0; i < Math.max(a.contents.length(), b.contents.length()); i++) {
-						int aChar = (int) a.contents.charAt(i);
-						int bChar = (int) b.contents.charAt(i);
+					for (int i = 0; i < Math.max(strA.contents.length(), strB.contents.length()); i++) {
+						int aChar = (int) strA.contents.charAt(i);
+						int bChar = (int) strB.contents.charAt(i);
 						
 						if (aChar > bChar) {
 							return 1;
 						} else if (aChar < bChar) {
 							return -1;
 						}
-						/** this is redundant: if same value but different string then
-						 * it means one has additional zeroes in front of the other 
-						 * hence program will never reach this code block
-						else {
-							if (i == a.contents.length()-1 && i == b.contents.length()-1) {
-								return 0;
-							} else if (i == a.contents.length()-1) {
-								return -1;
-							} else if (i == b.contents.length()-1) {
-								return 1;
-							} else {
-								continue;
-							}
-						}
-						**/
+						// else: not possible. strA and strB not being identical but having same numeric value means
+						// one has additional zeroes in front of the other, meaning it is impossible for strA and strB
+						// to start out identical
 					}
 					
 				}
 			}
 			// no need to worry about sorting numerically or not: already taken care in string splitting stage
-		} else if (a.type == b.type) {
+		} else if (strA.type == strB.type) {
 			// if the chars are of same type, just compare using the ASCII values
 			int aChar = -1;
 			int bChar = -1; // default values, set in case the content in empty string
-			if (a.contents.length() > 0) aChar = (int) a.contents.charAt(0);
-			if (b.contents.length() > 0) bChar = (int) b.contents.charAt(0);
+			if (strA.contents.length() > 0) {
+				aChar = (int) strA.contents.charAt(0);
+			}
+			if (strB.contents.length() > 0) {
+				bChar = (int) strB.contents.charAt(0);
+			}
 			// the content strings contain single chars anyway, so charAt(0) is okay
 			// except when contents are numbers, which has already been taken care of above
 			
-			if (aChar > bChar) return 1;
-			else if (aChar == bChar) return 0;
-			else return -1;
+			if (aChar > bChar) {
+				return 1;
+			} else if (aChar == bChar) {
+				return 0;
+			} else {
+				return -1;
+			}
 		} else {
 			// special char < number < capital < simple
-			int aType = a.type.getNumval();
-			int bType = b.type.getNumval();
+			int aType = strA.type.getNumval();
+			int bType = strB.type.getNumval();
 			
-			if (aType > bType) return 1;
-			else if (aType == bType) return 0;
-			else return -1;
+			if (aType > bType) {
+				return 1;
+			} else if (aType == bType) {
+				return 0;
+			} else {
+				return -1;
+			}
 		}
 		return 1; // should not reach this line, but it has to be included
 		// this line will not be covered by tests

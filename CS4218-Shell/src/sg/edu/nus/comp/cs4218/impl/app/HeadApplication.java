@@ -29,27 +29,27 @@ public class HeadApplication implements Application {
 	public static void readFile(OutputStream stdout) {
 		// Read file
 		try {
-			FileReader fr = new FileReader(path);
-			BufferedReader br = new BufferedReader(fr);
+			FileReader fileReader = new FileReader(path);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			
 			int currLineCount = 0;
 			String sCurrentLine;
 			
 			try {
-				while ((sCurrentLine = br.readLine()) != null) {
-					if (currLineCount != numOfLines) {
+				while ((sCurrentLine = bufferedReader.readLine()) != null) {
+					if (currLineCount == numOfLines) {
+						break;
+					} else {
 						stdout.write(sCurrentLine.getBytes());
 						stdout.write("\n".getBytes());
 						currLineCount++;
-					} else {
-						break;
 					}
 				}
+				bufferedReader.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -58,12 +58,12 @@ public class HeadApplication implements Application {
 
 	public static void readFromStdin(InputStream stdin, OutputStream stdout) throws HeadException {
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(stdin)); 
+			BufferedReader inputReader = new BufferedReader(new InputStreamReader(stdin)); 
 			String strCurrent;
 			ArrayList<String> answers = new ArrayList<String>();
 			answers.clear();
 			int cnt = numOfLines;
-			while ((strCurrent = in.readLine()) != null) {
+			while ((strCurrent = inputReader.readLine()) != null) {
 				
 				//if (strCurrent.equals("end")) break;  //This statement is used for testing only.
 				if (cnt == 0){
@@ -113,7 +113,9 @@ public class HeadApplication implements Application {
 				fileName = cmdArgs[2];
 				path = Environment.currentDirectory + "\\" + fileName;
 				isFileReadable = checkIfFileIsReadable(path);
-				if (!isFileReadable) throw new HeadException("File not found");
+				if (!isFileReadable) {
+					throw new HeadException("File not found");
+				}
 
 			} 
 			// command: head test.txt
@@ -122,7 +124,9 @@ public class HeadApplication implements Application {
 				fileName = cmdArgs[0];
 				path = Environment.currentDirectory + "\\" + fileName;
 				isFileReadable = checkIfFileIsReadable(path);
-				if (!isFileReadable) throw new HeadException("File not found");
+				if (!isFileReadable) {
+					throw new HeadException("File not found");
+				}
 
 			} else if(cmdArgs.length == 2){ 
 				

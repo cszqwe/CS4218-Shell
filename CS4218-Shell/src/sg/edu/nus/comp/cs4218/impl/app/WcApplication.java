@@ -54,17 +54,17 @@ public class WcApplication implements Wc {
 			words = true;
 			lines = true;
 		}
-		if (files.size() > 0) {
+		if (files.isEmpty()) {
+			if (stdin == null) {
+				throw new WcException("Null Pointer Exception");
+			} else {
+				// read from stdin
+				output = output.concat(printCountInStdin(stdin, chars, words, lines));
+			}
+		} else {
 			// read from file(s), even if stdin is provided
 			for (String file : files) {
 				output = output.concat(printCountInFile(file, chars, words, lines));
-			}
-		} else {
-			if (stdin != null) {
-				// read from stdin
-				output = output.concat(printCountInStdin(stdin, chars, words, lines));
-			} else {
-				throw new WcException("Null Pointer Exception");
 			}
 		}
 		try {
@@ -91,9 +91,15 @@ public class WcApplication implements Wc {
 			try {
 				String contents = new String(Files.readAllBytes(filePath));
 				
-				if (chars) line = line.concat(printCharacterCountInFile(contents) + " ");
-				if (words) line = line.concat(printWordCountInFile(contents) + " ");
-				if (lines) line = line.concat(printNewlineCountInFile(contents) + " ");
+				if (chars) {
+					line = line.concat(printCharacterCountInFile(contents) + " ");
+				}
+				if (words) {
+					line = line.concat(printWordCountInFile(contents) + " ");
+				}
+				if (lines) {
+					line = line.concat(printNewlineCountInFile(contents) + " ");
+				}
 				
 				line = line.concat(file);
 			} catch (Exception e) {
@@ -115,24 +121,25 @@ public class WcApplication implements Wc {
 	 * 
 	 */
 	public static String readInputStreamToString(InputStream stdin) {      
-         BufferedReader in = new BufferedReader(new InputStreamReader(stdin));
+         BufferedReader inputReader = new BufferedReader(new InputStreamReader(stdin));
          StringBuilder str = new StringBuilder();      
          String line = null; 
          boolean first = true;
         try {
-        	while ((line = in.readLine()) != null) {
-        		if (!first)
-        			str.append("\n" + line);      
-        		else {
+        	while ((line = inputReader.readLine()) != null) {
+        		if (first) {
         			str.append(line);
-        			first = false;
+        			first = false; 
+        		}
+        		else {
+        			str.append("\n" + line);  
         		}
         	}      
          } catch (IOException e) {      
              e.printStackTrace();      
          } finally {      
             try {      
-                 in.close();      
+            	inputReader.close();      
              } catch (IOException e) {      
                  e.printStackTrace();      
              }      
@@ -144,9 +151,15 @@ public class WcApplication implements Wc {
 	public String printCountInStdin(InputStream stdin, boolean chars, boolean words, boolean lines) {
 		String line = "";
 		String contents = readInputStreamToString(stdin);
-		if (chars) line = line.concat(printCharacterCountInStdin(contents) + " ");
-		if (words) line = line.concat(printWordCountInStdin(contents) + " ");
-		if (lines) line = line.concat(printNewlineCountInStdin(contents) + " ");
+		if (chars) {
+			line = line.concat(printCharacterCountInStdin(contents) + " ");
+		}
+		if (words) {
+			line = line.concat(printWordCountInStdin(contents) + " ");
+		}
+		if (lines) {
+			line = line.concat(printNewlineCountInStdin(contents) + " ");
+		}
 		return line + "\n";
 	}
 
@@ -173,7 +186,9 @@ public class WcApplication implements Wc {
 	@Override
 	public String printWordCountInFile(String args) {
 		String trim = args.trim();
-		if (trim.isEmpty()) return "0";
+		if (trim.isEmpty()) {
+			return "0";
+		}
 	    return Integer.toString(trim.split("\\s+").length);
 	}
 
@@ -186,7 +201,9 @@ public class WcApplication implements Wc {
 	 */
 	@Override
 	public String printNewlineCountInFile(String args) {
-		if (args.equals("")) return "0";
+		if ("".equals(args)) {
+			return "0";
+		}
 		return Integer.toString(args.split("\n", -1).length);
 	}
 
@@ -228,7 +245,9 @@ public class WcApplication implements Wc {
 	@Override
 	public String printWordCountInStdin(String args) {
 		String trim = args.trim();
-		if (trim.isEmpty()) return "0";
+		if (trim.isEmpty()) {
+			return "0";
+		}
 	    return Integer.toString(trim.split("\\s+").length);
 	}
 
@@ -241,7 +260,9 @@ public class WcApplication implements Wc {
 	 */
 	@Override
 	public String printNewlineCountInStdin(String args) {
-		if (args.equals("")) return "0";
+		if ("".equals(args)) {
+			return "0";
+		}
 		return Integer.toString(args.split("\n", -1).length);
 	}
 

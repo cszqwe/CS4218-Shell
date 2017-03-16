@@ -462,6 +462,15 @@ public class ExtraSortApplicationTest {
 	// Integration testing
 	
 	@Test
+	public void testSortPipeFromSort() throws AbstractApplicationException, ShellException {
+		ShellImpl shell = new ShellImpl();
+		String args = "sort -n sortAppTestAll.txt | tail -n 5";
+		String expected = "come here\ncommand unknown\ngain 30 more exp\nok\nokay\n";
+		shell.parseAndEvaluate(args, os);
+		assertEquals(expected, os.toString());
+	}
+	
+	@Test
 	public void testSortCmdSubstitution() throws AbstractApplicationException, ShellException {
 		ShellImpl shell = new ShellImpl();
 		String args = "sort -n `cat cmdSubFile.txt`"; // cmdSubFile contains a filename broken by lines, which allows sort to take in the filename as arg

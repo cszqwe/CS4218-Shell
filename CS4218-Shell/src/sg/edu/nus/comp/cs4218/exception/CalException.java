@@ -5,6 +5,6 @@ public class CalException extends AbstractApplicationException {
 	private static final long serialVersionUID = 8499486452467089104L;
 
 	public CalException(String message) {
-		super("echo: " + message);
+		super("cal: " + message);
 	}
 }

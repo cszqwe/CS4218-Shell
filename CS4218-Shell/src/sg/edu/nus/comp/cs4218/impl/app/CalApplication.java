@@ -13,7 +13,6 @@ import java.util.HashMap;
 import sg.edu.nus.comp.cs4218.app.Cal;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.CalException;
-import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
 public class CalApplication implements Cal {
 	/*
@@ -40,7 +39,7 @@ public class CalApplication implements Cal {
 	final int ROW_MAX_LENGTH = 20;
 	
 	@Override
-	public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
+	public void run(String[] args, InputStream stdin, OutputStream stdout) throws CalException {
 		firstDayOfMonthPositionMondayFirst.put("Monday", 0);
 		firstDayOfMonthPositionMondayFirst.put("Tuesday", 1);
 		firstDayOfMonthPositionMondayFirst.put("Wednesday", 2);

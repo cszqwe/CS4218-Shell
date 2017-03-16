@@ -24,7 +24,7 @@ public class GrepApplication implements Grep {
 		String output = "";
 		String ans;
 		boolean validPattern;
-		if (args == null) {
+		if (args == null || args.length == 0) {
 			throw new GrepException("No pattern found");
 		}
 		if (args.length == 1 && stdin == null){
@@ -58,7 +58,7 @@ public class GrepApplication implements Grep {
 					}catch (Exception e){
 						try {
 							stdout.write(e.getMessage().getBytes());
-						} catch (IOException e1) {
+						} catch (Exception ee) {
 							throw new GrepException("Invalid output stream");
 						}
 					}
@@ -222,7 +222,6 @@ public class GrepApplication implements Grep {
 
 	@Override
 	public String grepInvalidPatternInStdin(String args) {
-		
 		return "Invalid Pattern";
 	}
 

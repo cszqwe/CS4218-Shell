@@ -60,18 +60,18 @@ public class CalApplication implements Cal {
 		if (args.length == 0) {
 			try {
 				stdout.write(printCal("").getBytes());
-			} catch (IOException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new CalException(e.getMessage());
 			}			
 		} else if (args.length == 1) {
 			// cal -m	
 			if (args[0].equals("-m")) {
 				try {
 					stdout.write(printCalWithMondayFirst("").getBytes());
-				} catch (IOException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					throw new CalException(e.getMessage());
 				}
 			} else {
 				// cal year
@@ -79,11 +79,7 @@ public class CalApplication implements Cal {
 					// Catch illegal year argument
 					Integer.parseInt(args[0]);
 					stdout.write(printCalForYear(args[0]).getBytes());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (NumberFormatException e) {
-					// e.printStackTrace();
+				} catch (Exception e) {
 					throw new CalException("Usage: cal -m or cal <year>");
 				}
 			}
@@ -94,11 +90,7 @@ public class CalApplication implements Cal {
 					// Catch illegal year argument
 					Integer.parseInt(args[1]);
 					stdout.write(printCalForYearMondayFirst(args[1]).getBytes());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (NumberFormatException e) {
-					e.printStackTrace();
+				} catch (Exception e){
 					throw new CalException("Usage: cal -m or cal <year>");
 				}
 			} else {
@@ -112,16 +104,11 @@ public class CalApplication implements Cal {
 						try {
 							Integer.parseInt(args[1]); 
 							stdout.write(printCalForMonthYear(args[0], args[1]).getBytes());
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (NumberFormatException e) {
-							e.printStackTrace();
+						} catch (Exception e) {
 							throw new CalException("Usage: cal -m or cal <year>");
 						} 
 					}
 				} catch (NumberFormatException e) {
-					e.printStackTrace();
 					throw new CalException("Usage: cal -m or cal <year>");
 				} 	
 			}
@@ -138,16 +125,11 @@ public class CalApplication implements Cal {
 					try {
 						Integer.parseInt(args[2]);
 						stdout.write(printCalForMonthYearMondayFirst(args[1], args[2]).getBytes());
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (NumberFormatException e) {
-						e.printStackTrace();
+					} catch (Exception e) {
 						throw new CalException("Usage: cal -m <month> <year>");
 					} 
 				}
 			} catch (NumberFormatException e) {
-				e.printStackTrace();
 				throw new CalException("month must be between 1 and 12");
 			} 
 		} else {
@@ -268,7 +250,8 @@ public class CalApplication implements Cal {
 	    // System.out.println("first day of month: " + firstDayOfMonth);
 	    
 	    // Get the starting position
-	    int startingPos = firstDayOfMonthPositionSundayFirst.get(firstDayOfMonth);
+	    int startingPos = cal.get(Calendar.DAY_OF_WEEK) - 1;
+	    if (startingPos < 0) startingPos += 7;
 	    // System.out.println("starting pos: " + startingPos);
 	    
 	    int maxDaysInCurrentMonth = getMaxDaysInMonth(
@@ -309,12 +292,11 @@ public class CalApplication implements Cal {
 	    // System.out.println("first day of month: " + firstDayOfMonth);
 	    
 	    // Get the starting position
-	    int startingPos = firstDayOfMonthPositionMondayFirst.get(firstDayOfMonth);
-	    // System.out.println("starting pos: " + startingPos);
-	    
+	    int startingPos = cal.get(Calendar.DAY_OF_WEEK) - 2;
+	    if (startingPos < 0) startingPos += 7;
+
 	    int maxDaysInCurrentMonth = getMaxDaysInMonth(
 	    		Integer.parseInt(currentMonth)-1, Integer.parseInt(currentYear));
-	    // System.out.println("max days in current month: " + maxDaysInCurrentMonth);
 	    
 	    result += populateCalendarDays(startingPos, maxDaysInCurrentMonth);
 	    
@@ -350,7 +332,8 @@ public class CalApplication implements Cal {
 	    // System.out.println("first day of month: " + firstDayOfMonth);
 	    
 	    // Get the starting position
-	    int startingPos = firstDayOfMonthPositionSundayFirst.get(firstDayOfMonth);
+	    int startingPos = cal.get(Calendar.DAY_OF_WEEK) - 1;
+	    if (startingPos < 0) startingPos += 7;
 	    // System.out.println("starting pos: " + startingPos);
 	    
 	    int maxDaysInCurrentMonth = getMaxDaysInMonth(
@@ -493,7 +476,8 @@ public class CalApplication implements Cal {
 			    // System.out.println("first day of month: " + firstDayOfMonth);
 			    
 			    // Get the starting position
-			    int startingPos = firstDayOfMonthPositionSundayFirst.get(firstDayOfMonth);
+			    int startingPos = cal.get(Calendar.DAY_OF_WEEK) - 1;
+			    if (startingPos < 0) startingPos += 7;
 			    // System.out.println("starting pos: " + startingPos);
 			    
 			    int maxDaysInCurrentMonth = getMaxDaysInMonth(
@@ -541,7 +525,9 @@ public class CalApplication implements Cal {
 		    // System.out.println("first day of month: " + firstDayOfMonth);
 		    
 		    // Get the starting position
-		    int startingPos = firstDayOfMonthPositionMondayFirst.get(firstDayOfMonth);
+
+		    int startingPos = cal.get(Calendar.DAY_OF_WEEK) - 2;
+		    if (startingPos < 0) startingPos += 7;
 		    // System.out.println("starting pos: " + startingPos);
 		    
 		    int maxDaysInCurrentMonth = getMaxDaysInMonth(
@@ -590,9 +576,9 @@ public class CalApplication implements Cal {
 			    // System.out.println("first day of month: " + firstDayOfMonth);
 			    
 			    // Get the starting position
-			    int startingPos = firstDayOfMonthPositionMondayFirst.get(firstDayOfMonth);
-			    // System.out.println("starting pos: " + startingPos);
-			    
+			    int startingPos = cal.get(Calendar.DAY_OF_WEEK) - 2;
+			    if (startingPos < 0) startingPos += 7;
+			     
 			    int maxDaysInCurrentMonth = getMaxDaysInMonth(
 			    		currMonth-1, Integer.parseInt(currentYear));
 			    // System.out.println("max days in current month: " + maxDaysInCurrentMonth);

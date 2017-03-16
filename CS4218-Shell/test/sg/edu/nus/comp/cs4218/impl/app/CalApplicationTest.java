@@ -49,7 +49,7 @@ public class CalApplicationTest {
 	
 	// Cal -m month year
 	@Test
-	public void testCalMondayFirstWithMonthAndYear() {
+	public void testCalMondayFirstWithMonthAndYear() throws CalException {
 		String args[] = "-m 6 1993".split(" ");
 		String expected =	"     June 1993      \n" +
 							"Mo Tu We Th Fr Sa Su\n" +
@@ -58,20 +58,16 @@ public class CalApplicationTest {
 							"14 15 16 17 18 19 20\n" +
 							"21 22 23 24 25 26 27\n" +
 							"28 29 30            ";            
-		try {
-			calApp.run(args, is, os);
-			String output = os.toString();
-			assertEquals(expected, output);
-		} catch (CalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		calApp.run(args, is, os);
+		String output = os.toString();
+		assertEquals(expected, output);
+	
 		
 	}
 	
 	// Cal month year
 	@Test
-	public void testCalSundayFirstWithMonthAndYear() {
+	public void testCalSundayFirstWithMonthAndYear() throws CalException {
 		String args[] = "6 1993".split(" ");
 		String expected =	"     June 1993      \n" +
 							"Su Mo Tu We Th Fr Sa\n" +
@@ -80,19 +76,15 @@ public class CalApplicationTest {
 							"13 14 15 16 17 18 19\n" +
 							"20 21 22 23 24 25 26\n" +
 							"27 28 29 30         ";            
-		try {
 			calApp.run(args, is, os);
 			String output = os.toString();
 			assertEquals(expected, output);
-		} catch (CalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 	}
 	
 	// Cal -m year
 	@Test
-	public void testCalMondayFirstWithYearOnly() {
+	public void testCalMondayFirstWithYearOnly() throws CalException {
 		String args[] = "-m 1993".split(" ");
 		String expected =	""
 				+ "      January               February               March        \n"
@@ -125,19 +117,15 @@ public class CalApplicationTest {
 				+ "11 12 13 14 15 16 17  15 16 17 18 19 20 21  13 14 15 16 17 18 19\n"
 				+ "18 19 20 21 22 23 24  22 23 24 25 26 27 28  20 21 22 23 24 25 26\n"
 				+ "25 26 27 28 29 30 31  29 30                 27 28 29 30 31      \n"; 
-		try {
-			calApp.run(args, is, os);
-			String output = os.toString();
-			assertEquals(expected, output);
-		} catch (CalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		calApp.run(args, is, os);
+		String output = os.toString();
+		assertEquals(expected, output);
+
 	}
 	
 	// Cal year
 	@Test
-	public void testCalSundayFirstWithYearOnly() {
+	public void testCalSundayFirstWithYearOnly() throws CalException {
 		String args[] = "1993".split(" ");
 		String expected =	""
 				+ "      January               February               March        \n"
@@ -171,19 +159,15 @@ public class CalApplicationTest {
 				+ "17 18 19 20 21 22 23  21 22 23 24 25 26 27  19 20 21 22 23 24 25\n"
 				+ "24 25 26 27 28 29 30  28 29 30              26 27 28 29 30 31   \n"
 				+ "31                                                              \n"; 
-		try {
-			calApp.run(args, is, os);
-			String output = os.toString();
-			assertEquals(expected, output);
-		} catch (CalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		calApp.run(args, is, os);
+		String output = os.toString();
+		assertEquals(expected, output);
+
 	}
 	
 	// Cal -m
 	@Test
-	public void testCalMondayFirst() {
+	public void testCalMondayFirst() throws CalException {
 		String args[] = "-m".split(" ");
 		String expected =	"     March 2017     \n" +
 							"Mo Tu We Th Fr Sa Su\n" +
@@ -192,20 +176,16 @@ public class CalApplicationTest {
 							"13 14 15 16 17 18 19\n" +
 							"20 21 22 23 24 25 26\n" +
 							"27 28 29 30 31      ";            
-		try {
-			calApp.run(args, is, os);
-			String output = os.toString();
-			assertEquals(expected, output);
-		} catch (CalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		calApp.run(args, is, os);
+		String output = os.toString();
+		assertEquals(expected, output);
+
 	}
 	
 	
 	// Cal
 	@Test
-	public void testCalSundayFirst() {
+	public void testCalSundayFirst() throws CalException {
 		String args[] = new String[0];
 		String expected =	"     March 2017     \n" +
 							"Su Mo Tu We Th Fr Sa\n" +
@@ -214,62 +194,33 @@ public class CalApplicationTest {
 							"12 13 14 15 16 17 18\n" +
 							"19 20 21 22 23 24 25\n" +
 							"26 27 28 29 30 31   ";            
-		try {
-			calApp.run(args, is, os);
-			String output = os.toString();
-			assertEquals(expected, output);
-		} catch (CalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		calApp.run(args, is, os);
+		String output = os.toString();
+		assertEquals(expected, output);
 	}
 	
 	
 	// Failing test cases
 	
 	// cal a
-	@Test
-	public void testCalSundayFirstInvalidYear() {
+	@Test (expected = CalException.class)
+	public void testCalSundayFirstInvalidYear() throws CalException {
 		String args[] = "a".split(" ");      
-		try {
-			calApp.run(args, is, os);
-			fail("CalException should be thrown!");
-			// String output = os.toString();
-			// assertEquals(expected, output);
-		} catch (CalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		calApp.run(args, is, os);
 	}
 	
 	// cal -m z
-	@Test
-	public void testCalMondayFirstInvalidYear() {
+	@Test (expected = CalException.class)
+	public void testCalMondayFirstInvalidYear() throws CalException {
 		String args[] = "-m asd".split(" ");      
-		try {
-			calApp.run(args, is, os);
-			fail("CalException should be thrown!");
-			// String output = os.toString();
-			// assertEquals(expected, output);
-		} catch (CalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		calApp.run(args, is, os);
 	}
 	
 	// cal a 1999
-	@Test
-	public void testCalMondayFirstInvalidM() {
+	@Test (expected = CalException.class)
+	public void testCalMondayFirstInvalidM() throws CalException {
 		String args[] = "asd 2000".split(" ");      
-		try {
-			calApp.run(args, is, os);
-			fail("Exception should be thrown!");
-			// String output = os.toString();
-			// assertEquals(expected, output);
-		} catch (CalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		calApp.run(args, is, os);
 	}
 	
 	// cal 0 1999
@@ -292,78 +243,38 @@ public class CalApplicationTest {
 	}
 	
 	// cal 6 zx
-	@Test
-	public void testCalSundayFirstMonthAndYearInvalidYear() {
+	@Test (expected = CalException.class)
+	public void testCalSundayFirstMonthAndYearInvalidYear() throws CalException {
 		String args[] = "6 dfv".split(" ");      
-		try {
-			calApp.run(args, is, os);
-			fail("Exception should be thrown!");
-			// String output = os.toString();
-			// assertEquals(expected, output);
-		} catch (CalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		calApp.run(args, is, os);
 	}
 	
 	// cal a b
-	@Test
-	public void testCalSundayFirstMonthAndYearInvalidMonthAndYear() {
+	@Test (expected = CalException.class)
+	public void testCalSundayFirstMonthAndYearInvalidMonthAndYear() throws CalException {
 		String args[] = "fg dfv".split(" ");      
-		try {
-			calApp.run(args, is, os);
-			fail("Exception should be thrown!");
-			// String output = os.toString();
-			// assertEquals(expected, output);
-		} catch (CalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		calApp.run(args, is, os);
 	}
 	
 	// cal -m 6 abc
-	@Test
-	public void testCalMondayFirstMonthAndYearInvalidYear() {
+	@Test (expected = CalException.class)
+	public void testCalMondayFirstMonthAndYearInvalidYear() throws CalException {
 		String args[] = "-m 3 rgfds".split(" ");      
-		try {
-			calApp.run(args, is, os);
-			fail("Exception should be thrown!");
-			// String output = os.toString();
-			// assertEquals(expected, output);
-		} catch (CalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		calApp.run(args, is, os);
 	}
 	
 	// cal -m 0 2000
-	@Test
-	public void testCalMondayFirstMonthAndYearInvalidMonth() {
+	@Test (expected = CalException.class)
+	public void testCalMondayFirstMonthAndYearInvalidMonth() throws CalException  {
 		String args[] = "-m 32 2006".split(" ");      
-		try {
-			calApp.run(args, is, os);
-			fail("Exception should be thrown!");
-			// String output = os.toString();
-			// assertEquals(expected, output);
-		} catch (CalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		calApp.run(args, is, os);
 	}
 	
 	// cal a 4 2000
-	@Test
-	public void testCalMondayFirstMonthAndYearInvalidM() {
+	@Test (expected = CalException.class)
+	public void testCalMondayFirstMonthAndYearInvalidM() throws CalException {
 		String args[] = "2asd 3 2006".split(" ");      
-		try {
-			calApp.run(args, is, os);
-			fail("Exception should be thrown!");
-			// String output = os.toString();
-			// assertEquals(expected, output);
-		} catch (CalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		calApp.run(args, is, os);
 	}
 }
 

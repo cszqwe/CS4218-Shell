@@ -105,7 +105,7 @@ public class PwdApplicationTest {
 		ShellImpl shell = new ShellImpl();
 		String args = "cd `pwd`";
 		shell.parseAndEvaluate(args, os);
-		assertEquals(Environment.currentDirectory, pwd);
+		assertEquals(pwd, Environment.currentDirectory);
 	}
 
 }

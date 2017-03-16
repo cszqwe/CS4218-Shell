@@ -516,7 +516,7 @@ public class ExtraSedApplicationTest {
 		String cmdline = "sed s/l/L/ `echo test.txt`";
 		String expected = "Line 1\r\nLine 2\r\nLine 3\r\nLine 4\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test
@@ -566,7 +566,7 @@ public class ExtraSedApplicationTest {
 		String cmdline = "head -n 2 tesasdt.txt | grep line | sed test";
 		String expected = "line 1\nline 2\n";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}	
 	
 	@Test
@@ -576,7 +576,7 @@ public class ExtraSedApplicationTest {
 		String cmdline = "grep `echo line` `echo test.txt` | sed s/[l]/L/g";
 		String expected = "Line 1\nLine 2\nLine 3\nLine 4";
 		shell.parseAndEvaluate(cmdline, os);
-		assertEquals(os.toString(), expected);
+		assertEquals(expected, os.toString());
 	}
 
 	@Test

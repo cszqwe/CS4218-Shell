@@ -26,9 +26,9 @@ public class ShellTestEF1 {
 	@Test
 	//Test the globbing function.
 	public void testGlobbing() throws AbstractApplicationException, ShellException {
-		assertEquals(ShellImpl.processGlobbing("cat globbingTest\\*"), "cat globbingTest/test.txt globbingTest/test2.txt");
-		assertEquals(ShellImpl.processGlobbing("cat globbingTest\\test*"), "cat globbingTest/test.txt globbingTest/test2.txt");
-		assertEquals(ShellImpl.processGlobbing("cat globbingTest\\test2*"), "cat globbingTest/test2.txt");
+		assertEquals("cat globbingTest/test.txt globbingTest/test2.txt", ShellImpl.processGlobbing("cat globbingTest\\*"));
+		assertEquals("cat globbingTest/test.txt globbingTest/test2.txt", ShellImpl.processGlobbing("cat globbingTest\\test*"));
+		assertEquals("cat globbingTest/test2.txt", ShellImpl.processGlobbing("cat globbingTest\\test2*"));
 		os = new ByteArrayOutputStream();
 		//A normal one
 		String cmdline = "cat globbingTest\\*";
@@ -40,7 +40,7 @@ public class ShellTestEF1 {
 	@Test
 	//Test the redirect function
 	public void testRedirection() throws AbstractApplicationException, ShellException {
-		assertEquals(ShellImpl.processRedirectInput("cat < test.txt"), "cat");
+		assertEquals("cat", ShellImpl.processRedirectInput("cat < test.txt"));
 		Exception exc1 = new Exception();
 		Exception exc2 = new Exception();
 		try{
@@ -48,14 +48,14 @@ public class ShellTestEF1 {
 		}catch (Exception e){
 			exc1 = e;
 		}
-		assertEquals(exc1.getMessage(), "shell: More than one redirect input");
+		assertEquals("shell: More than one redirect input", exc1.getMessage());
 		
 		try{
 			ShellImpl.processRedirectInput("cat < test3.txt");			
 		}catch (Exception e){
 			exc2 = e;
 		}
-		assertEquals(exc2.getMessage(), "shell: Could not read file");
+		assertEquals("shell: Could not read file", exc2.getMessage());
 		
 		os = new ByteArrayOutputStream();
 		

@@ -45,12 +45,12 @@ public class TailApplicationTest {
 		String expected ="line 8\nline 9\nline 10\nline 11\nline 12\n";
 		try {
 			tailApp.run(args, is, os);
-			String output = os.toString();
-			assertEquals(expected, output);
 		} catch (AbstractApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		String output = os.toString();
+		assertEquals(expected, output);
 	}
 	@Test
 	public void testTailOptionExceedFileLines() {
@@ -59,12 +59,12 @@ public class TailApplicationTest {
 		String expected ="line 1\nline 2\nline 3\nline 4\n";
 		try {
 			tailApp.run(args, is, os);
-			String output = os.toString();
-			assertEquals(expected, output);
 		} catch (AbstractApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		String output = os.toString();
+		assertEquals(expected, output);
 	}
 	@Test
 	public void testTailFileOnly() {
@@ -73,12 +73,12 @@ public class TailApplicationTest {
 		String expected ="line 3\nline 4\nline 5\nline 6\nline 7\nline 8\nline 9\nline 10\nline 11\nline 12\n";
 		try {
 			tailApp.run(args, is, os);
-			String output = os.toString();
-			assertEquals(expected, output);
 		} catch (AbstractApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		String output = os.toString();
+		assertEquals(expected, output);
 	}
 	
 	@Test
@@ -87,12 +87,12 @@ public class TailApplicationTest {
 		String expected = ""; // newline is not added
 		try {
 			tailApp.run(args, is, os);
-			String output = os.toString();
-			assertEquals(expected, output);
 		} catch (AbstractApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		String output = os.toString();
+		assertEquals(expected, output);
 	}
 	
 	@Test
@@ -101,12 +101,12 @@ public class TailApplicationTest {
 		String expected = "     \n";
 		try {
 			tailApp.run(args, is, os);
-			String output = os.toString();
-			assertEquals(expected, output);
 		} catch (AbstractApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		String output = os.toString();
+		assertEquals(expected, output);
 	}
 	
 	@Test
@@ -115,12 +115,12 @@ public class TailApplicationTest {
 		String expected = "\n\n\n\n";
 		try {
 			tailApp.run(args, is, os);
-			String output = os.toString();
-			assertEquals(expected, output);
 		} catch (AbstractApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		String output = os.toString();
+		assertEquals(expected, output);
 	}
 	
 	@Test
@@ -129,25 +129,27 @@ public class TailApplicationTest {
 		String expected = "\n\n\n\n\n\n\n\n\n\n";
 		try {
 			tailApp.run(args, is, os);
-			String output = os.toString();
-			assertEquals(expected, output);
 		} catch (AbstractApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		String output = os.toString();
+		assertEquals(expected, output);
 	}
 	
 	@Test
 	public void testTailEmptyInput() {
 		String args[] = "".split(" ");	
+		Exception exc = new Exception();
 		try {
 			tailApp.run(args, is, os);
 
 		} catch (AbstractApplicationException e) {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
-			assertEquals("tail: File not found", e.getMessage());
+			exc = e;
 		}
+		assertEquals("tail: File not found", exc.getMessage());
 	}
 	
 	@Test

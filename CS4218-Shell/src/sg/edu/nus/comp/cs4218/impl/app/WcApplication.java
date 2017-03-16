@@ -28,6 +28,7 @@ public class WcApplication implements Wc {
 			if (stdin == null || stdout == null) {
 				throw new WcException("Null Pointer Exception");
 			}
+		} else {
 		}
 		for (String arg : args) {
 			if (arg.charAt(0) == '-') { // indicates option
@@ -61,7 +62,7 @@ public class WcApplication implements Wc {
 		} else {
 			if (stdin != null) {
 				// read from stdin
-				output = output.concat(printCountInStdin(stdin));
+				output = output.concat(printCountInStdin(stdin, chars, words, lines));
 			} else {
 				throw new WcException("Null Pointer Exception");
 			}
@@ -140,12 +141,12 @@ public class WcApplication implements Wc {
      }
 	
 	
-	public String printCountInStdin(InputStream stdin) {
+	public String printCountInStdin(InputStream stdin, boolean chars, boolean words, boolean lines) {
 		String line = "";
 		String contents = readInputStreamToString(stdin);
-		line = line.concat(printCharacterCountInStdin(contents) + " ");
-		line = line.concat(printWordCountInStdin(contents) + " ");
-		line = line.concat(printNewlineCountInStdin(contents) + " ");
+		if (chars) line = line.concat(printCharacterCountInStdin(contents) + " ");
+		if (words) line = line.concat(printWordCountInStdin(contents) + " ");
+		if (lines) line = line.concat(printNewlineCountInStdin(contents) + " ");
 		return line + "\n";
 	}
 

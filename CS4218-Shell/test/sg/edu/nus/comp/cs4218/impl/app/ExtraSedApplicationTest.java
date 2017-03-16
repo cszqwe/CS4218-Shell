@@ -103,6 +103,7 @@ public class ExtraSedApplicationTest {
 		String args[] = { "s|a|b|", "non-existent.txt" };
 		stdin = null;
 		sed.run(args, stdin, stdout);
+		assertEquals("sed: File is not readable",stdout.toString());
 		// String msg =
 		// "error on sed command - fails to throw exception with null stdin and
 		// non-existent file ";

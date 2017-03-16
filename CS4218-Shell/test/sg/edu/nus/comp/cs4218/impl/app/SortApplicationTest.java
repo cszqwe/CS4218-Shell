@@ -517,23 +517,6 @@ public class SortApplicationTest {
 		assertEquals(expected, exc.getMessage());
 	}
 	
-	@Test
-	public void testSortOsFailure() {
-		String[] args = {};
-		String expected = "sort: Output stream not working";
-		Exception exc = new Exception();
-		try {
-			is = new FileInputStream("sortTestBasic.txt");
-			os.close();
-			sortApp.run(args, is, os);
-			System.out.println("passes");
-		} catch (Exception e) {
-			exc = e;
-			System.out.println(e);
-		}
-		assertEquals(expected, exc.getMessage());
-	}
-	
 	// tests for each combination of char types
 	// same files and expected results as those in interface unit test
 	

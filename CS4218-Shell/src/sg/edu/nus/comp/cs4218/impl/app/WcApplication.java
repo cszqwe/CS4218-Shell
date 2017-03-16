@@ -59,8 +59,12 @@ public class WcApplication implements Wc {
 				output = output.concat(printCountInFile(file, chars, words, lines));
 			}
 		} else {
-			// read from stdin
-			output = output.concat(printCountInStdin(stdin));
+			if (stdin != null) {
+				// read from stdin
+				output = output.concat(printCountInStdin(stdin));
+			} else {
+				throw new WcException("Null Pointer Exception");
+			}
 		}
 		try {
 			stdout.write(output.getBytes());
@@ -154,7 +158,7 @@ public class WcApplication implements Wc {
 	 */
 	@Override
 	public String printCharacterCountInFile(String args) {
-		args = args.replaceAll("\r\n", "\n"); //Under windows, the newline char would be counted twice, therefore replace it with \n
+		args = args.replace("\r\n", "\n");
 		return Integer.toString(args.length());
 	}
 

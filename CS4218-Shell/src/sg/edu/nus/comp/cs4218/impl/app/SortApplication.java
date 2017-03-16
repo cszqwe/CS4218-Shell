@@ -35,25 +35,7 @@ public class SortApplication implements Sort {
 		if (args == null && (stdin == null || stdout == null)) {
 			throw new SortException("Null Pointer Exception");
 		}
-		
-		if (stdin != null) {
-			// copy stdin so that it can be accessed >1 times
-			// System.out.println("stdin detected");
-			baos = new ByteArrayOutputStream();
-			byte[] buffer = new byte[1024];
-			int len;
-			try {
-				while ((len = stdin.read(buffer)) > -1 ) {
-				    baos.write(buffer, 0, len);
-				}
-				baos.flush();
-			} catch (IOException e) {
-				throw new SortException("InputStream failed");
-				// System.out.println("Copy stdin failed");
-			}
-			this.stdin = new ByteArrayInputStream(baos.toByteArray());
-		}
-		
+
 		boolean isNumericSort = false;
 		ArrayList<String> filepaths = new ArrayList<>();
 		ArrayList<String> lines = new ArrayList<>();
@@ -103,6 +85,26 @@ public class SortApplication implements Sort {
 			// System.out.println("No file(s): read from stdin");
 			// if (isNumericSort) System.out.println("Numeric sort");
 			// else System.out.println("Non-numeric sort");
+
+			if (stdin != null) {
+				// copy stdin so that it can be accessed >1 times
+				// System.out.println("stdin detected");
+				baos = new ByteArrayOutputStream();
+				byte[] buffer = new byte[1024];
+				int len;
+				try {
+					while ((len = stdin.read(buffer)) > -1 ) {
+					    baos.write(buffer, 0, len);
+					}
+					baos.flush();
+				} catch (IOException e) {
+					throw new SortException("InputStream failed");
+					// System.out.println("Copy stdin failed");
+				}
+				this.stdin = new ByteArrayInputStream(baos.toByteArray());
+			} else {
+				throw new SortException("Null Point Exception");
+			}
 			lines = getStdinContents();
 		} else {
 			lines = getFilesContents(filepaths);

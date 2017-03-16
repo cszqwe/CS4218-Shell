@@ -16,6 +16,7 @@ import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.app.CalApplication;
 import sg.edu.nus.comp.cs4218.impl.app.CatApplication;
 import sg.edu.nus.comp.cs4218.impl.app.EchoApplication;
+import sg.edu.nus.comp.cs4218.impl.app.GrepApplication;
 import sg.edu.nus.comp.cs4218.impl.app.HeadApplication;
 import sg.edu.nus.comp.cs4218.impl.app.TailApplication;
 import sg.edu.nus.comp.cs4218.impl.cmd.CallCommand;
@@ -115,7 +116,7 @@ public class ShellImpl implements Shell {
 			String bqResult = new String(byteArray).replace("\n", "")
 					.replace("\r", "").replace("\\", "\\\\");
 			
-			String replacedStr = stmt.replaceFirst("`" + bqStr + "`",
+			String replacedStr = stmt.replace("`" + bqStr + "`",
 					bqResult);
 			stmt = replacedStr;
 		}
@@ -298,6 +299,7 @@ public class ShellImpl implements Shell {
 		stmt = stmt+"|";
 		int numOfDQ = 0;
 		int numOfSQ = 0;
+		int numOfBQ = 0;
 		int startIndex = 0;
 		ArrayList<String> stmts = new ArrayList<String>();
 		stmts.clear();
@@ -307,8 +309,10 @@ public class ShellImpl implements Shell {
 				numOfSQ++;
 			}else if (stmt.charAt(i) == '"'){
 				numOfDQ++;
-			}else if (stmt.charAt(i) == '|'){
-				if (numOfDQ % 2 == 0 && numOfSQ %2 ==0){
+			}else if (stmt.charAt(i) == '`'){
+				numOfBQ++;
+			}			else if (stmt.charAt(i) == '|'){
+				if (numOfDQ % 2 == 0 && numOfSQ %2 ==0 && numOfBQ %2 == 0){
 					String newCmd = stmt.substring(startIndex, i);
 					stmts.add(newCmd);
 					startIndex = i+1;
@@ -648,7 +652,12 @@ public class ShellImpl implements Shell {
 		}
 		else if (("sort").equals(app)) {
 			absApp = new SortApplication();
-		} else { // invalid command
+		}else if (("grep").equals(app)){
+			absApp = new GrepApplication();
+		}
+		
+		
+		else { // invalid command
 			throw new ShellException(app + ": " + EXP_INVALID_APP);
 		}
 		absApp.run(argsArray, inputStream, outputStream);

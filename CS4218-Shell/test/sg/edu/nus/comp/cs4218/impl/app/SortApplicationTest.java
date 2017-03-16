@@ -112,7 +112,7 @@ public class SortApplicationTest {
 	
 	@Test
 	public void testSortComplex() {
-		String[] args = {"sortTest Complex.txt"};
+		String[] args = {"sortTestComplex.txt"};
 		String expected = "\n" +
 				"\n" +
 				"\n" + 
@@ -146,7 +146,7 @@ public class SortApplicationTest {
 	
 	@Test
 	public void testSortComplexNumeric() {
-		String[] args = {"-n", "sortTest Complex.txt"};
+		String[] args = {"-n", "sortTestComplex.txt"};
 		String expected = "\n" +
 				"\n" +
 				"\n" + 

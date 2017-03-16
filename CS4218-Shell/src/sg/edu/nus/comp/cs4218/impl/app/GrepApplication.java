@@ -24,7 +24,7 @@ public class GrepApplication implements Grep {
 		String output = "";
 		String ans;
 		boolean validPattern;
-		if (args == null) {
+		if (args == null || args.length == 0) {
 			throw new GrepException("No pattern found");
 		}
 		if (args.length == 1 && stdin == null){
@@ -58,7 +58,7 @@ public class GrepApplication implements Grep {
 					}catch (Exception e){
 						try {
 							stdout.write(e.getMessage().getBytes());
-						} catch (IOException e1) {
+						} catch (Exception ee) {
 							throw new GrepException("Invalid output stream");
 						}
 					}
@@ -80,7 +80,7 @@ public class GrepApplication implements Grep {
 			try {
 				if (!ans.equals(""))
 					stdout.write((ans+"\n").getBytes());
-			} catch (IOException e) {
+			} catch (Exception e) {
 				throw new GrepException("Invalid output stream");
 			}
 		}
@@ -97,31 +97,6 @@ public class GrepApplication implements Grep {
 		A string which represents the content read from the stdin.
 	 * 
 	 */
-	public static String readInputStreamToString(InputStream stdin) {      
-         BufferedReader in = new BufferedReader(new InputStreamReader(stdin));
-         StringBuilder str = new StringBuilder();      
-         String line = null; 
-         boolean first = true;
-        try {
-        	while ((line = in.readLine()) != null) {
-        		if (!first)
-        			str.append("\n" + line);      
-        		else {
-        			str.append(line);
-        			first = false;
-        		}
-        	}      
-         } catch (IOException e) {      
-             e.printStackTrace();      
-         } finally {      
-            try {      
-                 in.close();      
-             } catch (IOException e) {      
-                 e.printStackTrace();      
-             }      
-         }
-        return str.toString().replaceAll("\r\n", "\n");
-     }
 	
 	/**
 	 * @params file chars words lines
@@ -159,7 +134,7 @@ public class GrepApplication implements Grep {
 		A string which represents the content read from the stdin.
 	 * 
 	 */
-	public static String getContentFromStdin(InputStream stdin) {      
+	public static String getContentFromStdin(InputStream stdin) throws GrepException{      
          BufferedReader in = new BufferedReader(new InputStreamReader(stdin));
          StringBuilder str = new StringBuilder();      
          String line = null; 
@@ -173,15 +148,9 @@ public class GrepApplication implements Grep {
         			first = false;
         		}
         	}      
-         } catch (IOException e) {      
-             e.printStackTrace();      
-         } finally {      
-            try {      
-                 in.close();      
-             } catch (IOException e) {      
-                 e.printStackTrace();      
-             }      
-         }
+         } catch (Exception e) {      
+        	 throw new GrepException("Invalid input stream");
+         } 
         return str.toString();
      }
 
@@ -222,7 +191,6 @@ public class GrepApplication implements Grep {
 
 	@Override
 	public String grepInvalidPatternInStdin(String args) {
-		
 		return "Invalid Pattern";
 	}
 

@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 
 import org.junit.Before;
@@ -12,6 +14,8 @@ import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.GrepException;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.app.GrepApplication;
 
 /*
@@ -36,6 +40,11 @@ public class ExtraGrepApplicationTest {
 	private GrepApplication grepApp;
 	private String[] args;
 	private FileInputStream stdin;
+	private FileInputStream failstdin;
+	
+	static ShellImpl shell;
+	static OutputStream os;
+	
 	private String fileName;
 	private String fileName2;
 	private String fileName3;
@@ -46,8 +55,11 @@ public class ExtraGrepApplicationTest {
 
 	@Before
 	public void setUp() throws FileNotFoundException {
+		shell = new ShellImpl();
 		grepApp = new GrepApplication();
 		stdin = new FileInputStream("test/sg/edu/nus/comp/cs4218/impl/app/greptestdoc.txt");
+		failstdin = new FileInputStream("test/sg/edu/nus/comp/cs4218/impl/app/greptestdoc.txt");
+		
 		fileName = "test/sg/edu/nus/comp/cs4218/impl/app/greptestdoc.txt";
 		fileName2 = "test/sg/edu/nus/comp/cs4218/impl/app/greptestdoc2.txt";
 		fileName3 = "test/sg/edu/nus/comp/cs4218/impl/app/testdoc.txt";
@@ -77,6 +89,56 @@ public class ExtraGrepApplicationTest {
 		assertEquals(ABCSINGLEFILEOUT + "\n", baos.toString());
 	}
 
+	@Test (expected = GrepException.class)
+	public void grepStdInInvalidPattern() throws AbstractApplicationException {
+		args = new String[1];
+		args[0] = "[";
+		grepApp.run(args, stdin, System.out);
+		System.out.flush();
+		assertEquals(ABCSINGLEFILEOUT + "\n", baos.toString());
+	}
+	
+
+	@Test 
+	public void grepStdInValidPatternNoMatch() throws AbstractApplicationException {
+		args = new String[1];
+		args[0] = "asdasda";
+		grepApp.run(args, stdin, System.out);
+		System.out.flush();
+		assertEquals("", baos.toString());
+	}
+	
+
+	@Test (expected = GrepException.class)
+	public void grepStdInValidStdin() throws AbstractApplicationException, IOException {
+		args = new String[1];
+		args[0] = "asdasda";
+		failstdin.close();
+		grepApp.run(args, failstdin, System.out);
+		System.out.flush();
+		assertEquals("", baos.toString());
+	}
+	
+	
+	@Test (expected = GrepException.class)
+	public void grepStdInInvalidOutputStream() throws AbstractApplicationException {
+		args = new String[1];
+		args[0] = ABCPATTERN;
+		grepApp.run(args, stdin, null);
+		System.out.flush();
+		assertEquals(ABCSINGLEFILEOUT + "\n", baos.toString());
+	}
+	
+	
+	@Test (expected = GrepException.class)
+	public void grepStdInInvalidPatternInvalidOutputStream() throws AbstractApplicationException {
+		args = new String[1];
+		args[0] = "[";
+		grepApp.run(args, stdin, null);
+		System.out.flush();
+		assertEquals(ABCSINGLEFILEOUT + "\n", baos.toString());
+	}
+	
 	@Test
 	public void grepStdInRegexMatchesFromRun() throws AbstractApplicationException {
 		args = new String[1];
@@ -292,15 +354,21 @@ public class ExtraGrepApplicationTest {
 		System.out.flush();
 	}
 
-	@Test(expected = GrepException.class)
-	public void invalidOutputStream() throws AbstractApplicationException {
-		args = new String[3];
-		args[0] = REGEXPATTERN;
-		args[1] = fileName2;
-		args[2] = fileName;
-		grepApp.run(args, stdin, null);
-		System.out.flush();
+	@Test
+	//Test the fail case of calling command functions
+	public void commandSubTest() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep line `cat test.txt | head -n 1`";
+		String expected = "line 1\r\nline 2\r\nline 3\r\nline 4";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+		os = new ByteArrayOutputStream();
+		cmdline = "cat test.txt | head -n 2 | tail -n 1";
+		expected = "line 2\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
 	}
-
+	
+	
 	
 }

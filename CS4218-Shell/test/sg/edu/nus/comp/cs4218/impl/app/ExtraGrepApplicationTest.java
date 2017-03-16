@@ -13,7 +13,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.CatException;
 import sg.edu.nus.comp.cs4218.exception.GrepException;
+import sg.edu.nus.comp.cs4218.exception.HeadException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.app.GrepApplication;
@@ -355,7 +357,7 @@ public class ExtraGrepApplicationTest {
 	}
 
 	@Test
-	//Test the fail case of calling command functions
+	//Test the case of calling command functions
 	public void commandSubTest1() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "grep `echo line` test.txt";
@@ -363,17 +365,85 @@ public class ExtraGrepApplicationTest {
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(os.toString(), expected);
 	}
-	
 
 	@Test
-	//Test the fail case of calling command functions
+	//Test the case of calling command functions
 	public void commandSubTest2() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
-		String cmdline = "grep `echo line | cat` test.txt";
+		String cmdline = "grep `echo line | head` test.txt";
 		String expected = "line 1\nline 2\nline 3\nline 4\n";
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(os.toString(), expected);
 	}
 
+	@Test (expected = CatException.class)
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void commandSubTestFail() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep `echo line | cat test5.txt` test.txt";
+		String expected = "line 1\nline 2\nline 3\nline 4\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+
+	@Test
+	//Test the case of pipe
+	public void pipeTest1() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "sed s/[l]/L/g test.txt | grep Line";
+		String expected = "Line 1\nLine 2\nLine 3\nLine 4\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+
+	@Test
+	//Test the case of pipe
+	public void pipeTest2() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "head -n 2 test.txt | grep line";
+		String expected = "line 1\nline 2\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}	
+
+	@Test (expected = HeadException.class)
+	//Test the case of pipe with exception
+	public void pipeTestFail() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "head -n 2 tesasdt.txt | grep line";
+		String expected = "line 1\nline 2\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}	
+	
+	@Test
+	//Test the case of calling command functions
+	public void complicatedCommandSubTest1() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep `echo line` `echo test.txt`";
+		String expected = "line 1\nline 2\nline 3\nline 4\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+
+	@Test
+	//Test the case of calling command functions
+	public void complicatedCommandSubTest2() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep `echo line | head` `echo test.txt`";
+		String expected = "line 1\nline 2\nline 3\nline 4\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
+
+	@Test (expected = CatException.class)
+	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	public void ComplicatedommandSubTestFail() throws AbstractApplicationException, ShellException {
+		os = new ByteArrayOutputStream();
+		String cmdline = "grep `echo line | cat test5.txt` test.txt";
+		String expected = "line 1\nline 2\nline 3\nline 4\n";
+		shell.parseAndEvaluate(cmdline, os);
+		assertEquals(os.toString(), expected);
+	}
 	
 }

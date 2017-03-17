@@ -16,7 +16,7 @@ public class PwdApplication implements Application {
 		if (stdout == null) {
 			throw new PwdException("Null Pointer Exception");
 		}
-		
+
 		try {
 			stdout.write(Environment.currentDirectory.getBytes());
 		} catch (IOException e) {

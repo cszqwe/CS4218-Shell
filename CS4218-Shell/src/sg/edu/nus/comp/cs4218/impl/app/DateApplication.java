@@ -14,7 +14,7 @@ public class DateApplication implements Date {
 		if (stdout == null) {
 			throw new DateException("Null Pointer Exception");
 		}
-		
+
 		String date = printCurrentDate(null);
 		try {
 			stdout.write(date.getBytes());

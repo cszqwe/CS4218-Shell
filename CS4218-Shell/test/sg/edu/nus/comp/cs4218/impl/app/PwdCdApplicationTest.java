@@ -16,10 +16,9 @@ import sg.edu.nus.comp.cs4218.Environment;
 
 /**
  * 
- * This test is to test how apps pwd and cd work together
- * since there is little to test with pwd alone
- * Since pwd and cd are already tested in respective tests,
- * this test focuses on pwd and cd interaction
+ * This test is to test how apps pwd and cd work together since there is little
+ * to test with pwd alone Since pwd and cd are already tested in respective
+ * tests, this test focuses on pwd and cd interaction
  *
  */
 public class PwdCdApplicationTest {
@@ -34,7 +33,7 @@ public class PwdCdApplicationTest {
 	public static void setUpBeforeClass() throws Exception {
 		cdApp = new CdApplication();
 		pwdApp = new PwdApplication();
-		
+
 		is = null;
 		os = new ByteArrayOutputStream();
 		pwdBackup = Environment.currentDirectory;
@@ -42,7 +41,8 @@ public class PwdCdApplicationTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		Environment.currentDirectory = pwdBackup; // reset, to prevent affecting other test suites
+		Environment.currentDirectory = pwdBackup; // reset, to prevent affecting
+													// other test suites
 	}
 
 	@Before
@@ -60,26 +60,26 @@ public class PwdCdApplicationTest {
 		String[] args1 = {};
 		try {
 			pwdApp.run(args1, is, os);
-			
+
 		} catch (Exception e) {
-			
+
 		}
 		assertEquals(currentDir, os.toString());
 		os = new ByteArrayOutputStream();
-		
-		String[] args2 = {"cd Test_folder"};
+
+		String[] args2 = { "cd Test_folder" };
 		try {
 			cdApp.run(args2, is, os);
 		} catch (Exception e) {
-			
+
 		}
 		assertEquals(pwdBackup + "\\cd Test_folder", Environment.currentDirectory);
 		os = new ByteArrayOutputStream();
-		
+
 		try {
 			pwdApp.run(args1, is, os);
 		} catch (Exception e) {
-			
+
 		}
 		assertEquals(pwdBackup + "\\cd Test_folder", os.toString());
 		os = new ByteArrayOutputStream();

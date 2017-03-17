@@ -1,4 +1,5 @@
 package sg.edu.nus.comp.cs4218.impl.app;
+
 import static org.junit.Assert.*;
 
 import java.io.InputStream;
@@ -45,36 +46,38 @@ public class PwdApplicationTest {
 		try {
 			pwdApp.run(args, is, os);
 		} catch (PwdException e) {
-			
+
 		}
 		assertEquals(pwd, os.toString());
-		
+
 	}
-	
+
 	@Test
 	public void testPwdWithAdditionalArgs() {
-		String args[] = {"unnecessary args"};
-		// expected behavior: pwd works as long as the command "pwd" is valid, and does not care about args
+		String args[] = { "unnecessary args" };
+		// expected behavior: pwd works as long as the command "pwd" is valid,
+		// and does not care about args
 		try {
 			pwdApp.run(args, is, os);
 		} catch (PwdException e) {
-			
+
 		}
 		assertEquals(pwd, os.toString());
 	}
-	
+
 	@Test
 	public void testPwdWithNullArgs() {
 		String args[] = null;
-		// expected behavior: pwd works as long as the command "pwd" is valid, and does not care about args
+		// expected behavior: pwd works as long as the command "pwd" is valid,
+		// and does not care about args
 		try {
 			pwdApp.run(args, is, os);
 		} catch (PwdException e) {
-			
+
 		}
 		assertEquals(pwd, os.toString());
 	}
-	
+
 	@Test
 	public void testPwdWithNullStdout() {
 		String args[] = {};
@@ -87,17 +90,23 @@ public class PwdApplicationTest {
 		}
 		assertEquals(expected, exc.getMessage());
 	}
-	
+
 	// Integration test
 	@Test
 	public void testPwdCmdPipe() throws AbstractApplicationException, ShellException {
-		Environment.currentDirectory = "CS4218_team15_2017\\CS4218-Shell"; // because pwd may differ for other computers
+		Environment.currentDirectory = "CS4218_team15_2017\\CS4218-Shell"; // because
+																			// pwd
+																			// may
+																			// differ
+																			// for
+																			// other
+																			// computers
 		ShellImpl shell = new ShellImpl();
 		String args = "pwd | wc";
 		shell.parseAndEvaluate(args, os);
 		assertEquals("31 1 1 \n", os.toString());
 	}
-	
+
 	@Test
 	public void testPwdCmdSubstitutionWithCd() throws AbstractApplicationException, ShellException {
 		// our implementation of cd does not support absolute path inputs

@@ -13,13 +13,15 @@ public class CdApplication implements Application {
 
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws CdException {
-		if (args != null && args.length > 0) { // does not support going to home directory when no args are provided: ignore command
+		if (args != null && args.length > 0) { // does not support going to home
+												// directory when no args are
+												// provided: ignore command
 			String path = Environment.currentDirectory + '\\' + args[0];
 			// if there are more arguments, they are ignored
 			File file = new File(path);
 			if (file.exists() && file.isDirectory()) {
 				try {
-					//To simplify the path if the path contains ".." 
+					// To simplify the path if the path contains ".."
 					Environment.currentDirectory = file.getCanonicalPath();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block

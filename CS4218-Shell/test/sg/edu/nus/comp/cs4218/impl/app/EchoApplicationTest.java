@@ -1,4 +1,5 @@
 package sg.edu.nus.comp.cs4218.impl.app;
+
 import static org.junit.Assert.*;
 
 import java.io.OutputStream;
@@ -30,15 +31,15 @@ public class EchoApplicationTest {
 
 	@Test
 	public void testEcho() {
-		String args[] = {"test", "values", "args"};
+		String args[] = { "test", "values", "args" };
 		try {
 			echoApp.run(args, null, os);
 		} catch (EchoException e) {
-			
+
 		}
 		assertEquals("test values args\n", os.toString());
 	}
-	
+
 	@Test
 	public void testEchoNoArgs() {
 		Exception exc = new Exception();
@@ -53,7 +54,7 @@ public class EchoApplicationTest {
 	@Test
 	public void testEchoNoStdout() {
 		Exception exc = new Exception();
-		String args[] = {"test"};
+		String args[] = { "test" };
 		try {
 			echoApp.run(args, null, null);
 		} catch (EchoException e) {
@@ -68,18 +69,18 @@ public class EchoApplicationTest {
 		try {
 			echoApp.run(args, null, os);
 		} catch (EchoException e) {
-			
+
 		}
 		assertEquals("\n\n", os.toString());
 	}
 
 	@Test
 	public void testEchoSingleArg() {
-		String args[] = {"test"};
+		String args[] = { "test" };
 		try {
 			echoApp.run(args, null, os);
 		} catch (EchoException e) {
-			
+
 		}
 		assertEquals("test\n", os.toString());
 	}

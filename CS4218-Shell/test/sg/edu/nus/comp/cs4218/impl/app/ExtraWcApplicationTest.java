@@ -204,7 +204,7 @@ public class ExtraWcApplicationTest {
 		String singleWordFileExpected = String.format("5 1 1 %s%s", TEST_FILE_SINGLE_WORD, LINE_SEPARATOR);
 		String titlesFileExpected = String.format("4129 717 251 %s%s", TEST_FILE_TITLES, LINE_SEPARATOR);
 		String expectedResult = String.format("%s%s%s", emptyFileExpected, singleWordFileExpected, titlesFileExpected);
-		
+
 		String res = stdout.toString();
 		assertEquals(expectedResult, res);
 	}
@@ -238,13 +238,11 @@ public class ExtraWcApplicationTest {
 	public void testWcWithBothStdinAndFile() throws WcException {
 		String[] args = { TEST_FILE_SINGLE_WORD };
 		stdin = new ByteArrayInputStream("not single word".getBytes());
-		String singleWordFileExpected = String.format("5 1 1 %s%s", TEST_FILE_SINGLE_WORD,
-				LINE_SEPARATOR);
+		String singleWordFileExpected = String.format("5 1 1 %s%s", TEST_FILE_SINGLE_WORD, LINE_SEPARATOR);
 		wcApp.run(args, stdin, stdout);
 		assertEquals(singleWordFileExpected, stdout.toString());
 	}
-	
-	
+
 	@Test
 	public void testWcWithFileNameContainSpace() throws WcException {
 		String[] args = { TEST_FILE_NAME_HAS_SPACE };
@@ -256,7 +254,7 @@ public class ExtraWcApplicationTest {
 	}
 
 	// Integration testing
-	
+
 	// With pipelines
 	@Test
 	public void testWcAllFromPipe() throws AbstractApplicationException, ShellException {
@@ -267,7 +265,7 @@ public class ExtraWcApplicationTest {
 		shell.parseAndEvaluate(args, stdout);
 		assertEquals(expected, stdout.toString());
 	}
-	
+
 	public void testWcLinesFromPipe() throws AbstractApplicationException, ShellException {
 		stdout = new ByteArrayOutputStream();
 		ShellImpl shell = new ShellImpl();
@@ -276,7 +274,7 @@ public class ExtraWcApplicationTest {
 		shell.parseAndEvaluate(args, stdout);
 		assertEquals(expected, stdout.toString());
 	}
-	
+
 	@Test
 	public void testWcCharsFromPipe() throws AbstractApplicationException, ShellException {
 		stdout = new ByteArrayOutputStream();
@@ -285,14 +283,16 @@ public class ExtraWcApplicationTest {
 		String expected = "42 \n";
 		shell.parseAndEvaluate(args, stdout);
 		assertEquals(expected, stdout.toString());
-		
+
 		stdout = new ByteArrayOutputStream();
 		args = "wc -m sortTestBasic.txt";
 		expected = "42 sortTestBasic.txt\n";
 		shell.parseAndEvaluate(args, stdout);
-		assertEquals(expected, stdout.toString()); // both char count should be the same since sort only sorts the file
+		assertEquals(expected, stdout.toString()); // both char count should be
+													// the same since sort only
+													// sorts the file
 	}
-	
+
 	@Test
 	public void testWcOverlappingOptionsFromPipe() throws AbstractApplicationException, ShellException {
 		stdout = new ByteArrayOutputStream();
@@ -302,35 +302,35 @@ public class ExtraWcApplicationTest {
 		shell.parseAndEvaluate(args, stdout);
 		assertEquals(expected, stdout.toString());
 	}
-	
+
 	// Test with pipeline where second app throws exception
-	@Test (expected = WcException.class)
+	@Test(expected = WcException.class)
 	public void testPipeWcException() throws AbstractApplicationException, ShellException {
 		stdout = new ByteArrayOutputStream();
 		ShellImpl shell = new ShellImpl();
 		String args = "head test2.txt | wc -x";
 		shell.parseAndEvaluate(args, stdout);
 	}
-	
+
 	// Test with pipeline where the first app throws exception
-	@Test (expected = CatException.class)
+	@Test(expected = CatException.class)
 	public void testPipePrevException() throws AbstractApplicationException, ShellException {
 		stdout = new ByteArrayOutputStream();
 		ShellImpl shell = new ShellImpl();
 		String args = "cat nonexistent.txt | wc";
 		shell.parseAndEvaluate(args, stdout);
 	}
-	
+
 	// Test with pipeline where both apps throw exception
 	// Expected behavior: exception thrown by first app should be caught
-	@Test (expected = HeadException.class)
+	@Test(expected = HeadException.class)
 	public void testPipeBothException() throws AbstractApplicationException, ShellException {
 		stdout = new ByteArrayOutputStream();
 		ShellImpl shell = new ShellImpl();
 		String args = "head nonexistent.txt | wc -ap";
 		shell.parseAndEvaluate(args, stdout);
 	}
-	
+
 	// Test with two pipelines, with wc being the last cmd
 	@Test
 	public void testDoublePipeWcLast() throws AbstractApplicationException, ShellException {
@@ -341,7 +341,7 @@ public class ExtraWcApplicationTest {
 		shell.parseAndEvaluate(args, stdout);
 		assertEquals(expected, stdout.toString());
 	}
-	
+
 	// Test with two pipelines, with wc being the last cmd
 	@Test
 	public void testDoublePipeWcMiddle() throws AbstractApplicationException, ShellException {
@@ -352,7 +352,7 @@ public class ExtraWcApplicationTest {
 		shell.parseAndEvaluate(args, stdout);
 		assertEquals(expected, stdout.toString());
 	}
-	
+
 	// Test with command substitution
 	@Test
 	public void testCmdSubstitution() throws AbstractApplicationException, ShellException {
@@ -360,15 +360,12 @@ public class ExtraWcApplicationTest {
 		stdout = new ByteArrayOutputStream();
 		ShellImpl shell = new ShellImpl();
 		String args = "wc `cat test.txt`";
-		String expected = "wc: line: No such file\n"
-				+ "wc: 1line: No such file\n"
-				+ "wc: 2line: No such file\n"
-				+ "wc: 3line: No such file\n"
-				+ "wc: 4: No such file\n";
+		String expected = "wc: line: No such file\n" + "wc: 1line: No such file\n" + "wc: 2line: No such file\n"
+				+ "wc: 3line: No such file\n" + "wc: 4: No such file\n";
 		shell.parseAndEvaluate(args, stdout);
 		assertEquals(expected, stdout.toString());
 	}
-	
+
 	@Test
 	public void testDoubleCmdSubstitution() throws AbstractApplicationException, ShellException {
 		stdout = new ByteArrayOutputStream();
@@ -378,7 +375,7 @@ public class ExtraWcApplicationTest {
 		shell.parseAndEvaluate(args, stdout);
 		assertEquals(expected, stdout.toString());
 	}
-	
+
 	@Test
 	public void testDoubleCmdSubstitutionFilename() throws AbstractApplicationException, ShellException {
 		stdout = new ByteArrayOutputStream();
@@ -388,20 +385,16 @@ public class ExtraWcApplicationTest {
 		shell.parseAndEvaluate(args, stdout);
 		assertEquals(expected, stdout.toString());
 	}
-	
+
 	@Test
 	public void testCmdSubstitutionAndPipe() throws AbstractApplicationException, ShellException {
 		stdout = new ByteArrayOutputStream();
 		ShellImpl shell = new ShellImpl();
 		String args = "wc `cat test.txt` | sort";
-		String expected = "wc: 1line: No such file\n"
-				+ "wc: 2line: No such file\n"
-				+ "wc: 3line: No such file\n"
-				+ "wc: 4: No such file\n"
-				+ "wc: line: No such file\n";
+		String expected = "wc: 1line: No such file\n" + "wc: 2line: No such file\n" + "wc: 3line: No such file\n"
+				+ "wc: 4: No such file\n" + "wc: line: No such file\n";
 		shell.parseAndEvaluate(args, stdout);
 		assertEquals(expected, stdout.toString());
 	}
-	
-	
+
 }

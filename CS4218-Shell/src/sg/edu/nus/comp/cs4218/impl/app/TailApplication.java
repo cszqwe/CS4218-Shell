@@ -22,20 +22,19 @@ public class TailApplication implements Application {
 	public static int numOfLines;
 	public static String path;
 	public static String fileName;
-	
+
 	public String[] cmdArgs = ShellImpl.cmdArgs;
 
-	
 	public static int getFileLineCounts(String filename) {
-        int cnt = 0;
+		int cnt = 0;
 		// Read file
 		try {
 			FileReader fileReader = new FileReader(path);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
-			
+
 			int currLineCount = 0;
 			String sCurrentLine;
-			
+
 			try {
 				while ((sCurrentLine = bufferedReader.readLine()) != null) {
 					cnt++;
@@ -50,8 +49,8 @@ public class TailApplication implements Application {
 			e.printStackTrace();
 		}
 		return cnt;
-    }
-	
+	}
+
 	public static void readFile(OutputStream stdout) {
 		// Read file
 		try {
@@ -61,10 +60,10 @@ public class TailApplication implements Application {
 			int currLineCount = 0;
 			int firstWantedLine = lineCount - numOfLines;
 			String sCurrentLine;
-			
+
 			try {
 				while ((sCurrentLine = bufferedReader.readLine()) != null) {
-					if (currLineCount >= firstWantedLine){
+					if (currLineCount >= firstWantedLine) {
 						stdout.write(sCurrentLine.getBytes());
 						stdout.write("\n".getBytes());
 					}
@@ -82,8 +81,7 @@ public class TailApplication implements Application {
 	}
 
 	/**
-	 * @params args
-	 * 		Arguments from input, without the app name
+	 * @params args Arguments from input, without the app name
 	 * 
 	 * 
 	 * 
@@ -94,16 +92,16 @@ public class TailApplication implements Application {
 		String currentDir = Environment.currentDirectory;
 		boolean isFileReadable = false;
 		cmdArgs = args;
-		
+
 		// If there are command line args, read from it
 		if (cmdArgs.length > 0) {
 			path = currentDir + "\\" + args[0];
 			// command: head -n 15 test.txt
 			if (cmdArgs.length == 3) {
-				try{
+				try {
 					numOfLines = Integer.parseInt(cmdArgs[1]);
-				}catch (Exception e){
-					AbstractApplicationException err =  new TailException("The second parameter should be a number");
+				} catch (Exception e) {
+					AbstractApplicationException err = new TailException("The second parameter should be a number");
 					throw err;
 				}
 				fileName = cmdArgs[2];
@@ -113,7 +111,7 @@ public class TailApplication implements Application {
 					throw new HeadException("File not found");
 				}
 
-			} 
+			}
 			// command: head test.txt
 			else if (cmdArgs.length == 1) {
 				numOfLines = 10;
@@ -124,18 +122,18 @@ public class TailApplication implements Application {
 					throw new HeadException("File not found");
 				}
 
-			} else if(cmdArgs.length == 2){ 
-				
-				try{
+			} else if (cmdArgs.length == 2) {
+
+				try {
 					numOfLines = Integer.parseInt(cmdArgs[1]);
 					isFileReadable = false;
 
-				}catch (Exception e){
-					AbstractApplicationException err =  new TailException("The second parameter should be a number");
+				} catch (Exception e) {
+					AbstractApplicationException err = new TailException("The second parameter should be a number");
 					throw err;
 				}
-			}else{
-				AbstractApplicationException err =  new TailException("Invalid usage of head");
+			} else {
+				AbstractApplicationException err = new TailException("Invalid usage of head");
 				throw err;
 			}
 		} // TODO: read from stdin
@@ -143,37 +141,38 @@ public class TailApplication implements Application {
 			numOfLines = 10;
 			isFileReadable = false;
 		}
-		if (isFileReadable) {	
+		if (isFileReadable) {
 			readFile(stdout);
-		}else{
-			readFromStdin(stdin,stdout);
+		} else {
+			readFromStdin(stdin, stdout);
 		}
 
 	}
-	
+
 	public static void readFromStdin(InputStream stdin, OutputStream stdout) throws HeadException {
 		try {
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stdin)); 
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stdin));
 			String strCurrent;
 			ArrayList<String> answers = new ArrayList<String>();
 			answers.clear();
 			int cnt = numOfLines;
 			while ((strCurrent = bufferedReader.readLine()) != null) {
-				
-				//if (strCurrent.equals("end")) break;  //This statement is used for testing only.
+
+				// if (strCurrent.equals("end")) break; //This statement is used
+				// for testing only.
 				answers.add(strCurrent);
-				if (cnt == 0){
+				if (cnt == 0) {
 					answers.remove(0);
-				}else{
+				} else {
 					cnt--;
 				}
 			}
-			for (int i = 0; i < answers.size(); i++){
+			for (int i = 0; i < answers.size(); i++) {
 				stdout.write(answers.get(i).getBytes());
 				stdout.write("\n".getBytes());
-				
+
 			}
-		
+
 		} catch (Exception exIO) {
 			throw new HeadException("Exception Caught");
 		}

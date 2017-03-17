@@ -1,4 +1,5 @@
 package sg.edu.nus.comp.cs4218.impl.app;
+
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
@@ -24,7 +25,7 @@ public class CdApplicationTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		cdApp = new CdApplication();
-		
+
 	}
 
 	@AfterClass
@@ -45,134 +46,135 @@ public class CdApplicationTest {
 
 	@Test
 	public void testCd() {
-		String args[] = {"cd Test_folder"};
+		String args[] = { "cd Test_folder" };
 		try {
 			cdApp.run(args, null, null);
 		} catch (AbstractApplicationException e) {
-			
+
 		}
 		assertEquals(origPwd + "\\cd Test_folder", Environment.currentDirectory);
-		
+
 	}
-	
+
 	@Test
 	public void testCdInvalidDir() {
-		String args[] = {"nonexistent"};
+		String args[] = { "nonexistent" };
 		try {
 			cdApp.run(args, null, null);
-			
+
 		} catch (AbstractApplicationException e) {
-			
+
 		}
 		assertEquals(origPwd, Environment.currentDirectory);
 	}
-	
+
 	@Test
 	public void testCdNestedDir() {
-		String args[] = {"cd Test_folder\\nested-folder"};
+		String args[] = { "cd Test_folder\\nested-folder" };
 		try {
 			cdApp.run(args, null, null);
 		} catch (AbstractApplicationException e) {
-			
+
 		}
 		assertEquals(origPwd + "\\cd Test_folder\\nested-folder", Environment.currentDirectory);
 	}
-	
+
 	@Test
 	public void testCdMultipleArgsValid() {
-		String args[] = {"cd Test_folder", "asdf"};
+		String args[] = { "cd Test_folder", "asdf" };
 		try {
 			cdApp.run(args, null, null);
 		} catch (AbstractApplicationException e) {
-			
+
 		}
 		assertEquals(origPwd + "\\cd Test_folder", Environment.currentDirectory);
 	}
-	
+
 	@Test
 	public void testCdMultipleArgsInvalid() {
-		String args[] = {"Nonexistent", "asdf"};
+		String args[] = { "Nonexistent", "asdf" };
 		try {
 			cdApp.run(args, null, null);
 		} catch (AbstractApplicationException e) {
-			
+
 		}
 		assertEquals(origPwd, Environment.currentDirectory);
 	}
-	
+
 	@Test
 	public void testCdFileNotDir() {
-		String args[] = {"Test.txt"};
+		String args[] = { "Test.txt" };
 		try {
 			cdApp.run(args, null, null);
 		} catch (AbstractApplicationException e) {
-			
+
 		}
 		assertEquals(origPwd, Environment.currentDirectory);
 	}
-	
+
 	@Test
 	public void testCdNoArgs() {
 		String[] args = {};
 		try {
 			cdApp.run(args, null, null);
 		} catch (AbstractApplicationException e) {
-			
+
 		}
 		assertEquals(origPwd, Environment.currentDirectory);
 	}
-	
+
 	@Test
 	public void testCdNullArgs() {
 		String[] args = null;
 		try {
 			cdApp.run(args, null, null);
 		} catch (AbstractApplicationException e) {
-			
+
 		}
 		assertEquals(origPwd, Environment.currentDirectory);
 	}
-	
+
 	@Test
 	public void testCdEmptyArgs() {
-		String[] args = {""};
+		String[] args = { "" };
 		try {
 			cdApp.run(args, null, null);
 		} catch (AbstractApplicationException e) {
-			
+
 		}
 		assertEquals(origPwd, Environment.currentDirectory);
 	}
-	
+
 	// Integration tests
-	
+
 	@Test
 	public void testCdCmdPipe() throws AbstractApplicationException, ShellException {
-		// Negative test case: while cd does not throw exception, it does not read from stdin
+		// Negative test case: while cd does not throw exception, it does not
+		// read from stdin
 		ShellImpl shell = new ShellImpl();
 		String args = "echo Files | cd";
 		shell.parseAndEvaluate(args, os);
 		assertEquals(origPwd, Environment.currentDirectory);
 	}
-	
+
 	@Test
 	public void testCdCmdSubstitution() throws AbstractApplicationException, ShellException {
-		// Positive test case: unlike pipe, cmd substitution passes the contents as args, allowing cd to change directory
+		// Positive test case: unlike pipe, cmd substitution passes the contents
+		// as args, allowing cd to change directory
 		ShellImpl shell = new ShellImpl();
 		String args = "cd `echo Files`";
 		shell.parseAndEvaluate(args, os);
 		assertEquals(origPwd + "\\Files", Environment.currentDirectory);
 	}
-	
+
 	@Test
 	public void testCdDoublePipeCdMiddle() throws AbstractApplicationException, ShellException {
-		// Negative test case: while cd does not throw exception, the contents of stdout in first app do not get transferred to stdin of third app
+		// Negative test case: while cd does not throw exception, the contents
+		// of stdout in first app do not get transferred to stdin of third app
 		ShellImpl shell = new ShellImpl();
 		String args = "cat test.txt | cd | wc -m -l";
 		shell.parseAndEvaluate(args, os);
 		assertEquals("0 0 \n", os.toString());
 	}
-	
-	
 
 }

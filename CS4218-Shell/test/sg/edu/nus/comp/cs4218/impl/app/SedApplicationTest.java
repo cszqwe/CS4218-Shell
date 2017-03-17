@@ -22,6 +22,7 @@ public class SedApplicationTest {
 	static InputStream is;
 	static OutputStream os;
 	static ShellImpl shell;
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		sedApp = new SedApplication();
@@ -42,7 +43,7 @@ public class SedApplicationTest {
 		String result = sedApp.replaceFirstSubStringInFile(args);
 		assertEquals(expected, result);
 	}
-	
+
 	@Test
 	public void testReplaceAllSubStringInFile() {
 		os = new ByteArrayOutputStream();
@@ -51,7 +52,7 @@ public class SedApplicationTest {
 		String result = sedApp.replaceAllSubstringsInFile(args);
 		assertEquals(expected, result);
 	}
-	
+
 	@Test
 	public void testReplaceSubstringWithInvalidRegex() {
 		os = new ByteArrayOutputStream();
@@ -60,7 +61,7 @@ public class SedApplicationTest {
 		String result = sedApp.replaceSubstringWithInvalidRegex(args);
 		assertEquals(expected, result);
 	}
-	
+
 	@Test
 	public void testReplaceSubstringWithInvalidReplacement() {
 		os = new ByteArrayOutputStream();
@@ -68,28 +69,27 @@ public class SedApplicationTest {
 		String expected = "The command test has invalid Replacement";
 		String result = sedApp.replaceSubstringWithInvalidReplacement(args);
 		assertEquals(expected, result);
-		
+
 	}
-	
+
 	@Test
-	//Integrated Test
+	// Integrated Test
 	public void testOverAllFromStdin() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String args = "cat test.txt | sed s/l/L/g";
 		String expected = "Line 1\nLine 2\nLine 3\nLine 4";
-		shell.parseAndEvaluate(args,os);
+		shell.parseAndEvaluate(args, os);
 		assertEquals(expected, os.toString());
-		
+
 	}
-	
+
 	@Test
 	public void testOverAllFromFile() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String args = "sed s/l/L/g test.txt";
 		String expected = "Line 1\r\nLine 2\r\nLine 3\r\nLine 4";
-		shell.parseAndEvaluate(args,os);
-		assertEquals(expected, os.toString());	
+		shell.parseAndEvaluate(args, os);
+		assertEquals(expected, os.toString());
 	}
-	
 
 }

@@ -31,8 +31,7 @@ public class EchoApplication implements Application {
 	 * @throws EchoException
 	 *             If an I/O exception occurs.
 	 */
-	public void run(String[] args, InputStream stdin, OutputStream stdout)
-			throws EchoException {
+	public void run(String[] args, InputStream stdin, OutputStream stdout) throws EchoException {
 		if (args == null) {
 			throw new EchoException("Null arguments");
 		}
@@ -45,12 +44,13 @@ public class EchoApplication implements Application {
 			} else {
 				for (int i = 0; i < args.length; i++) {
 					stdout.write(args[i].getBytes());
-					//Output a space between different args
-					if (i != args.length -1) {
+					// Output a space between different args
+					if (i != args.length - 1) {
 						stdout.write(" ".getBytes());
 					}
 				}
-				//This is different from cat, cat would not print such an extra newline into the stdout.
+				// This is different from cat, cat would not print such an extra
+				// newline into the stdout.
 				stdout.write("\n".getBytes());
 			}
 		} catch (IOException e) {

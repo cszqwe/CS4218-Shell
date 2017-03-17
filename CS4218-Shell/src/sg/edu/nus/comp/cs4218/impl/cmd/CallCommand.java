@@ -27,8 +27,7 @@ public class CallCommand implements Command {
 	public static final String EXP_SYNTAX = "Invalid syntax encountered.";
 	public static final String EXP_REDIR_PIPE = "File output redirection and pipe "
 			+ "operator cannot be used side by side.";
-	public static final String EXP_SAME_REDIR = "Input redirection file same as "
-			+ "output redirection file.";
+	public static final String EXP_SAME_REDIR = "Input redirection file same as " + "output redirection file.";
 	public static final String EXP_STDOUT = "Error writing to stdout.";
 	public static final String EXP_NOT_SUPPORTED = " not supported yet";
 
@@ -65,15 +64,13 @@ public class CallCommand implements Command {
 	 *             If an exception happens while evaluating the sub-command.
 	 */
 	@Override
-	public void evaluate(InputStream stdin, OutputStream stdout)
-			throws AbstractApplicationException, ShellException {
+	public void evaluate(InputStream stdin, OutputStream stdout) throws AbstractApplicationException, ShellException {
 		if (error) {
 			throw new ShellException(errorMsg);
 		}
 
 		InputStream inputStream;
 		OutputStream outputStream;
-
 
 		if (("").equals(inputStreamS)) {// empty
 			inputStream = stdin;
@@ -102,19 +99,19 @@ public class CallCommand implements Command {
 	 *             If an exception happens while parsing the sub-command, or if
 	 *             the input redirection file path is same as that of the output
 	 *             redirection file path.
-	 * @throws AbstractApplicationException 
+	 * @throws AbstractApplicationException
 	 */
 	public void parse() throws ShellException, AbstractApplicationException {
-		cmdline = ShellImpl.processRedirectInput(cmdline);		
+		cmdline = ShellImpl.processRedirectInput(cmdline);
 		cmdline = ShellImpl.processGlobbing(cmdline);
 		cmdline = ShellImpl.processBQ(cmdline);
 		cmdline = ShellImpl.processDQ(cmdline);
 		cmdline = ShellImpl.processSQ(cmdline);
-		
+
 		Vector<String> cmdVector = new Vector<String>();
 		Boolean result = true;
 		int endIdx = 0;
-		
+
 		String str = " " + cmdline + " ";
 		try {
 			endIdx = extractArgs(str, cmdVector);
@@ -140,8 +137,7 @@ public class CallCommand implements Command {
 			throw new ShellException(errorMsg);
 		}
 
-		String[] cmdTokensArray = cmdVector
-				.toArray(new String[cmdVector.size()]);
+		String[] cmdTokensArray = cmdVector.toArray(new String[cmdVector.size()]);
 		this.app = cmdTokensArray[0];
 		int nTokens = cmdTokensArray.length;
 
@@ -149,18 +145,16 @@ public class CallCommand implements Command {
 		if (nTokens >= 3) { // last 2 for inputRedir & >outputRedir
 			this.inputStreamS = cmdTokensArray[nTokens - 2].trim();
 			this.outputStreamS = cmdTokensArray[nTokens - 1].trim();
-			if (!("").equals(inputStreamS)
-					&& inputStreamS.equals(outputStreamS)) {
+			if (!("").equals(inputStreamS) && inputStreamS.equals(outputStreamS)) {
 				error = true;
 				errorMsg = ShellImpl.EXP_SAME_REDIR;
 				throw new ShellException(errorMsg);
 			}
-			this.argsArray = Arrays.copyOfRange(cmdTokensArray, 1,
-					cmdTokensArray.length - 2);
+			this.argsArray = Arrays.copyOfRange(cmdTokensArray, 1, cmdTokensArray.length - 2);
 		} else {
 			this.argsArray = new String[0];
 		}
-		for (int i = 0; i < this.argsArray.length; i++){
+		for (int i = 0; i < this.argsArray.length; i++) {
 			this.argsArray[i] = this.argsArray[i].replace(SPACE_CHAR, " ");
 		}
 	}
@@ -169,10 +163,10 @@ public class CallCommand implements Command {
 	 * Parses the sub-command's arguments to the call command and splits it into
 	 * its different components, namely the application name and the arguments
 	 * (if any), based on rules: Unquoted: any char except for whitespace
-	 * characters, quotes, newlines, semicolons . Double
-	 * quoted: any char except \n, ", ` Single quoted: any char except \n, '
-	 * Back quotes in Double Quote for command substitution: DQ rules for
-	 * outside BQ + `anything but \n` in BQ.
+	 * characters, quotes, newlines, semicolons . Double quoted: any char except
+	 * \n, ", ` Single quoted: any char except \n, ' Back quotes in Double Quote
+	 * for command substitution: DQ rules for outside BQ + `anything but \n` in
+	 * BQ.
 	 * 
 	 * @param str
 	 *            String of command to split.
@@ -187,7 +181,7 @@ public class CallCommand implements Command {
 	 *             parsing.
 	 */
 	int extractArgs(String str, Vector<String> cmdVector) throws ShellException {
-		//String patternDash = "[\\s]+(-[A-Za-z]*)[\\s]";
+		// String patternDash = "[\\s]+(-[A-Za-z]*)[\\s]";
 		String patternUQ = "[\\s]+([^\\s\\n]*)[\\s]";
 		String[] patterns = { patternUQ };
 		String substring;
@@ -196,15 +190,13 @@ public class CallCommand implements Command {
 			substring = str.substring(newEndIdx);
 			smallestStartIdx = -1;
 			smallestPattIdx = -1;
-			if (substring.trim().startsWith("<")
-					|| substring.trim().startsWith(">")) {
+			if (substring.trim().startsWith("<") || substring.trim().startsWith(">")) {
 				break;
 			}
 			for (int i = 0; i < patterns.length; i++) {
 				Pattern pattern = Pattern.compile(patterns[i]);
 				Matcher matcher = pattern.matcher(substring);
-				if (matcher.find()
-						&& (matcher.start() < smallestStartIdx || smallestStartIdx == -1)) {
+				if (matcher.find() && (matcher.start() < smallestStartIdx || smallestStartIdx == -1)) {
 					smallestPattIdx = i;
 					smallestStartIdx = matcher.start();
 				}
@@ -248,8 +240,7 @@ public class CallCommand implements Command {
 	 *             When more than one input redirection string is found, or when
 	 *             invalid syntax is encountered..
 	 */
-	int extractInputRedir(String str, Vector<String> cmdVector, int endIdx)
-			throws ShellException {
+	int extractInputRedir(String str, Vector<String> cmdVector, int endIdx) throws ShellException {
 		String substring = str.substring(endIdx);
 		String strTrm = substring.trim();
 		if (strTrm.startsWith(">") || strTrm.isEmpty()) {
@@ -260,8 +251,7 @@ public class CallCommand implements Command {
 		}
 
 		int newEndIdx = endIdx;
-		Pattern inputRedirP = Pattern
-				.compile("[\\s]+<[\\s]+(([^\\n\"`'<>]*))[\\s]");
+		Pattern inputRedirP = Pattern.compile("[\\s]+<[\\s]+(([^\\n\"`'<>]*))[\\s]");
 		Matcher inputRedirM;
 		String inputRedirS = "";
 		int cmdVectorIndex = cmdVector.size() - 2;
@@ -304,8 +294,7 @@ public class CallCommand implements Command {
 	 *             When more than one input redirection string is found, or when
 	 *             invalid syntax is encountered..
 	 */
-	int extractOutputRedir(String str, Vector<String> cmdVector, int endIdx)
-			throws ShellException {
+	int extractOutputRedir(String str, Vector<String> cmdVector, int endIdx) throws ShellException {
 		String substring = str.substring(endIdx);
 		String strTrm = substring.trim();
 		if (strTrm.isEmpty()) {
@@ -316,8 +305,7 @@ public class CallCommand implements Command {
 		}
 
 		int newEndIdx = endIdx;
-		Pattern inputRedirP = Pattern
-				.compile("[\\s]+>[\\s]+(([^\\n\"`'<>]*))[\\s]");
+		Pattern inputRedirP = Pattern.compile("[\\s]+>[\\s]+(([^\\n\"`'<>]*))[\\s]");
 		Matcher inputRedirM;
 		String inputRedirS = "";
 		int cmdVectorIdx = cmdVector.size() - 1;

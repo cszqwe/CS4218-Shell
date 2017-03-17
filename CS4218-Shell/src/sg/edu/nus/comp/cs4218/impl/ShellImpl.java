@@ -45,8 +45,7 @@ public class ShellImpl implements Shell {
 	public static final String EXP_SYNTAX = "Invalid syntax encountered.";
 	public static final String EXP_REDIR_PIPE = "File output redirection and "
 			+ "pipe operator cannot be used side by side.";
-	public static final String EXP_SAME_REDIR = "Input redirection file same "
-			+ "as output redirection file.";
+	public static final String EXP_SAME_REDIR = "Input redirection file same " + "as output redirection file.";
 	public static final String EXP_STDOUT = "Error writing to stdout.";
 	public static final String EXP_NOT_SUPPORTED = " not supported yet";
 
@@ -55,8 +54,10 @@ public class ShellImpl implements Shell {
 	 * command substitution.If no back quotes are found, the argsArray from the
 	 * input is returned unchanged. If back quotes are found, the back quotes
 	 * and its enclosed commands substituted with the output from processing the
-	 * commands enclosed in the back quotes.
-	 * Note that the back quotes enclosed by single quotes would not work. They would be viewed as normal characters.
+	 * commands enclosed in the back quotes. Note that the back quotes enclosed
+	 * by single quotes would not work. They would be viewed as normal
+	 * characters.
+	 * 
 	 * @param argsArray
 	 *            String of the individual commands.
 	 * 
@@ -69,34 +70,34 @@ public class ShellImpl implements Shell {
 	 *             If an exception happens while processing the content in the
 	 *             back quotes.
 	 */
-	public static String processBQ(String stmt)
-			throws AbstractApplicationException, ShellException {
+	public static String processBQ(String stmt) throws AbstractApplicationException, ShellException {
 		// echo "this is space `echo "nbsp"`"
 		// echo "this is space `echo "nbsp"` and `echo "2nd space"`"
 		// Back quoted: any char except \n,`
 		boolean isQuoted = false;
 
-		while (true){
+		while (true) {
 			int start = -1;
 			int end = -1;
 			int len = stmt.length();
-			for (int i = 0; i < len; i++){ 
-				if (stmt.charAt(i) == '\''){
-					if (i != 0){
-						if (stmt.charAt(i-1) == '\\'){
+			for (int i = 0; i < len; i++) {
+				if (stmt.charAt(i) == '\'') {
+					if (i != 0) {
+						if (stmt.charAt(i - 1) == '\\') {
 							continue;
-						}else{
+						} else {
 							isQuoted = !isQuoted;
 						}
 					}
-				}else if (stmt.charAt(i) == '`' && !isQuoted){
+				} else if (stmt.charAt(i) == '`' && !isQuoted) {
 					if (i != 0) {
-						if (stmt.charAt(i-1) == '\\') continue;
+						if (stmt.charAt(i - 1) == '\\')
+							continue;
 					}
 					start = i;
 					end = -1;
-					for (int j = i+1; j < len; j++){
-						if (stmt.charAt(j) == '`' && stmt.charAt(j-1) != '\\'){
+					for (int j = i + 1; j < len; j++) {
+						if (stmt.charAt(j) == '`' && stmt.charAt(j - 1) != '\\') {
 							end = j;
 							break;
 						}
@@ -104,30 +105,32 @@ public class ShellImpl implements Shell {
 					break;
 				}
 			}
-			
-			if (start == -1) return stmt;
-			if (end == -1) throw new ShellException("Shell not completed!");
+
+			if (start == -1)
+				return stmt;
+			if (end == -1)
+				throw new ShellException("Shell not completed!");
 			String bqStr = stmt.substring(start + 1, end);
 			OutputStream bqOutputStream = new ByteArrayOutputStream();
 			ShellImpl shell = new ShellImpl();
 			ByteArrayOutputStream outByte = (ByteArrayOutputStream) bqOutputStream;
 			shell.parseAndEvaluate(bqStr, bqOutputStream);
 			byte[] byteArray = outByte.toByteArray();
-			String bqResult = new String(byteArray).replace("\n", "")
-					.replace("\r", "").replace("\\", "\\\\");
-			
-			String replacedStr = stmt.replace("`" + bqStr + "`",
-					bqResult);
+			String bqResult = new String(byteArray).replace("\n", "").replace("\r", "").replace("\\", "\\\\");
+
+			String replacedStr = stmt.replace("`" + bqStr + "`", bqResult);
 			stmt = replacedStr;
 		}
 	}
-	
-	
+
 	/**
-	 * Searches for and processes the commands enclosed by double quotes.If no double quotes are found, the argsArray from the
-	 * input is returned unchanged. If double quotes are found, the double quotes
-	 * and its enclosed contents substituted with the enclosed contents. 
-	 * Note that the double quotes enclosed by single quotes would not work. They would be viewed as normal characters.
+	 * Searches for and processes the commands enclosed by double quotes.If no
+	 * double quotes are found, the argsArray from the input is returned
+	 * unchanged. If double quotes are found, the double quotes and its enclosed
+	 * contents substituted with the enclosed contents. Note that the double
+	 * quotes enclosed by single quotes would not work. They would be viewed as
+	 * normal characters.
+	 * 
 	 * @param argsArray
 	 *            String of the individual commands.
 	 * 
@@ -140,34 +143,34 @@ public class ShellImpl implements Shell {
 	 *             If an exception happens while processing the content in the
 	 *             double quotes.
 	 */
-	public static String processDQ(String stmt)
-			throws AbstractApplicationException, ShellException {
+	public static String processDQ(String stmt) throws AbstractApplicationException, ShellException {
 		// echo "this is space `echo "nbsp"`"
 		// echo "this is space `echo "nbsp"` and `echo "2nd space"`"
 		// Back quoted: any char except \n,`
 		boolean isQuoted = false;
 
-		while (true){
+		while (true) {
 			int start = -1;
 			int end = -1;
 			int len = stmt.length();
-			for (int i = 0; i < len; i++){ 
-				if (stmt.charAt(i) == '\''){
-					if (i != 0){
-						if (stmt.charAt(i-1) == '\\'){
+			for (int i = 0; i < len; i++) {
+				if (stmt.charAt(i) == '\'') {
+					if (i != 0) {
+						if (stmt.charAt(i - 1) == '\\') {
 							continue;
-						}else{
+						} else {
 							isQuoted = !isQuoted;
 						}
 					}
-				}else if (stmt.charAt(i) == '"' && !isQuoted){
+				} else if (stmt.charAt(i) == '"' && !isQuoted) {
 					if (i != 0) {
-						if (stmt.charAt(i-1) == '\\') continue;
+						if (stmt.charAt(i - 1) == '\\')
+							continue;
 					}
 					start = i;
 					end = -1;
-					for (int j = i+1; j < len; j++){
-						if (stmt.charAt(j) == '"' && stmt.charAt(j-1) != '\\'){
+					for (int j = i + 1; j < len; j++) {
+						if (stmt.charAt(j) == '"' && stmt.charAt(j - 1) != '\\') {
 							end = j;
 							break;
 						}
@@ -175,21 +178,24 @@ public class ShellImpl implements Shell {
 					break;
 				}
 			}
-			
-			if (start == -1) return stmt;
-			if (end == -1) throw new ShellException("Shell not completed!");
+
+			if (start == -1)
+				return stmt;
+			if (end == -1)
+				throw new ShellException("Shell not completed!");
 			String bqStr = stmt.substring(start + 1, end);
 			String replacedOne = bqStr.replace(" ", SPACE_CHAR);
-			String replacedStr = stmt.replaceFirst('"' + bqStr + '"',
-					replacedOne);
+			String replacedStr = stmt.replaceFirst('"' + bqStr + '"', replacedOne);
 			stmt = replacedStr;
 		}
 	}
-	
+
 	/**
-	 * Searches for and processes the commands enclosed by single quotes.If no double quotes are found, the argsArray from the
-	 * input is returned unchanged. If single quotes are found, the single quotes
-	 * and its enclosed contents substituted with the enclosed contents. 
+	 * Searches for and processes the commands enclosed by single quotes.If no
+	 * double quotes are found, the argsArray from the input is returned
+	 * unchanged. If single quotes are found, the single quotes and its enclosed
+	 * contents substituted with the enclosed contents.
+	 * 
 	 * @param argsArray
 	 *            String of the individual commands.
 	 * 
@@ -197,30 +203,30 @@ public class ShellImpl implements Shell {
 	 * 
 	 * @throws AbstractApplicationException
 	 *             If an exception happens while processing the content in the
-	 *             single  quotes.
+	 *             single quotes.
 	 * @throws ShellException
 	 *             If an exception happens while processing the content in the
 	 *             single quotes.
 	 */
-	public static String processSQ(String stmt)
-			throws AbstractApplicationException, ShellException {
+	public static String processSQ(String stmt) throws AbstractApplicationException, ShellException {
 		// echo "this is space `echo "nbsp"`"
 		// echo "this is space `echo "nbsp"` and `echo "2nd space"`"
 		// Back quoted: any char except \n,`
 
-		while (true){
+		while (true) {
 			int start = -1;
 			int end = -1;
 			int len = stmt.length();
-			for (int i = 0; i < len; i++){ 
-				if (stmt.charAt(i) == '\''){
+			for (int i = 0; i < len; i++) {
+				if (stmt.charAt(i) == '\'') {
 					if (i != 0) {
-						if (stmt.charAt(i-1) == '\\') continue;
+						if (stmt.charAt(i - 1) == '\\')
+							continue;
 					}
 					start = i;
 					end = -1;
-					for (int j = i+1; j < len; j++){
-						if (stmt.charAt(j) == '\'' && stmt.charAt(j-1) != '\\'){
+					for (int j = i + 1; j < len; j++) {
+						if (stmt.charAt(j) == '\'' && stmt.charAt(j - 1) != '\\') {
 							end = j;
 							break;
 						}
@@ -228,19 +234,22 @@ public class ShellImpl implements Shell {
 					break;
 				}
 			}
-			
-			if (start == -1) return stmt;
-			if (end == -1) throw new ShellException("Shell not completed!");
+
+			if (start == -1)
+				return stmt;
+			if (end == -1)
+				throw new ShellException("Shell not completed!");
 			String bqStr = stmt.substring(start + 1, end);
 			String replacedOne = bqStr.replace(" ", SPACE_CHAR);
-			String replacedStr = stmt.replaceFirst('\'' + bqStr + '\'',
-					replacedOne);
+			String replacedStr = stmt.replaceFirst('\'' + bqStr + '\'', replacedOne);
 			stmt = replacedStr;
 		}
-	}	
+	}
 
 	/**
-	 * Searches for and processes the Semicolon sign. Read in a string, return an array of strings 
+	 * Searches for and processes the Semicolon sign. Read in a string, return
+	 * an array of strings
+	 * 
 	 * @param stmt
 	 *            String of the individual commands.
 	 * 
@@ -248,40 +257,41 @@ public class ShellImpl implements Shell {
 	 * 
 	 * @throws AbstractApplicationException
 	 *             If an exception happens while processing the content in the
-	 *             single  quotes.
+	 *             single quotes.
 	 * @throws ShellException
 	 *             If an exception happens while processing the content in the
 	 *             single quotes.
 	 */
-	public static String[] processSemi(String stmt)
-			throws AbstractApplicationException, ShellException {
-		stmt = stmt+";";
+	public static String[] processSemi(String stmt) throws AbstractApplicationException, ShellException {
+		stmt = stmt + ";";
 		int numOfDQ = 0;
 		int numOfSQ = 0;
 		int startIndex = 0;
 		ArrayList<String> stmts = new ArrayList<String>();
 		stmts.clear();
 		int len = stmt.length();
-		for (int i = 0 ; i < len; i++){
-			if (stmt.charAt(i) =='\''){
+		for (int i = 0; i < len; i++) {
+			if (stmt.charAt(i) == '\'') {
 				numOfSQ++;
-			}else if (stmt.charAt(i) == '"'){
+			} else if (stmt.charAt(i) == '"') {
 				numOfDQ++;
-			}else if (stmt.charAt(i) == ';'){
-				if (numOfDQ % 2 == 0 && numOfSQ %2 ==0){
+			} else if (stmt.charAt(i) == ';') {
+				if (numOfDQ % 2 == 0 && numOfSQ % 2 == 0) {
 					String newCmd = stmt.substring(startIndex, i);
 					stmts.add(newCmd);
-					startIndex = i+1;
+					startIndex = i + 1;
 				}
 			}
 		}
 		String[] commands = new String[stmts.size()];
 		stmts.toArray(commands);
 		return commands;
-	}	
+	}
 
 	/**
-	 * Searches for and processes the pipe sign. Read in a string, return an array of strings 
+	 * Searches for and processes the pipe sign. Read in a string, return an
+	 * array of strings
+	 * 
 	 * @param stmt
 	 *            String of the individual commands.
 	 * 
@@ -289,14 +299,13 @@ public class ShellImpl implements Shell {
 	 * 
 	 * @throws AbstractApplicationException
 	 *             If an exception happens while processing the content in the
-	 *             single  quotes.
+	 *             single quotes.
 	 * @throws ShellException
 	 *             If an exception happens while processing the content in the
 	 *             single quotes.
 	 */
-	public static String[] processPipe(String stmt)
-			throws AbstractApplicationException, ShellException {
-		stmt = stmt+"|";
+	public static String[] processPipe(String stmt) throws AbstractApplicationException, ShellException {
+		stmt = stmt + "|";
 		int numOfDQ = 0;
 		int numOfSQ = 0;
 		int numOfBQ = 0;
@@ -304,39 +313,43 @@ public class ShellImpl implements Shell {
 		ArrayList<String> stmts = new ArrayList<String>();
 		stmts.clear();
 		int len = stmt.length();
-		for (int i = 0 ; i < len; i++){
-			if (stmt.charAt(i) =='\''){
+		for (int i = 0; i < len; i++) {
+			if (stmt.charAt(i) == '\'') {
 				numOfSQ++;
-			}else if (stmt.charAt(i) == '"'){
+			} else if (stmt.charAt(i) == '"') {
 				numOfDQ++;
-			}else if (stmt.charAt(i) == '`'){
+			} else if (stmt.charAt(i) == '`') {
 				numOfBQ++;
-			}			else if (stmt.charAt(i) == '|'){
-				if (numOfDQ % 2 == 0 && numOfSQ %2 ==0 && numOfBQ %2 == 0){
+			} else if (stmt.charAt(i) == '|') {
+				if (numOfDQ % 2 == 0 && numOfSQ % 2 == 0 && numOfBQ % 2 == 0) {
 					String newCmd = stmt.substring(startIndex, i);
 					stmts.add(newCmd);
-					startIndex = i+1;
+					startIndex = i + 1;
 				}
 			}
 		}
 		String[] commands = new String[stmts.size()];
 		stmts.toArray(commands);
 		return commands;
-	}	
-	public static File[] listFilesMatching(File root, String regex) {
-	    if(!root.isDirectory()) {
-	        throw new IllegalArgumentException(root+" is no directory.");
-	    }
-	    final Pattern p = Pattern.compile(regex); // careful: could also throw an exception!
-	    return root.listFiles(new FileFilter(){
-	        @Override
-	        public boolean accept(File file) {
-	            return p.matcher(file.getName()).matches();
-	        }
-	    });
 	}
+
+	public static File[] listFilesMatching(File root, String regex) {
+		if (!root.isDirectory()) {
+			throw new IllegalArgumentException(root + " is no directory.");
+		}
+		final Pattern p = Pattern.compile(regex); // careful: could also throw
+													// an exception!
+		return root.listFiles(new FileFilter() {
+			@Override
+			public boolean accept(File file) {
+				return p.matcher(file.getName()).matches();
+			}
+		});
+	}
+
 	/**
 	 * Process the globbing functionality of the command.
+	 * 
 	 * @param stmt
 	 *            String of the individual commands.
 	 * 
@@ -344,58 +357,58 @@ public class ShellImpl implements Shell {
 	 * 
 	 * @throws AbstractApplicationException
 	 *             If an exception happens while processing the content in the
-	 *             single  quotes.
+	 *             single quotes.
 	 * @throws ShellException
 	 *             If an exception happens while processing the content in the
 	 *             single quotes.
 	 */
-	public static String processGlobbing(String stmt)
-			throws AbstractApplicationException, ShellException {
+	public static String processGlobbing(String stmt) throws AbstractApplicationException, ShellException {
 		int numOfDQ = 0;
 		int numOfSQ = 0;
 		int len = stmt.length();
-		for (int i = 0 ; i < len; i++){
-			if (stmt.charAt(i) =='\''){
+		for (int i = 0; i < len; i++) {
+			if (stmt.charAt(i) == '\'') {
 				numOfSQ++;
-			}else if (stmt.charAt(i) == '"'){
+			} else if (stmt.charAt(i) == '"') {
 				numOfDQ++;
-			}else if (stmt.charAt(i) == '*'){
-				if (numOfDQ % 2 == 0 && numOfSQ %2 ==0){
+			} else if (stmt.charAt(i) == '*') {
+				if (numOfDQ % 2 == 0 && numOfSQ % 2 == 0) {
 					String directory = new String();
 					String pattern = new String(".*");
 					String replacedString = new String("*");
 					boolean isPattern = true;
-					for (int j = i-1; j >=0; j--){
-						if (stmt.charAt(j) != ' '){
-							if (stmt.charAt(j) == '\\' || stmt.charAt(j) == '/'){
+					for (int j = i - 1; j >= 0; j--) {
+						if (stmt.charAt(j) != ' ') {
+							if (stmt.charAt(j) == '\\' || stmt.charAt(j) == '/') {
 								isPattern = false;
 							}
-							if (isPattern){
+							if (isPattern) {
 								pattern = stmt.charAt(j) + pattern;
 								replacedString = stmt.charAt(j) + replacedString;
-							}else{
+							} else {
 								directory = stmt.charAt(j) + directory;
 								replacedString = stmt.charAt(j) + replacedString;
 							}
-						}else{
+						} else {
 							break;
 						}
 					}
-  				    File dir = new File(directory);
-					File file[] = listFilesMatching(dir, pattern);;
-					if (file != null){
+					File dir = new File(directory);
+					File file[] = listFilesMatching(dir, pattern);
+					;
+					if (file != null) {
 						String newStr = "";
-						for (int j = 0; j < file.length; j++){
+						for (int j = 0; j < file.length; j++) {
 							newStr += (file[j].getPath() + " ").replace("\\", "/");
 						}
-						
+
 						stmt = stmt.replace(replacedString, newStr);
 					}
 				}
 			}
 		}
 		return stmt.trim();
-	}	
+	}
 
 	/**
 	 * Checks if a file is readable.
@@ -407,7 +420,7 @@ public class ShellImpl implements Shell {
 	 *             If the file is not readable
 	 */
 	static boolean checkIfFileIsReadable(Path filePath) throws ShellException {
-		
+
 		if (Files.isDirectory(filePath)) {
 			throw new ShellException("This is a directory");
 		}
@@ -417,9 +430,10 @@ public class ShellImpl implements Shell {
 			throw new ShellException("Could not read file");
 		}
 	}
-	
+
 	/**
 	 * Process the globbing functionality of the command.
+	 * 
 	 * @param stmt
 	 *            String of the individual commands.
 	 * 
@@ -427,45 +441,47 @@ public class ShellImpl implements Shell {
 	 * 
 	 * @throws AbstractApplicationException
 	 *             If an exception happens while processing the content in the
-	 *             single  quotes.
+	 *             single quotes.
 	 * @throws ShellException
 	 *             If an exception happens while processing the content in the
 	 *             single quotes.
 	 */
-	public static String processRedirectInput(String stmt)
-			throws AbstractApplicationException, ShellException {
+	public static String processRedirectInput(String stmt) throws AbstractApplicationException, ShellException {
 		stmt = stmt.trim();
 		int numOfDQ = 0;
 		int numOfSQ = 0;
 		int numOfRedirect = 0;
-		for (int i = 0 ; i < stmt.length(); i++){
-			if (stmt.charAt(i) =='\''){
+		for (int i = 0; i < stmt.length(); i++) {
+			if (stmt.charAt(i) == '\'') {
 				numOfSQ++;
-			}else if (stmt.charAt(i) == '"'){
+			} else if (stmt.charAt(i) == '"') {
 				numOfDQ++;
-			}else if (stmt.charAt(i) == '<'){
-				if (numOfDQ % 2 == 0 && numOfSQ %2 ==0){
+			} else if (stmt.charAt(i) == '<') {
+				if (numOfDQ % 2 == 0 && numOfSQ % 2 == 0) {
 					numOfRedirect++;
-					if (numOfRedirect > 1) throw new ShellException("More than one redirect input");
+					if (numOfRedirect > 1)
+						throw new ShellException("More than one redirect input");
 					String inputFileName = "";
-					for (int j = i + 2; j < stmt.length(); j++){
-						if (stmt.charAt(j) == ' ') break;
+					for (int j = i + 2; j < stmt.length(); j++) {
+						if (stmt.charAt(j) == ' ')
+							break;
 						inputFileName += stmt.charAt(j);
 					}
 					Path currentDir = Paths.get(Environment.currentDirectory);
 					Path filePath = currentDir.resolve(inputFileName);
 					boolean isFileReadable = checkIfFileIsReadable(filePath);
-					if (isFileReadable){
-						stmt = stmt.replace("< "+inputFileName, "").trim();
+					if (isFileReadable) {
+						stmt = stmt.replace("< " + inputFileName, "").trim();
 					}
 				}
 			}
 		}
 		return stmt.trim();
-	}	
+	}
 
 	/**
 	 * Process the globbing functionality of the command.
+	 * 
 	 * @param stmt
 	 *            String of the individual commands.
 	 * 
@@ -473,45 +489,47 @@ public class ShellImpl implements Shell {
 	 * 
 	 * @throws AbstractApplicationException
 	 *             If an exception happens while processing the content in the
-	 *             single  quotes.
+	 *             single quotes.
 	 * @throws ShellException
 	 *             If an exception happens while processing the content in the
 	 *             single quotes.
 	 */
-	public static InputStream getRedirectInput(String stmt)
-			throws AbstractApplicationException, ShellException {
+	public static InputStream getRedirectInput(String stmt) throws AbstractApplicationException, ShellException {
 		stmt = stmt.trim();
 		int numOfDQ = 0;
 		int numOfSQ = 0;
 		int numOfRedirect = 0;
 		InputStream is = null;
-		for (int i = 0 ; i < stmt.length(); i++){
-			if (stmt.charAt(i) =='\''){
+		for (int i = 0; i < stmt.length(); i++) {
+			if (stmt.charAt(i) == '\'') {
 				numOfSQ++;
-			}else if (stmt.charAt(i) == '"'){
+			} else if (stmt.charAt(i) == '"') {
 				numOfDQ++;
-			}else if (stmt.charAt(i) == '<'){
-				if (numOfDQ % 2 == 0 && numOfSQ %2 ==0){
+			} else if (stmt.charAt(i) == '<') {
+				if (numOfDQ % 2 == 0 && numOfSQ % 2 == 0) {
 					numOfRedirect++;
-					if (numOfRedirect > 1) throw new ShellException("More than one redirect input");
+					if (numOfRedirect > 1)
+						throw new ShellException("More than one redirect input");
 					String inputFileName = "";
-					for (int j = i + 2; j < stmt.length(); j++){
-						if (stmt.charAt(j) == ' ') break;
+					for (int j = i + 2; j < stmt.length(); j++) {
+						if (stmt.charAt(j) == ' ')
+							break;
 						inputFileName += stmt.charAt(j);
 					}
-					try{
+					try {
 						is = new FileInputStream(inputFileName);
-					}catch (Exception e){
+					} catch (Exception e) {
 						throw new ShellException(e.getMessage());
 					}
 				}
 			}
 		}
 		return is;
-	}	
-	
+	}
+
 	/**
 	 * Process the globbing functionality of the command.
+	 * 
 	 * @param stmt
 	 *            String of the individual commands.
 	 * 
@@ -519,45 +537,47 @@ public class ShellImpl implements Shell {
 	 * 
 	 * @throws AbstractApplicationException
 	 *             If an exception happens while processing the content in the
-	 *             single  quotes.
+	 *             single quotes.
 	 * @throws ShellException
 	 *             If an exception happens while processing the content in the
 	 *             single quotes.
 	 */
-	public static String processRedirectOutput(String stmt)
-			throws AbstractApplicationException, ShellException {
+	public static String processRedirectOutput(String stmt) throws AbstractApplicationException, ShellException {
 		stmt = stmt.trim();
 		int numOfDQ = 0;
 		int numOfSQ = 0;
 		int numOfRedirect = 0;
-		for (int i = 0 ; i < stmt.length(); i++){
-			if (stmt.charAt(i) =='\''){
+		for (int i = 0; i < stmt.length(); i++) {
+			if (stmt.charAt(i) == '\'') {
 				numOfSQ++;
-			}else if (stmt.charAt(i) == '"'){
+			} else if (stmt.charAt(i) == '"') {
 				numOfDQ++;
-			}else if (stmt.charAt(i) == '>'){
-				if (numOfDQ % 2 == 0 && numOfSQ %2 ==0){
+			} else if (stmt.charAt(i) == '>') {
+				if (numOfDQ % 2 == 0 && numOfSQ % 2 == 0) {
 					numOfRedirect++;
-					if (numOfRedirect > 1) throw new ShellException("More than one redirect input");
+					if (numOfRedirect > 1)
+						throw new ShellException("More than one redirect input");
 					String inputFileName = "";
-					for (int j = i + 2; j < stmt.length(); j++){
-						if (stmt.charAt(j) == ' ') break;
+					for (int j = i + 2; j < stmt.length(); j++) {
+						if (stmt.charAt(j) == ' ')
+							break;
 						inputFileName += stmt.charAt(j);
 					}
 					Path currentDir = Paths.get(Environment.currentDirectory);
 					Path filePath = currentDir.resolve(inputFileName);
 					boolean isFileReadable = checkIfFileIsReadable(filePath);
-					if (isFileReadable){
-						stmt = stmt.replace("< "+inputFileName, "").trim();
+					if (isFileReadable) {
+						stmt = stmt.replace("< " + inputFileName, "").trim();
 					}
 				}
 			}
 		}
 		return stmt.trim();
-	}	
+	}
 
 	/**
 	 * Process the globbing functionality of the command.
+	 * 
 	 * @param stmt
 	 *            String of the individual commands.
 	 * 
@@ -565,44 +585,44 @@ public class ShellImpl implements Shell {
 	 * 
 	 * @throws AbstractApplicationException
 	 *             If an exception happens while processing the content in the
-	 *             single  quotes.
+	 *             single quotes.
 	 * @throws ShellException
 	 *             If an exception happens while processing the content in the
 	 *             single quotes.
 	 */
-	public static OutputStream getRedirectOutput(String stmt)
-			throws AbstractApplicationException, ShellException {
+	public static OutputStream getRedirectOutput(String stmt) throws AbstractApplicationException, ShellException {
 		stmt = stmt.trim();
 		int numOfDQ = 0;
 		int numOfSQ = 0;
 		int numOfRedirect = 0;
 		OutputStream os = null;
-		for (int i = 0 ; i < stmt.length(); i++){
-			if (stmt.charAt(i) =='\''){
+		for (int i = 0; i < stmt.length(); i++) {
+			if (stmt.charAt(i) == '\'') {
 				numOfSQ++;
-			}else if (stmt.charAt(i) == '"'){
+			} else if (stmt.charAt(i) == '"') {
 				numOfDQ++;
-			}else if (stmt.charAt(i) == '>'){
-				if (numOfDQ % 2 == 0 && numOfSQ %2 ==0){
+			} else if (stmt.charAt(i) == '>') {
+				if (numOfDQ % 2 == 0 && numOfSQ % 2 == 0) {
 					numOfRedirect++;
-					if (numOfRedirect > 1) throw new ShellException("More than one redirect input");
+					if (numOfRedirect > 1)
+						throw new ShellException("More than one redirect input");
 					String inputFileName = "";
-					for (int j = i + 2; j < stmt.length(); j++){
-						if (stmt.charAt(j) == ' ') break;
+					for (int j = i + 2; j < stmt.length(); j++) {
+						if (stmt.charAt(j) == ' ')
+							break;
 						inputFileName += stmt.charAt(j);
 					}
-					try{
+					try {
 						os = new FileOutputStream(inputFileName);
-					}catch (Exception e){
+					} catch (Exception e) {
 						throw new ShellException(e.getMessage());
 					}
 				}
 			}
 		}
 		return os;
-	}	
+	}
 
-	
 	/**
 	 * Static method to run the application as specified by the application
 	 * command keyword and arguments.
@@ -625,8 +645,7 @@ public class ShellImpl implements Shell {
 	 * @throws ShellException
 	 *             If an unsupported or invalid application command is detected.
 	 */
-	public static void runApp(String app, String[] argsArray,
-			InputStream inputStream, OutputStream outputStream)
+	public static void runApp(String app, String[] argsArray, InputStream inputStream, OutputStream outputStream)
 			throws AbstractApplicationException, ShellException {
 		Application absApp = null;
 		if (("cat").equals(app)) {// cat [FILE]...
@@ -649,14 +668,12 @@ public class ShellImpl implements Shell {
 			absApp = new SedApplication();
 		} else if (("cal").equals(app)) {
 			absApp = new CalApplication();
-		}
-		else if (("sort").equals(app)) {
+		} else if (("sort").equals(app)) {
 			absApp = new SortApplication();
-		}else if (("grep").equals(app)){
+		} else if (("grep").equals(app)) {
 			absApp = new GrepApplication();
 		}
-		
-		
+
 		else { // invalid command
 			throw new ShellException(app + ": " + EXP_INVALID_APP);
 		}
@@ -675,8 +692,7 @@ public class ShellImpl implements Shell {
 	 * @throws ShellException
 	 *             If file is not found.
 	 */
-	public static InputStream openInputRedir(String inputStreamS)
-			throws ShellException {
+	public static InputStream openInputRedir(String inputStreamS) throws ShellException {
 		File inputFile = new File(inputStreamS);
 		FileInputStream fInputStream = null;
 		try {
@@ -699,8 +715,7 @@ public class ShellImpl implements Shell {
 	 * @throws ShellException
 	 *             If file destination cannot be opened or inaccessible.
 	 */
-	public static OutputStream openOutputRedir(String outputStreamS)
-			throws ShellException {
+	public static OutputStream openOutputRedir(String outputStreamS) throws ShellException {
 		File outputFile = new File(outputStreamS);
 		FileOutputStream fOutputStream = null;
 		try {
@@ -720,8 +735,7 @@ public class ShellImpl implements Shell {
 	 * @throws ShellException
 	 *             If inputStream cannot be closed successfully.
 	 */
-	public static void closeInputStream(InputStream inputStream)
-			throws ShellException {
+	public static void closeInputStream(InputStream inputStream) throws ShellException {
 		if (inputStream != System.in) {
 			try {
 				inputStream.close();
@@ -741,8 +755,7 @@ public class ShellImpl implements Shell {
 	 * @throws ShellException
 	 *             If outputStream cannot be closed successfully.
 	 */
-	public static void closeOutputStream(OutputStream outputStream)
-			throws ShellException {
+	public static void closeOutputStream(OutputStream outputStream) throws ShellException {
 		if (outputStream != System.out) {
 			try {
 				outputStream.close();
@@ -763,8 +776,7 @@ public class ShellImpl implements Shell {
 	 * @throws ShellException
 	 *             If exception is thrown during writing.
 	 */
-	public static void writeToStdout(OutputStream outputStream,
-			OutputStream stdout) throws ShellException {
+	public static void writeToStdout(OutputStream outputStream, OutputStream stdout) throws ShellException {
 		if (outputStream instanceof FileOutputStream) {
 			return;
 		}
@@ -787,10 +799,8 @@ public class ShellImpl implements Shell {
 	 * @throws ShellException
 	 *             If exception is thrown during piping.
 	 */
-	public static InputStream outputStreamToInputStream(
-			OutputStream outputStream) throws ShellException {
-		return new ByteArrayInputStream(
-				((ByteArrayOutputStream) outputStream).toByteArray());
+	public static InputStream outputStreamToInputStream(OutputStream outputStream) throws ShellException {
+		return new ByteArrayInputStream(((ByteArrayOutputStream) outputStream).toByteArray());
 	}
 
 	/**
@@ -804,8 +814,7 @@ public class ShellImpl implements Shell {
 		ShellImpl shell = new ShellImpl();
 		ShellImpl.cmdArgs = args;
 
-		BufferedReader bReader = new BufferedReader(new InputStreamReader(
-				System.in));
+		BufferedReader bReader = new BufferedReader(new InputStreamReader(System.in));
 		String readLine = null;
 		String currentDir;
 
@@ -821,7 +830,7 @@ public class ShellImpl implements Shell {
 					continue;
 				}
 				String[] stmts = processSemi(readLine);
-				for (int i = 0; i < stmts.length; i++){
+				for (int i = 0; i < stmts.length; i++) {
 					shell.parseAndEvaluate(stmts[i], System.out);
 				}
 			} catch (Exception e) {
@@ -834,48 +843,50 @@ public class ShellImpl implements Shell {
 	public void parseAndEvaluate(String cmdline, OutputStream stdout)
 			throws AbstractApplicationException, ShellException {
 		String[] allStmts = processPipe(cmdline);
-		PipedInputStream in = new PipedInputStream(100000);  
+		PipedInputStream in = new PipedInputStream(100000);
 		PipedOutputStream out;
-		try{
-			out = new PipedOutputStream(in);  
-		}catch (Exception e){
+		try {
+			out = new PipedOutputStream(in);
+		} catch (Exception e) {
 			throw new ShellException("Wrong when generating piped output stream");
 		}
-		PipedInputStream tmpIn = null;  
+		PipedInputStream tmpIn = null;
 		PipedOutputStream tmpout = null;
 		InputStream actualIn, redirectIn;
 		OutputStream actualOut, redirectOut;
-		for (int i = 0; i < allStmts.length; i++){
+		for (int i = 0; i < allStmts.length; i++) {
 			CallCommand callCommand = new CallCommand(allStmts[i]);
 			redirectIn = getRedirectInput(allStmts[i]);
 			redirectOut = getRedirectOutput(allStmts[i]);
 			callCommand.parse();
-			if (i == 0){
+			if (i == 0) {
 				actualIn = System.in;
-			}else if (i == 1){
+			} else if (i == 1) {
 				actualIn = in;
-			}else{
+			} else {
 				actualIn = tmpIn;
 			}
-			if (i == allStmts.length -1){
+			if (i == allStmts.length - 1) {
 				actualOut = stdout;
-			}else{
+			} else {
 				tmpIn = new PipedInputStream(1000000);
-				try{
-					tmpout = new PipedOutputStream(tmpIn);  
-				}catch (Exception e){
+				try {
+					tmpout = new PipedOutputStream(tmpIn);
+				} catch (Exception e) {
 					throw new ShellException("Wrong when generating piped output stream");
-				}	
-				if (i == 0){
+				}
+				if (i == 0) {
 					actualOut = out;
-				}else{
+				} else {
 					actualOut = tmpout;
 				}
 			}
-			if (redirectIn != null) actualIn = redirectIn;
-			if (redirectOut != null) actualOut = redirectOut;
+			if (redirectIn != null)
+				actualIn = redirectIn;
+			if (redirectOut != null)
+				actualOut = redirectOut;
 			callCommand.evaluate(actualIn, actualOut);
-			
+
 		}
 
 	}
@@ -1044,9 +1055,5 @@ public class ShellImpl implements Shell {
 			return e.getMessage();
 		}
 	}
-	
 
-	
-	
-	
 }

@@ -23,7 +23,7 @@ public class HeadApplication implements Application {
 	public static int numOfLines;
 	public static String path;
 	public static String fileName;
-	
+
 	public String[] cmdArgs = ShellImpl.cmdArgs;
 
 	public static void readFile(OutputStream stdout) {
@@ -31,10 +31,10 @@ public class HeadApplication implements Application {
 		try {
 			FileReader fileReader = new FileReader(path);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
-			
+
 			int currLineCount = 0;
 			String sCurrentLine;
-			
+
 			try {
 				while ((sCurrentLine = bufferedReader.readLine()) != null) {
 					if (currLineCount == numOfLines) {
@@ -58,36 +58,36 @@ public class HeadApplication implements Application {
 
 	public static void readFromStdin(InputStream stdin, OutputStream stdout) throws HeadException {
 		try {
-			BufferedReader inputReader = new BufferedReader(new InputStreamReader(stdin)); 
+			BufferedReader inputReader = new BufferedReader(new InputStreamReader(stdin));
 			String strCurrent;
 			ArrayList<String> answers = new ArrayList<String>();
 			answers.clear();
 			int cnt = numOfLines;
 			while ((strCurrent = inputReader.readLine()) != null) {
-				
-				//if (strCurrent.equals("end")) break;  //This statement is used for testing only.
-				if (cnt == 0){
+
+				// if (strCurrent.equals("end")) break; //This statement is used
+				// for testing only.
+				if (cnt == 0) {
 					break;
-				}else{
+				} else {
 					cnt--;
 				}
 				answers.add(strCurrent);
-				
+
 			}
-			for (int i = 0; i < answers.size(); i++){
+			for (int i = 0; i < answers.size(); i++) {
 				stdout.write(answers.get(i).getBytes());
 				stdout.write("\n".getBytes());
-				
+
 			}
-		
+
 		} catch (Exception exIO) {
 			throw new HeadException("Exception Caught");
 		}
 	}
 
 	/**
-	 * @params args
-	 * 		Arguments from input, without the app name
+	 * @params args Arguments from input, without the app name
 	 * 
 	 * 
 	 * 
@@ -98,16 +98,17 @@ public class HeadApplication implements Application {
 		String currentDir = Environment.currentDirectory;
 		boolean isFileReadable = false;
 		cmdArgs = args;
-		
+
 		// If there are command line args, read from it
 		if (cmdArgs.length > 0) {
 			path = currentDir + "\\" + args[0];
 			// command: head -n 15 test.txt
 			if (cmdArgs.length == 3) {
-				try{
+				try {
 					numOfLines = Integer.parseInt(cmdArgs[1]);
-				}catch (Exception e){
-					AbstractApplicationException err =  new HeadException("Head: The second parameter should be a number");
+				} catch (Exception e) {
+					AbstractApplicationException err = new HeadException(
+							"Head: The second parameter should be a number");
 					throw err;
 				}
 				fileName = cmdArgs[2];
@@ -117,7 +118,7 @@ public class HeadApplication implements Application {
 					throw new HeadException("File not found");
 				}
 
-			} 
+			}
 			// command: head test.txt
 			else if (cmdArgs.length == 1) {
 				numOfLines = 10;
@@ -128,18 +129,18 @@ public class HeadApplication implements Application {
 					throw new HeadException("File not found");
 				}
 
-			} else if(cmdArgs.length == 2){ 
-				
-				try{
+			} else if (cmdArgs.length == 2) {
+
+				try {
 					numOfLines = Integer.parseInt(cmdArgs[1]);
 					isFileReadable = false;
 
-				}catch (Exception e){
-					AbstractApplicationException err =  new HeadException("The second parameter should be a number");
+				} catch (Exception e) {
+					AbstractApplicationException err = new HeadException("The second parameter should be a number");
 					throw err;
 				}
-			}else{
-				AbstractApplicationException e =  new HeadException("Invalid usage of head");
+			} else {
+				AbstractApplicationException e = new HeadException("Invalid usage of head");
 				throw e;
 			}
 		} // TODO: read from stdin
@@ -147,13 +148,12 @@ public class HeadApplication implements Application {
 			numOfLines = 10;
 			isFileReadable = false;
 		}
-		if (isFileReadable) {	
+		if (isFileReadable) {
 			readFile(stdout);
-		}else{
-			readFromStdin(stdin,stdout);
+		} else {
+			readFromStdin(stdin, stdout);
 		}
 	}
-	
 
 	/**
 	 * Checks if a file is readable.
@@ -171,7 +171,7 @@ public class HeadApplication implements Application {
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			return false;
-		} 
+		}
 		// System.out.println("OH NO");
 	}
 }

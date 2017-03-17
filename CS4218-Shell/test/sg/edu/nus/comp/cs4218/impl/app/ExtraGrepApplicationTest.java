@@ -44,10 +44,10 @@ public class ExtraGrepApplicationTest {
 	private String[] args;
 	private FileInputStream stdin;
 	private FileInputStream failstdin;
-	
+
 	static ShellImpl shell;
 	static OutputStream os;
-	
+
 	private String fileName;
 	private String fileName2;
 	private String fileName3;
@@ -62,7 +62,7 @@ public class ExtraGrepApplicationTest {
 		grepApp = new GrepApplication();
 		stdin = new FileInputStream("test/sg/edu/nus/comp/cs4218/impl/app/greptestdoc.txt");
 		failstdin = new FileInputStream("test/sg/edu/nus/comp/cs4218/impl/app/greptestdoc.txt");
-		
+
 		fileName = "test/sg/edu/nus/comp/cs4218/impl/app/greptestdoc.txt";
 		fileName2 = "test/sg/edu/nus/comp/cs4218/impl/app/greptestdoc2.txt";
 		fileName3 = "test/sg/edu/nus/comp/cs4218/impl/app/testdoc.txt";
@@ -82,7 +82,6 @@ public class ExtraGrepApplicationTest {
 		assertEquals(NOMATCHSTDIN + "\n", baos.toString());
 	}
 
-
 	@Test
 	public void grepStdInMatchesFromRun() throws AbstractApplicationException {
 		args = new String[1];
@@ -92,7 +91,7 @@ public class ExtraGrepApplicationTest {
 		assertEquals(ABCSINGLEFILEOUT + "\n", baos.toString());
 	}
 
-	@Test (expected = GrepException.class)
+	@Test(expected = GrepException.class)
 	public void grepStdInInvalidPattern() throws AbstractApplicationException {
 		args = new String[1];
 		args[0] = "[";
@@ -100,9 +99,8 @@ public class ExtraGrepApplicationTest {
 		System.out.flush();
 		assertEquals(ABCSINGLEFILEOUT + "\n", baos.toString());
 	}
-	
 
-	@Test 
+	@Test
 	public void grepStdInValidPatternNoMatch() throws AbstractApplicationException {
 		args = new String[1];
 		args[0] = "asdasda";
@@ -110,9 +108,8 @@ public class ExtraGrepApplicationTest {
 		System.out.flush();
 		assertEquals("", baos.toString());
 	}
-	
 
-	@Test (expected = GrepException.class)
+	@Test(expected = GrepException.class)
 	public void grepStdInValidStdin() throws AbstractApplicationException, IOException {
 		args = new String[1];
 		args[0] = "asdasda";
@@ -121,9 +118,8 @@ public class ExtraGrepApplicationTest {
 		System.out.flush();
 		assertEquals("", baos.toString());
 	}
-	
-	
-	@Test (expected = GrepException.class)
+
+	@Test(expected = GrepException.class)
 	public void grepStdInInvalidOutputStream() throws AbstractApplicationException {
 		args = new String[1];
 		args[0] = ABCPATTERN;
@@ -131,9 +127,8 @@ public class ExtraGrepApplicationTest {
 		System.out.flush();
 		assertEquals(ABCSINGLEFILEOUT + "\n", baos.toString());
 	}
-	
-	
-	@Test (expected = GrepException.class)
+
+	@Test(expected = GrepException.class)
 	public void grepStdInInvalidPatternInvalidOutputStream() throws AbstractApplicationException {
 		args = new String[1];
 		args[0] = "[";
@@ -141,7 +136,7 @@ public class ExtraGrepApplicationTest {
 		System.out.flush();
 		assertEquals(ABCSINGLEFILEOUT + "\n", baos.toString());
 	}
-	
+
 	@Test
 	public void grepStdInRegexMatchesFromRun() throws AbstractApplicationException {
 		args = new String[1];
@@ -150,7 +145,6 @@ public class ExtraGrepApplicationTest {
 		System.out.flush();
 		assertEquals(REGEXPATTERNOUT + "\n", baos.toString());
 	}
-
 
 	@Test
 	public void grepSingleFileNoMatchesFromRun() throws AbstractApplicationException {
@@ -215,7 +209,6 @@ public class ExtraGrepApplicationTest {
 		assertEquals(REGEXPATTERNOUT + "\n", baos.toString());
 	}
 
-
 	@Test
 	public void grepMultipleFileNoMatchesFromRun() throws AbstractApplicationException {
 		args = new String[3];
@@ -226,7 +219,6 @@ public class ExtraGrepApplicationTest {
 		System.out.flush();
 		assertEquals("", baos.toString());
 	}
-
 
 	@Test
 	public void grepMultipleFileMatchesFromRun() throws AbstractApplicationException {
@@ -281,7 +273,8 @@ public class ExtraGrepApplicationTest {
 		args[3] = directory;
 		grepApp.run(args, stdin, System.out);
 		System.out.flush();
-		assertEquals(REGEXMULTIOUT + "\n" + "grep: test/sg/edu/nus/comp/cs4218/impl/app/: No such file\n", baos.toString());
+		assertEquals(REGEXMULTIOUT + "\n" + "grep: test/sg/edu/nus/comp/cs4218/impl/app/: No such file\n",
+				baos.toString());
 	}
 
 	@Test
@@ -292,7 +285,8 @@ public class ExtraGrepApplicationTest {
 		args[2] = directory;
 		grepApp.run(args, stdin, System.out);
 		System.out.flush();
-		assertEquals(REGEXPATTERNOUT + "\n" + "grep: test/sg/edu/nus/comp/cs4218/impl/app/: No such file\n", baos.toString());
+		assertEquals(REGEXPATTERNOUT + "\n" + "grep: test/sg/edu/nus/comp/cs4218/impl/app/: No such file\n",
+				baos.toString());
 	}
 
 	@Test(expected = GrepException.class)
@@ -326,7 +320,6 @@ public class ExtraGrepApplicationTest {
 		System.out.flush();
 	}
 
-	
 	@Test
 	public void grepDirectoryFromRun() throws AbstractApplicationException {
 		args = new String[2];
@@ -335,7 +328,6 @@ public class ExtraGrepApplicationTest {
 		grepApp.run(args, stdin, System.out);
 		assertEquals(baos.toString(), baos.toString());
 	}
-
 
 	@Test(expected = GrepException.class)
 	public void invalidRegexFromRun() throws AbstractApplicationException {
@@ -357,11 +349,10 @@ public class ExtraGrepApplicationTest {
 		System.out.flush();
 	}
 
-	
 	// Integration tests
-	
+
 	@Test
-	//Test the case of calling command functions
+	// Test the case of calling command functions
 	public void commandSubTest1() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "grep `echo line` test.txt";
@@ -371,7 +362,7 @@ public class ExtraGrepApplicationTest {
 	}
 
 	@Test
-	//Test the case of calling command functions
+	// Test the case of calling command functions
 	public void commandSubTest2() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "grep `echo line | head` test.txt";
@@ -380,8 +371,9 @@ public class ExtraGrepApplicationTest {
 		assertEquals(expected, os.toString());
 	}
 
-	@Test (expected = CatException.class)
-	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	@Test(expected = CatException.class)
+	// Test the fail case of calling command functions, when command
+	// subsititution failed, the whole thing would generate an exception
 	public void commandSubTestFail() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "grep `echo line | cat test5.txt` test.txt";
@@ -391,7 +383,7 @@ public class ExtraGrepApplicationTest {
 	}
 
 	@Test
-	//Test the case of pipe
+	// Test the case of pipe
 	public void pipeTest1() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "sed s/[l]/L/g test.txt | grep Line";
@@ -401,7 +393,7 @@ public class ExtraGrepApplicationTest {
 	}
 
 	@Test
-	//Test the case of pipe
+	// Test the case of pipe
 	public void pipeTest2() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "head -n 2 test.txt | grep line";
@@ -411,27 +403,33 @@ public class ExtraGrepApplicationTest {
 	}
 
 	@Test
-	//Test the case of pipe
+	// Test the case of pipe
 	public void pipeTest3() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "date | grep T";
-		String expected = java.util.Calendar.getInstance().getTime().toString() + "\n"; // assumption: tester is doing this in Singapore
+		String expected = java.util.Calendar.getInstance().getTime().toString() + "\n"; // assumption:
+																						// tester
+																						// is
+																						// doing
+																						// this
+																						// in
+																						// Singapore
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(expected, os.toString());
-	}	
+	}
 
-	@Test (expected = HeadException.class)
-	//Test the case of pipe with exception
+	@Test(expected = HeadException.class)
+	// Test the case of pipe with exception
 	public void pipeTestFail() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "head -n 2 tesasdt.txt | grep line";
 		String expected = "line 1\nline 2\n";
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(expected, os.toString());
-	}	
-	
+	}
+
 	@Test
-	//Test the case of calling command functions
+	// Test the case of calling command functions
 	public void complicatedCommandSubTest1() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "grep `echo line` `echo test.txt`";
@@ -441,7 +439,7 @@ public class ExtraGrepApplicationTest {
 	}
 
 	@Test
-	//Test the case of calling command functions
+	// Test the case of calling command functions
 	public void complicatedCommandSubTest2() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "grep `echo line | head` `echo test.txt`";
@@ -450,8 +448,9 @@ public class ExtraGrepApplicationTest {
 		assertEquals(expected, os.toString());
 	}
 
-	@Test (expected = SortException.class)
-	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	@Test(expected = SortException.class)
+	// Test the fail case of calling command functions, when command
+	// subsititution failed, the whole thing would generate an exception
 	public void ComplicatedommandSubTestFail() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "grep `echo line | cat test.txt` `sort test5.txt`";
@@ -459,9 +458,9 @@ public class ExtraGrepApplicationTest {
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(expected, os.toString());
 	}
-	
+
 	@Test
-	//Test the case of calling command functions
+	// Test the case of calling command functions
 	public void complicatedPipeTest1() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "grep line test.txt | tail -n 2 | grep 'line 4'";
@@ -471,7 +470,7 @@ public class ExtraGrepApplicationTest {
 	}
 
 	@Test
-	//Test the case of calling command functions
+	// Test the case of calling command functions
 	public void complicatedPipeSubTest2() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "grep 'line 2' test.txt | grep 'line' | grep 'li'";
@@ -480,8 +479,9 @@ public class ExtraGrepApplicationTest {
 		assertEquals(expected, os.toString());
 	}
 
-	@Test (expected = GrepException.class)
-	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	@Test(expected = GrepException.class)
+	// Test the fail case of calling command functions, when command
+	// subsititution failed, the whole thing would generate an exception
 	public void ComplicatedPipeTestFail() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "grep `echo line | cat test.txt` `sort test.txt` | grep | grep line2";
@@ -491,7 +491,8 @@ public class ExtraGrepApplicationTest {
 	}
 
 	@Test
-	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	// Test the fail case of calling command functions, when command
+	// subsititution failed, the whole thing would generate an exception
 	public void quoteTest1() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "grep line 2 test.txt";
@@ -499,9 +500,10 @@ public class ExtraGrepApplicationTest {
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(expected, os.toString());
 	}
-	
+
 	@Test
-	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	// Test the fail case of calling command functions, when command
+	// subsititution failed, the whole thing would generate an exception
 	public void quoteTest2() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "grep \"line 2\" test.txt";
@@ -509,9 +511,10 @@ public class ExtraGrepApplicationTest {
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(expected, os.toString());
 	}
-	
+
 	@Test
-	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	// Test the fail case of calling command functions, when command
+	// subsititution failed, the whole thing would generate an exception
 	public void quoteTest3() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "grep 'line 2' test.txt";
@@ -519,10 +522,10 @@ public class ExtraGrepApplicationTest {
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(expected, os.toString());
 	}
-	
-	
-	@Test (expected = GrepException.class)
-	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+
+	@Test(expected = GrepException.class)
+	// Test the fail case of calling command functions, when command
+	// subsititution failed, the whole thing would generate an exception
 	public void quoteFail() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "'grep' 'line 2' test.txt | 'grep' [";
@@ -530,9 +533,10 @@ public class ExtraGrepApplicationTest {
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(expected, os.toString());
 	}
-	
+
 	@Test
-	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	// Test the fail case of calling command functions, when command
+	// subsititution failed, the whole thing would generate an exception
 	public void redirTest1() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "grep 'line 2' test.txt > line2.txt";
@@ -543,9 +547,10 @@ public class ExtraGrepApplicationTest {
 		shell.parseAndEvaluate(cmdline2, os);
 		assertEquals(expected, os.toString());
 	}
-	
+
 	@Test
-	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	// Test the fail case of calling command functions, when command
+	// subsititution failed, the whole thing would generate an exception
 	public void redirTest2() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "grep 'line 2' test.txt > line2.txt";
@@ -556,9 +561,10 @@ public class ExtraGrepApplicationTest {
 		shell.parseAndEvaluate(cmdline2, os);
 		assertEquals(expected, os.toString());
 	}
-	
+
 	@Test
-	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+	// Test the fail case of calling command functions, when command
+	// subsititution failed, the whole thing would generate an exception
 	public void redirTest3() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "grep 'line 2' test.txt > line2.txt";
@@ -569,10 +575,10 @@ public class ExtraGrepApplicationTest {
 		shell.parseAndEvaluate(cmdline2, os);
 		assertEquals(expected, os.toString());
 	}
-	
-	
-	@Test (expected = ShellException.class)
-	//Test the fail case of calling command functions, when command subsititution failed, the whole thing would generate an exception
+
+	@Test(expected = ShellException.class)
+	// Test the fail case of calling command functions, when command
+	// subsititution failed, the whole thing would generate an exception
 	public void redirTestFail() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "grep 'line 2' test.txt > line2.txt";
@@ -582,5 +588,5 @@ public class ExtraGrepApplicationTest {
 		os = new ByteArrayOutputStream();
 		shell.parseAndEvaluate(cmdline2, os);
 		assertEquals(expected, os.toString());
-	}	
+	}
 }

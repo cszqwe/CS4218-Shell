@@ -43,8 +43,7 @@ public class CatApplication implements Application {
 	 *             If the file(s) specified do not exist or are unreadable.
 	 */
 	@Override
-	public void run(String[] args, InputStream stdin, OutputStream stdout)
-			throws CatException {
+	public void run(String[] args, InputStream stdin, OutputStream stdout) throws CatException {
 		// for (int i = 0; i< 10; i++) System.out.println("Test");
 		if (args == null || args.length == 0) {
 			if (stdin == null || stdout == null) {
@@ -80,13 +79,11 @@ public class CatApplication implements Application {
 				if (filePathArray.length != 0) {
 					for (int j = 0; j < filePathArray.length; j++) {
 						try {
-							byte[] byteFileArray = Files
-									.readAllBytes(filePathArray[j]);
+							byte[] byteFileArray = Files.readAllBytes(filePathArray[j]);
 							stdout.write(byteFileArray);
-							
+
 						} catch (IOException e) {
-							throw new CatException(
-									"Could not write to output stream");
+							throw new CatException("Could not write to output stream");
 						}
 					}
 				}
@@ -104,7 +101,7 @@ public class CatApplication implements Application {
 	 *             If the file is not readable
 	 */
 	boolean checkIfFileIsReadable(Path filePath) throws CatException {
-		
+
 		if (Files.isDirectory(filePath)) {
 			throw new CatException("This is a directory");
 		}

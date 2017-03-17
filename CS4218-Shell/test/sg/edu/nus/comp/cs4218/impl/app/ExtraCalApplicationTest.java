@@ -40,7 +40,7 @@ public class ExtraCalApplicationTest {
 	PrintStream print;
 	static ShellImpl shell;
 	static OutputStream os;
-	
+
 	@Before
 	public void setUp() {
 		shell = new ShellImpl();
@@ -50,8 +50,6 @@ public class ExtraCalApplicationTest {
 		print = new PrintStream(baos);
 		System.setOut(print);
 	}
-
-
 
 	@Test(expected = CalException.class)
 	public void multipleMFromRun() throws CalException {
@@ -84,7 +82,6 @@ public class ExtraCalApplicationTest {
 		System.out.flush();
 	}
 
-
 	@Test(expected = CalException.class)
 	public void invalidYearFromRun() throws CalException {
 		args = new String[1];
@@ -100,14 +97,13 @@ public class ExtraCalApplicationTest {
 		calendarApp.run(args, null, System.out);
 		System.out.flush();
 	}
-	
-	
+
 	@Test
-	//Test the case of pipe
+	// Test the case of pipe
 	public void pipeRedirOutputTest1() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "cal -m 1993 > call.txt | cat call.txt";
-		String expected =	"                              1993\n"
+		String expected = "                              1993\n"
 				+ "      January               February               March        \n"
 				+ "Mo Tu We Th Fr Sa Su  Mo Tu We Th Fr Sa Su  Mo Tu We Th Fr Sa Su\n"
 				+ "            1  2  3   1  2  3  4  5  6  7   1  2  3  4  5  6  7 \n"
@@ -137,18 +133,18 @@ public class ExtraCalApplicationTest {
 				+ "4  5  6  7  8  9  10  8  9  10 11 12 13 14  6  7  8  9  10 11 12\n"
 				+ "11 12 13 14 15 16 17  15 16 17 18 19 20 21  13 14 15 16 17 18 19\n"
 				+ "18 19 20 21 22 23 24  22 23 24 25 26 27 28  20 21 22 23 24 25 26\n"
-				+ "25 26 27 28 29 30 31  29 30                 27 28 29 30 31      \n"; 
-		
+				+ "25 26 27 28 29 30 31  29 30                 27 28 29 30 31      \n";
+
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(expected, os.toString());
 	}
 
 	@Test
-	//Test the case of pipe
+	// Test the case of pipe
 	public void pipeTest2() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "cal -m 1993 | cat";
-		String expected =	"                              1993\n"
+		String expected = "                              1993\n"
 				+ "      January               February               March        \n"
 				+ "Mo Tu We Th Fr Sa Su  Mo Tu We Th Fr Sa Su  Mo Tu We Th Fr Sa Su\n"
 				+ "            1  2  3   1  2  3  4  5  6  7   1  2  3  4  5  6  7 \n"
@@ -178,17 +174,17 @@ public class ExtraCalApplicationTest {
 				+ "4  5  6  7  8  9  10  8  9  10 11 12 13 14  6  7  8  9  10 11 12\n"
 				+ "11 12 13 14 15 16 17  15 16 17 18 19 20 21  13 14 15 16 17 18 19\n"
 				+ "18 19 20 21 22 23 24  22 23 24 25 26 27 28  20 21 22 23 24 25 26\n"
-				+ "25 26 27 28 29 30 31  29 30                 27 28 29 30 31      \n"; 
+				+ "25 26 27 28 29 30 31  29 30                 27 28 29 30 31      \n";
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(expected, os.toString());
-	}	
+	}
 
 	@Test
-	//Test the case of pipe
+	// Test the case of pipe
 	public void pipeTest3() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "cal -m 1993 | cat | cat |cat";
-		String expected =	"                              1993\n"
+		String expected = "                              1993\n"
 				+ "      January               February               March        \n"
 				+ "Mo Tu We Th Fr Sa Su  Mo Tu We Th Fr Sa Su  Mo Tu We Th Fr Sa Su\n"
 				+ "            1  2  3   1  2  3  4  5  6  7   1  2  3  4  5  6  7 \n"
@@ -218,18 +214,17 @@ public class ExtraCalApplicationTest {
 				+ "4  5  6  7  8  9  10  8  9  10 11 12 13 14  6  7  8  9  10 11 12\n"
 				+ "11 12 13 14 15 16 17  15 16 17 18 19 20 21  13 14 15 16 17 18 19\n"
 				+ "18 19 20 21 22 23 24  22 23 24 25 26 27 28  20 21 22 23 24 25 26\n"
-				+ "25 26 27 28 29 30 31  29 30                 27 28 29 30 31      \n"; 
+				+ "25 26 27 28 29 30 31  29 30                 27 28 29 30 31      \n";
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(expected, os.toString());
-	}	
+	}
 
-	
 	@Test
-	//Test the case of calling command functions
+	// Test the case of calling command functions
 	public void complicatedCommandSubTest1() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "cal `echo -m 1993` | cat | cat |cat";
-		String expected =	"                              1993\n"
+		String expected = "                              1993\n"
 				+ "      January               February               March        \n"
 				+ "Mo Tu We Th Fr Sa Su  Mo Tu We Th Fr Sa Su  Mo Tu We Th Fr Sa Su\n"
 				+ "            1  2  3   1  2  3  4  5  6  7   1  2  3  4  5  6  7 \n"
@@ -259,17 +254,17 @@ public class ExtraCalApplicationTest {
 				+ "4  5  6  7  8  9  10  8  9  10 11 12 13 14  6  7  8  9  10 11 12\n"
 				+ "11 12 13 14 15 16 17  15 16 17 18 19 20 21  13 14 15 16 17 18 19\n"
 				+ "18 19 20 21 22 23 24  22 23 24 25 26 27 28  20 21 22 23 24 25 26\n"
-				+ "25 26 27 28 29 30 31  29 30                 27 28 29 30 31      \n"; 
+				+ "25 26 27 28 29 30 31  29 30                 27 28 29 30 31      \n";
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(expected, os.toString());
 	}
 
 	@Test
-	//Test the case of calling command functions
+	// Test the case of calling command functions
 	public void complicatedCommandSubTest2() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "cal `echo -m 1993 | cat` | cat |cat";
-		String expected =	"                              1993\n"
+		String expected = "                              1993\n"
 				+ "      January               February               March        \n"
 				+ "Mo Tu We Th Fr Sa Su  Mo Tu We Th Fr Sa Su  Mo Tu We Th Fr Sa Su\n"
 				+ "            1  2  3   1  2  3  4  5  6  7   1  2  3  4  5  6  7 \n"
@@ -299,18 +294,17 @@ public class ExtraCalApplicationTest {
 				+ "4  5  6  7  8  9  10  8  9  10 11 12 13 14  6  7  8  9  10 11 12\n"
 				+ "11 12 13 14 15 16 17  15 16 17 18 19 20 21  13 14 15 16 17 18 19\n"
 				+ "18 19 20 21 22 23 24  22 23 24 25 26 27 28  20 21 22 23 24 25 26\n"
-				+ "25 26 27 28 29 30 31  29 30                 27 28 29 30 31      \n"; 
+				+ "25 26 27 28 29 30 31  29 30                 27 28 29 30 31      \n";
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(expected, os.toString());
 	}
 
-	
 	@Test
-	//Test the case of calling command functions
+	// Test the case of calling command functions
 	public void complicatedPipeTest1() throws AbstractApplicationException, ShellException {
 		os = new ByteArrayOutputStream();
 		String cmdline = "cal `echo -m 1993 | cat` | cat |cat | cat | cat | cat";
-		String expected =	"                              1993\n"
+		String expected = "                              1993\n"
 				+ "      January               February               March        \n"
 				+ "Mo Tu We Th Fr Sa Su  Mo Tu We Th Fr Sa Su  Mo Tu We Th Fr Sa Su\n"
 				+ "            1  2  3   1  2  3  4  5  6  7   1  2  3  4  5  6  7 \n"
@@ -340,10 +334,9 @@ public class ExtraCalApplicationTest {
 				+ "4  5  6  7  8  9  10  8  9  10 11 12 13 14  6  7  8  9  10 11 12\n"
 				+ "11 12 13 14 15 16 17  15 16 17 18 19 20 21  13 14 15 16 17 18 19\n"
 				+ "18 19 20 21 22 23 24  22 23 24 25 26 27 28  20 21 22 23 24 25 26\n"
-				+ "25 26 27 28 29 30 31  29 30                 27 28 29 30 31      \n"; 
+				+ "25 26 27 28 29 30 31  29 30                 27 28 29 30 31      \n";
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(expected, os.toString());
 	}
-
 
 }

@@ -116,16 +116,6 @@ public class ExtraSedApplicationTest {
 		assertEquals(msg, expected, stdout.toString());
 	}
 
-	@Test
-	public void testSedWithTwoLineFile() throws SedException {
-		String args[] = { "s|a|b|", TWO_LINE_FILE_PATH };
-		stdin = null;
-		String expected = "Hey, good to know <you>!" + NEWLINE + "This is b small file consists of {1+1+0} lines."
-				+ NEWLINE + "/* Hope this helps */ # no new line here" + NEWLINE;
-		sed.run(args, stdin, stdout);
-		String msg = "error on sed command - incorrect output with two line file";
-		assertEquals(msg, expected, stdout.toString());
-	}
 
 	@Test
 	public void testSedWithEmptyFileInputStream() throws SedException {

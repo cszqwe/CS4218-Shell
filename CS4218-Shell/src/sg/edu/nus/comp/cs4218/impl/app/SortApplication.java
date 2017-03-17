@@ -165,6 +165,7 @@ public class SortApplication implements Sort {
 	}
 
 	public ParseRes parseCmd(String cmd) {
+		// (Re-)parse the cmd
 		ArrayList<String> filenames = new ArrayList<>();
 		boolean isNumericSort = false;
 
@@ -387,6 +388,7 @@ public class SortApplication implements Sort {
 	}
 
 	public ArrayList<StrObj> convertStringToStrObjLst(String line, boolean isNumericSort) {
+		// split a line into a list of StrObj each containing a char/number
 		ArrayList<StrObj> objLst = new ArrayList<>();
 
 		if ("".equals(line)) {
@@ -397,6 +399,9 @@ public class SortApplication implements Sort {
 
 		boolean isFirstNums = Character.isDigit(line.charAt(0));
 		// true if line starts with digit, false otherwise
+		// Assumption: in the case of numerical sort,
+		// only the starting sequence of numbers, if any, are treated numerically.
+		// for example, a line "21th" will be split to [21] [t] [h].
 		String firstNums = "";
 
 		for (int i = 0; i < line.length(); i++) {
@@ -443,6 +448,9 @@ public class SortApplication implements Sort {
 															// identical
 					return 0;
 				} else {
+					// This happens if either strA or strB has additional zeroes
+					// in front of the other, e.g. 020 and 0020.
+					// in this case, compare char by char.
 					for (int i = 0; i < Math.max(strA.contents.length(), strB.contents.length()); i++) {
 						int aChar = (int) strA.contents.charAt(i);
 						int bChar = (int) strB.contents.charAt(i);
@@ -451,12 +459,9 @@ public class SortApplication implements Sort {
 							return 1;
 						} else if (aChar < bChar) {
 							return -1;
+						} else {
+							continue; // both might start with zero
 						}
-						// else: not possible. strA and strB not being identical
-						// but having same numeric value means
-						// one has additional zeroes in front of the other,
-						// meaning it is impossible for strA and strB
-						// to start out identical
 					}
 
 				}
@@ -505,7 +510,7 @@ public class SortApplication implements Sort {
 	}
 
 	public int compareLines(ArrayList<StrObj> lst1, ArrayList<StrObj> lst2) {
-
+		// compare StrObj by StrObj
 		for (int i = 0; i < Math.max(lst1.size(), lst2.size()); i++) {
 			StrObj obj1 = lst1.get(i);
 			StrObj obj2 = lst2.get(i);

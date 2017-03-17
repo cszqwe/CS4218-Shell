@@ -84,7 +84,7 @@ public class SortApplication implements Sort {
 			lines = getFilesContents(filepaths);
 		}
 
-		// check for
+		// check for char types
 		for (String line : lines) {
 			for (int i = 0; i < line.length(); i++) {
 				char character = line.charAt(i);
@@ -208,8 +208,8 @@ public class SortApplication implements Sort {
 		if (baos == null) {
 			// not supposed to happen in normal executon (i.e. infeasible path)
 			// but can happen if for some reason
-			// this method is called in isolation. Deals with it by creating a
-			// new empty baos.
+			// this method is called in isolation.
+			// Deals with it by creating a new empty baos.
 			baos = new ByteArrayOutputStream();
 		}
 		InputStream inputStream = new ByteArrayInputStream(baos.toByteArray());
@@ -461,8 +461,8 @@ public class SortApplication implements Sort {
 
 				}
 			}
-			// no need to worry about sorting numerically or not: already taken
-			// care in string splitting stage
+			// no need to worry about sorting numerically or not:
+			// already taken care in string splitting stage
 		} else if (strA.type == strB.type) {
 			// if the chars are of same type, just compare using the ASCII
 			// values
@@ -574,11 +574,19 @@ public class SortApplication implements Sort {
 
 }
 
+/**
+ * 
+ * Object that contains a string for comparison Usually contains string of
+ * length 1, but can contain longer numbers
+ * 
+ * This class is used for: 1. comparing string types 2. comparing string values
+ *
+ */
 class StrObj {
 	public enum Type {
 		SIMPLE(3), CAPITAL(2), NUMBERS(1), SPECIAL(0);
 
-		private int numval;
+		private int numval; // used for ordering
 
 		Type(int numval) {
 			this.numval = numval;
@@ -599,6 +607,11 @@ class StrObj {
 
 }
 
+/**
+ * 
+ * Since Java doesn't have tuples created a class to use like a tuple
+ *
+ */
 class ParseRes {
 	public ArrayList<String> filenames;
 	public boolean isNumericSort;

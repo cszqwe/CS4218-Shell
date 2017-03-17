@@ -53,6 +53,9 @@ public class SortApplication implements Sort {
 			}
 
 			if (args.length > 0 && args[0].charAt(0) == '-') {
+				// Assumption: only args[0] can be the option to do numeric sort
+				// Assumption: any arg that starts with '-' is considered an
+				// option, regardless of whether it is a valid filename
 				for (int i = 1; i < args[0].length(); i++) {
 					if (args[0].charAt(i) == 'n') {
 						isNumericSort = true;
@@ -81,6 +84,7 @@ public class SortApplication implements Sort {
 			lines = getFilesContents(filepaths);
 		}
 
+		// check for char types
 		for (String line : lines) {
 			for (int i = 0; i < line.length(); i++) {
 				char character = line.charAt(i);
@@ -90,7 +94,7 @@ public class SortApplication implements Sort {
 					isCapitalFound = true;
 				} else if (Character.isDigit(character)) {
 					isNumbersFound = true;
-				} else {
+				} else { // Assumption: consider everything else as special char
 					isSpecialFound = true;
 				}
 			}
@@ -111,49 +115,34 @@ public class SortApplication implements Sort {
 		String output = "";
 		// invoke appropriate method
 		if (isSimpleFound && !isCapitalFound && !isNumbersFound && !isSpecialFound) {
-			// System.out.println("sortStringsSimple");
 			output = sortStringsSimple(cmd);
 		} else if (!isSimpleFound && isCapitalFound && !isNumbersFound && !isSpecialFound) {
-			// System.out.println("sortStringsCapital");
 			output = sortStringsCapital(cmd);
 		} else if (!isSimpleFound && !isCapitalFound && isNumbersFound && !isSpecialFound) {
-			// System.out.println("sortNumbers");
 			output = sortNumbers(cmd);
 		} else if (!isSimpleFound && !isCapitalFound && !isNumbersFound && isSpecialFound) {
-			// System.out.println("sortSpecialChars");
 			output = sortSpecialChars(cmd);
 		} else if (isSimpleFound && isCapitalFound && !isNumbersFound && !isSpecialFound) {
-			// System.out.println("sortSimpleCapital");
 			output = sortSimpleCapital(cmd);
 		} else if (isSimpleFound && !isCapitalFound && isNumbersFound && !isSpecialFound) {
-			// System.out.println("sortSimpleNumbers");
 			output = sortSimpleNumbers(cmd);
 		} else if (isSimpleFound && !isCapitalFound && !isNumbersFound && isSpecialFound) {
-			// System.out.println("sortSimpleSpecialChars");
 			output = sortSimpleSpecialChars(cmd);
 		} else if (!isSimpleFound && isCapitalFound && isNumbersFound && !isSpecialFound) {
-			// System.out.println("sortCapitalNumbers");
 			output = sortCapitalNumbers(cmd);
 		} else if (!isSimpleFound && isCapitalFound && !isNumbersFound && isSpecialFound) {
-			// System.out.println("sortCapitalSpecialChars");
 			output = sortCapitalSpecialChars(cmd);
 		} else if (!isSimpleFound && !isCapitalFound && isNumbersFound && isSpecialFound) {
-			// System.out.println("sortNumbersSpecialChars");
 			output = sortNumbersSpecialChars(cmd);
 		} else if (isSimpleFound && isCapitalFound && isNumbersFound && !isSpecialFound) {
-			// System.out.println("sortSimpleCapitalNumber");
 			output = sortSimpleCapitalNumber(cmd);
 		} else if (isSimpleFound && isCapitalFound && !isNumbersFound && isSpecialFound) {
-			// System.out.println("sortSimpleCapitalSpecialChars");
 			output = sortSimpleCapitalSpecialChars(cmd);
 		} else if (isSimpleFound && !isCapitalFound && isNumbersFound && isSpecialFound) {
-			// System.out.println("sortSimpleNumbersSpecialChars");
 			output = sortSimpleNumbersSpecialChars(cmd);
 		} else if (!isSimpleFound && isCapitalFound && isNumbersFound && isSpecialFound) {
-			// System.out.println("sortCapitalNumbersSpecialChars");
 			output = sortCapitalNumbersSpecialChars(cmd);
 		} else {
-			// System.out.println("sortAll");
 			output = sortAll(cmd);
 		}
 		return output;
@@ -161,7 +150,6 @@ public class SortApplication implements Sort {
 
 	public void setStdin(InputStream inputStream) throws SortException {
 		// copy stdin so that it can be accessed >1 times
-		// System.out.println("stdin detected");
 		baos = new ByteArrayOutputStream();
 		byte[] buffer = new byte[1024];
 		int len;
@@ -172,16 +160,16 @@ public class SortApplication implements Sort {
 			baos.flush();
 		} catch (IOException e) {
 			throw new SortException("InputStream failed");
-			// System.out.println("Copy stdin failed");
 		}
 		this.stdin = new ByteArrayInputStream(baos.toByteArray());
 	}
 
 	public ParseRes parseCmd(String cmd) {
-		// System.out.println("(Re-)parsing cmd");
 		ArrayList<String> filenames = new ArrayList<>();
 		boolean isNumericSort = false;
 
+		// deal with double quotes that may contain spaces
+		// simpler version of what Shell uses
 		ArrayList<String> matchList = new ArrayList<>();
 		Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
 		Matcher regexMatcher = regex.matcher(cmd);
@@ -199,7 +187,6 @@ public class SortApplication implements Sort {
 		}
 
 		String[] args = matchList.toArray(new String[matchList.size()]);
-		// for (String arg : args) System.out.println("\"" + arg + "\"");
 		if (args.length > 1 && args[1].equals("-n")) {
 			isNumericSort = true;
 		}
@@ -214,7 +201,6 @@ public class SortApplication implements Sort {
 		}
 
 		ParseRes res = new ParseRes(filenames, isNumericSort);
-		// System.out.println("(Re-)parsing cmd successful");
 		return res;
 	}
 
@@ -222,12 +208,11 @@ public class SortApplication implements Sort {
 		if (baos == null) {
 			// not supposed to happen in normal executon (i.e. infeasible path)
 			// but can happen if for some reason
-			// this method is called in isolation. Deals with it by creating a
-			// new empty baos.
+			// this method is called in isolation.
+			// Deals with it by creating a new empty baos.
 			baos = new ByteArrayOutputStream();
 		}
 		InputStream inputStream = new ByteArrayInputStream(baos.toByteArray());
-		// System.out.println("Reading from stdin");
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 		StringBuilder str = new StringBuilder();
 		String line = null;
@@ -274,12 +259,9 @@ public class SortApplication implements Sort {
 	}
 
 	public String sort(String toSort) {
-		// System.out.println("Sorting");
 		ParseRes res = parseCmd(toSort);
 		ArrayList<String> files = res.filenames;
 		boolean isNumericSort = res.isNumericSort;
-		// System.out.println(toSort);
-		// System.out.println(isNumericSort);
 
 		ArrayList<ArrayList<StrObj>> objLsts = new ArrayList<>();
 		ArrayList<String> lines = new ArrayList<>();
@@ -413,12 +395,8 @@ public class SortApplication implements Sort {
 			return objLst;
 		}
 
-		boolean isFirstNums = Character.isDigit(line.charAt(0)); // true if line
-																	// starts
-																	// with
-																	// digit,
-																	// false
-																	// otherwise
+		boolean isFirstNums = Character.isDigit(line.charAt(0));
+		// true if line starts with digit, false otherwise
 		String firstNums = "";
 
 		for (int i = 0; i < line.length(); i++) {
@@ -483,8 +461,8 @@ public class SortApplication implements Sort {
 
 				}
 			}
-			// no need to worry about sorting numerically or not: already taken
-			// care in string splitting stage
+			// no need to worry about sorting numerically or not:
+			// already taken care in string splitting stage
 		} else if (strA.type == strB.type) {
 			// if the chars are of same type, just compare using the ASCII
 			// values
@@ -596,11 +574,19 @@ public class SortApplication implements Sort {
 
 }
 
+/**
+ * 
+ * Object that contains a string for comparison Usually contains string of
+ * length 1, but can contain longer numbers
+ * 
+ * This class is used for: 1. comparing string types 2. comparing string values
+ *
+ */
 class StrObj {
 	public enum Type {
 		SIMPLE(3), CAPITAL(2), NUMBERS(1), SPECIAL(0);
 
-		private int numval;
+		private int numval; // used for ordering
 
 		Type(int numval) {
 			this.numval = numval;
@@ -619,14 +605,13 @@ class StrObj {
 		this.contents = contents;
 	}
 
-	/*
-	 * public boolean isThisAfterOther(CharGroup other) {
-	 * 
-	 * return false; }
-	 */
-
 }
 
+/**
+ * 
+ * Since Java doesn't have tuples created a class to use like a tuple
+ *
+ */
 class ParseRes {
 	public ArrayList<String> filenames;
 	public boolean isNumericSort;

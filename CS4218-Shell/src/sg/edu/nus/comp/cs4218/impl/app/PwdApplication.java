@@ -6,7 +6,6 @@ import java.io.OutputStream;
 
 import sg.edu.nus.comp.cs4218.Application;
 import sg.edu.nus.comp.cs4218.Environment;
-import sg.edu.nus.comp.cs4218.exception.DateException;
 import sg.edu.nus.comp.cs4218.exception.PwdException;
 
 public class PwdApplication implements Application {

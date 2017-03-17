@@ -30,10 +30,12 @@ public class SedApplication implements Sed {
 		for (int i = 0; i < args.length; i++) {
 			wholeCommand = wholeCommand + args[i] + " ";
 		}
-		if (args[0].length() < 5)
+		if (args[0].length() < 5) {
 			throw new SedException("Wrong usage");
-		if (args[0].charAt(0) != 's')
+		}
+		if (args[0].charAt(0) != 's') {
 			throw new SedException("Wrong usage");
+		}
 		args[0] = args[0].substring(1);
 		String splitSymbol = "" + args[0].charAt(0);
 		String[] strs = args[0].split(Pattern.quote(splitSymbol));
@@ -141,11 +143,11 @@ public class SedApplication implements Sed {
 		boolean first = true;
 		try {
 			while ((line = in.readLine()) != null) {
-				if (!first)
-					str.append("\n" + line);
-				else {
+				if (first) {
 					str.append(line);
 					first = false;
+				} else {
+					str.append("\n" + line);
 				}
 			}
 		} catch (Exception e) {

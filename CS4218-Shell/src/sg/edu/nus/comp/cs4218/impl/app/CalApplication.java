@@ -20,7 +20,7 @@ public class CalApplication implements Cal {
 	 * june)
 	 * 
 	 */
-	static DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	static DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", java.util.Locale.US);
 	static Date date = new Date();
 	String currentDate = dateFormat.format(date).split(" ")[0];
 	String[] currentDateSplit = currentDate.split("/");
@@ -34,7 +34,7 @@ public class CalApplication implements Cal {
 	HashMap<String, Integer> firstDayOfMonthPositionMondayFirst = new HashMap<String, Integer>();
 	HashMap<String, Integer> firstDayOfMonthPositionSundayFirst = new HashMap<String, Integer>();
 
-	final int ROW_MAX_LENGTH = 20;
+	static final int ROW_MAX_LENGTH = 20;
 
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws CalException {
@@ -139,7 +139,7 @@ public class CalApplication implements Cal {
 	public String getFirstLine(String month, String year) {
 		int currentMonthInt = Integer.parseInt(month);
 		String firstLine;
-		if (year.equals("")) {
+		if ("".equals(year)) {
 			firstLine = monthIntToString[currentMonthInt];
 		} else {
 			firstLine = monthIntToString[currentMonthInt] + " " + year;
@@ -247,14 +247,15 @@ public class CalApplication implements Cal {
 		// System.out.println(calDate);
 
 		// Get first day of the month
-		DateFormat sdf = new SimpleDateFormat("EEEE");
+		DateFormat sdf = new SimpleDateFormat("EEEE", java.util.Locale.US);
 		String firstDayOfMonth = sdf.format(calDate);
 		// System.out.println("first day of month: " + firstDayOfMonth);
 
 		// Get the starting position
 		int startingPos = cal.get(Calendar.DAY_OF_WEEK) - 1;
-		if (startingPos < 0)
+		if (startingPos < 0) {
 			startingPos += 7;
+		}
 		// System.out.println("starting pos: " + startingPos);
 
 		int maxDaysInCurrentMonth = getMaxDaysInMonth(Integer.parseInt(currentMonth) - 1,
@@ -293,14 +294,15 @@ public class CalApplication implements Cal {
 		// System.out.println(calDate);
 
 		// Get first day of the month
-		DateFormat sdf = new SimpleDateFormat("EEEE");
+		DateFormat sdf = new SimpleDateFormat("EEEE", java.util.Locale.US);
 		String firstDayOfMonth = sdf.format(calDate);
 		// System.out.println("first day of month: " + firstDayOfMonth);
 
 		// Get the starting position
 		int startingPos = cal.get(Calendar.DAY_OF_WEEK) - 2;
-		if (startingPos < 0)
+		if (startingPos < 0) {
 			startingPos += 7;
+		}
 
 		int maxDaysInCurrentMonth = getMaxDaysInMonth(Integer.parseInt(currentMonth) - 1,
 				Integer.parseInt(currentYear));
@@ -336,14 +338,15 @@ public class CalApplication implements Cal {
 		// System.out.println(calDate);
 
 		// Get first day of the month
-		DateFormat sdf = new SimpleDateFormat("EEEE");
+		DateFormat sdf = new SimpleDateFormat("EEEE", java.util.Locale.US);
 		String firstDayOfMonth = sdf.format(calDate);
 		// System.out.println("first day of month: " + firstDayOfMonth);
 
 		// Get the starting position
 		int startingPos = cal.get(Calendar.DAY_OF_WEEK) - 1;
-		if (startingPos < 0)
+		if (startingPos < 0) {
 			startingPos += 7;
+		}
 		// System.out.println("starting pos: " + startingPos);
 
 		int maxDaysInCurrentMonth = getMaxDaysInMonth(Integer.parseInt(month) - 1, Integer.parseInt(year));
@@ -374,10 +377,10 @@ public class CalApplication implements Cal {
 			int minColLength = Math.min(Math.min(colOneLength, colTwoLength), colThreeLength);
 
 			// Fill up last row with extra spaces
-			if (colOneLength != colTwoLength || colTwoLength != colThreeLength) {
-				padLastRow = true;
-			} else {
+			if (colOneLength == colTwoLength && colTwoLength == colThreeLength) {
 				padLastRow = false;
+			} else {
+				padLastRow = true;
 			}
 
 			for (int j = 0; j < minColLength; j++) {
@@ -480,8 +483,9 @@ public class CalApplication implements Cal {
 
 				// Get the starting position
 				int startingPos = cal.get(Calendar.DAY_OF_WEEK) - 1;
-				if (startingPos < 0)
+				if (startingPos < 0) {
 					startingPos += 7;
+				}
 				// System.out.println("starting pos: " + startingPos);
 
 				int maxDaysInCurrentMonth = getMaxDaysInMonth(currMonth - 1, Integer.parseInt(currentYear));
@@ -526,15 +530,16 @@ public class CalApplication implements Cal {
 		// System.out.println(calDate);
 
 		// Get first day of the month
-		DateFormat sdf = new SimpleDateFormat("EEEE");
+		DateFormat sdf = new SimpleDateFormat("EEEE", java.util.Locale.US);
 		String firstDayOfMonth = sdf.format(calDate);
 		// System.out.println("first day of month: " + firstDayOfMonth);
 
 		// Get the starting position
 
 		int startingPos = cal.get(Calendar.DAY_OF_WEEK) - 2;
-		if (startingPos < 0)
+		if (startingPos < 0) {
 			startingPos += 7;
+		}
 		// System.out.println("starting pos: " + startingPos);
 
 		int maxDaysInCurrentMonth = getMaxDaysInMonth(Integer.parseInt(month) - 1, Integer.parseInt(year));
@@ -579,14 +584,15 @@ public class CalApplication implements Cal {
 				// System.out.println(calDate);
 
 				// Get first day of the month
-				DateFormat sdf = new SimpleDateFormat("EEEE");
+				DateFormat sdf = new SimpleDateFormat("EEEE", java.util.Locale.US);
 				String firstDayOfMonth = sdf.format(calDate);
 				// System.out.println("first day of month: " + firstDayOfMonth);
 
 				// Get the starting position
 				int startingPos = cal.get(Calendar.DAY_OF_WEEK) - 2;
-				if (startingPos < 0)
+				if (startingPos < 0) {
 					startingPos += 7;
+				}
 
 				int maxDaysInCurrentMonth = getMaxDaysInMonth(currMonth - 1, Integer.parseInt(currentYear));
 				// System.out.println("max days in current month: " +

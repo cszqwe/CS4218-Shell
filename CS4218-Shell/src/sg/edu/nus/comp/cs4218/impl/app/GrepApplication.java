@@ -42,7 +42,24 @@ public class GrepApplication implements Grep {
 		for (int i = 1; i < args.length; i++) {
 			files.add(args[i]); // first add, later check for validity
 		}
-		if (files.size() > 0) {
+
+		if (files.isEmpty()) {
+			// read from stdin
+			if (validPattern) {
+				output = output.concat(getContentFromStdin(stdin));
+				ans = grepFromStdin(output);
+			} else {
+				ans = grepInvalidPatternInStdin(output);
+				throw new GrepException(ans);
+			}
+			try {
+				if (!"".equals(ans)) {
+					stdout.write((ans + "\n").getBytes());
+				}
+			} catch (Exception e) {
+				throw new GrepException("Invalid output stream");
+			}
+		} else {
 			if (validPattern) {
 				// read from file(s), even if stdin is provided
 				for (String file : files) {
@@ -54,8 +71,9 @@ public class GrepApplication implements Grep {
 						} else {
 							ans = grepFromMultipleFiles(content);
 						}
-						if (!ans.equals(""))
+						if (!"".equals(ans)) {
 							stdout.write((ans + "\n").getBytes());
+						}
 					} catch (Exception e) {
 						try {
 							stdout.write(e.getMessage().getBytes());
@@ -69,23 +87,7 @@ public class GrepApplication implements Grep {
 				ans = grepInvalidPatternInFile(output);
 				throw new GrepException(ans);
 			}
-		} else {
-			// read from stdin
-			if (validPattern) {
-				output = output.concat(getContentFromStdin(stdin));
-				ans = grepFromStdin(output);
-			} else {
-				ans = grepInvalidPatternInStdin(output);
-				throw new GrepException(ans);
-			}
-			try {
-				if (!ans.equals(""))
-					stdout.write((ans + "\n").getBytes());
-			} catch (Exception e) {
-				throw new GrepException("Invalid output stream");
-			}
 		}
-
 	}
 
 	/**
@@ -137,11 +139,11 @@ public class GrepApplication implements Grep {
 		boolean first = true;
 		try {
 			while ((line = in.readLine()) != null) {
-				if (!first)
-					str.append("\n" + line);
-				else {
+				if (first) {
 					str.append(line);
 					first = false;
+				} else {
+					str.append("\n" + line);
 				}
 			}
 		} catch (Exception e) {
@@ -165,8 +167,9 @@ public class GrepApplication implements Grep {
 		}
 		for (int i = 0; i < strList.size(); i++) {
 			ans += strList.get(i);
-			if (i != strList.size() - 1)
+			if (i != strList.size() - 1) {
 				ans += "\n";
+			}
 		}
 		return ans;
 	}

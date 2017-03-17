@@ -91,8 +91,9 @@ public class ShellImpl implements Shell {
 					}
 				} else if (stmt.charAt(i) == '`' && !isQuoted) {
 					if (i != 0) {
-						if (stmt.charAt(i - 1) == '\\')
+						if (stmt.charAt(i - 1) == '\\') {
 							continue;
+						}
 					}
 					start = i;
 					end = -1;
@@ -106,10 +107,12 @@ public class ShellImpl implements Shell {
 				}
 			}
 
-			if (start == -1)
+			if (start == -1) {
 				return stmt;
-			if (end == -1)
+			}
+			if (end == -1) {
 				throw new ShellException("Shell not completed!");
+			}
 			String bqStr = stmt.substring(start + 1, end);
 			OutputStream bqOutputStream = new ByteArrayOutputStream();
 			ShellImpl shell = new ShellImpl();
@@ -163,9 +166,8 @@ public class ShellImpl implements Shell {
 						}
 					}
 				} else if (stmt.charAt(i) == '"' && !isQuoted) {
-					if (i != 0) {
-						if (stmt.charAt(i - 1) == '\\')
-							continue;
+					if (i != 0 && stmt.charAt(i - 1) == '\\') {
+						continue;
 					}
 					start = i;
 					end = -1;
@@ -179,10 +181,12 @@ public class ShellImpl implements Shell {
 				}
 			}
 
-			if (start == -1)
+			if (start == -1) {
 				return stmt;
-			if (end == -1)
+			}
+			if (end == -1) {
 				throw new ShellException("Shell not completed!");
+			}
 			String bqStr = stmt.substring(start + 1, end);
 			String replacedOne = bqStr.replace(" ", SPACE_CHAR);
 			String replacedStr = stmt.replaceFirst('"' + bqStr + '"', replacedOne);
@@ -219,9 +223,8 @@ public class ShellImpl implements Shell {
 			int len = stmt.length();
 			for (int i = 0; i < len; i++) {
 				if (stmt.charAt(i) == '\'') {
-					if (i != 0) {
-						if (stmt.charAt(i - 1) == '\\')
-							continue;
+					if (i != 0 && stmt.charAt(i - 1) == '\\') {
+						continue;
 					}
 					start = i;
 					end = -1;
@@ -235,10 +238,12 @@ public class ShellImpl implements Shell {
 				}
 			}
 
-			if (start == -1)
+			if (start == -1) {
 				return stmt;
-			if (end == -1)
+			}
+			if (end == -1) {
 				throw new ShellException("Shell not completed!");
+			}
 			String bqStr = stmt.substring(start + 1, end);
 			String replacedOne = bqStr.replace(" ", SPACE_CHAR);
 			String replacedStr = stmt.replaceFirst('\'' + bqStr + '\'', replacedOne);
@@ -281,6 +286,8 @@ public class ShellImpl implements Shell {
 					stmts.add(newCmd);
 					startIndex = i + 1;
 				}
+				// PMD not followed here since it may be possible
+				// for new conditions to put here
 			}
 		}
 		String[] commands = new String[stmts.size()];
@@ -378,7 +385,9 @@ public class ShellImpl implements Shell {
 					String replacedString = new String("*");
 					boolean isPattern = true;
 					for (int j = i - 1; j >= 0; j--) {
-						if (stmt.charAt(j) != ' ') {
+						if (stmt.charAt(j) == ' ') {
+							break;
+						} else {
 							if (stmt.charAt(j) == '\\' || stmt.charAt(j) == '/') {
 								isPattern = false;
 							}
@@ -389,8 +398,6 @@ public class ShellImpl implements Shell {
 								directory = stmt.charAt(j) + directory;
 								replacedString = stmt.charAt(j) + replacedString;
 							}
-						} else {
-							break;
 						}
 					}
 					File dir = new File(directory);
@@ -459,12 +466,14 @@ public class ShellImpl implements Shell {
 			} else if (stmt.charAt(i) == '<') {
 				if (numOfDQ % 2 == 0 && numOfSQ % 2 == 0) {
 					numOfRedirect++;
-					if (numOfRedirect > 1)
+					if (numOfRedirect > 1) {
 						throw new ShellException("More than one redirect input");
+					}
 					String inputFileName = "";
 					for (int j = i + 2; j < stmt.length(); j++) {
-						if (stmt.charAt(j) == ' ')
+						if (stmt.charAt(j) == ' ') {
 							break;
+						}
 						inputFileName += stmt.charAt(j);
 					}
 					Path currentDir = Paths.get(Environment.currentDirectory);
@@ -508,12 +517,14 @@ public class ShellImpl implements Shell {
 			} else if (stmt.charAt(i) == '<') {
 				if (numOfDQ % 2 == 0 && numOfSQ % 2 == 0) {
 					numOfRedirect++;
-					if (numOfRedirect > 1)
+					if (numOfRedirect > 1) {
 						throw new ShellException("More than one redirect input");
+					}
 					String inputFileName = "";
 					for (int j = i + 2; j < stmt.length(); j++) {
-						if (stmt.charAt(j) == ' ')
+						if (stmt.charAt(j) == ' ') {
 							break;
+						}
 						inputFileName += stmt.charAt(j);
 					}
 					try {
@@ -555,12 +566,14 @@ public class ShellImpl implements Shell {
 			} else if (stmt.charAt(i) == '>') {
 				if (numOfDQ % 2 == 0 && numOfSQ % 2 == 0) {
 					numOfRedirect++;
-					if (numOfRedirect > 1)
+					if (numOfRedirect > 1) {
 						throw new ShellException("More than one redirect input");
+					}
 					String inputFileName = "";
 					for (int j = i + 2; j < stmt.length(); j++) {
-						if (stmt.charAt(j) == ' ')
+						if (stmt.charAt(j) == ' ') {
 							break;
+						}
 						inputFileName += stmt.charAt(j);
 					}
 					Path currentDir = Paths.get(Environment.currentDirectory);
@@ -604,12 +617,14 @@ public class ShellImpl implements Shell {
 			} else if (stmt.charAt(i) == '>') {
 				if (numOfDQ % 2 == 0 && numOfSQ % 2 == 0) {
 					numOfRedirect++;
-					if (numOfRedirect > 1)
+					if (numOfRedirect > 1) {
 						throw new ShellException("More than one redirect input");
+					}
 					String inputFileName = "";
 					for (int j = i + 2; j < stmt.length(); j++) {
-						if (stmt.charAt(j) == ' ')
+						if (stmt.charAt(j) == ' ') {
 							break;
+						}
 						inputFileName += stmt.charAt(j);
 					}
 					try {
@@ -881,10 +896,12 @@ public class ShellImpl implements Shell {
 					actualOut = tmpout;
 				}
 			}
-			if (redirectIn != null)
+			if (redirectIn != null) {
 				actualIn = redirectIn;
-			if (redirectOut != null)
+			}
+			if (redirectOut != null) {
 				actualOut = redirectOut;
+			}
 			callCommand.evaluate(actualIn, actualOut);
 
 		}

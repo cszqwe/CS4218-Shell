@@ -150,6 +150,12 @@ public class GrepApplication implements Grep {
 		return str.toString();
 	}
 
+	/**
+	 * @params args pattern
+	 * 		   args is the actual content, pattern is the regex pattern to match
+	 * @return A string which represents the grep Result.
+	 * 
+	 */
 	public String grepFromContent(String args, String pattern) {
 		args.replaceAll("\r\n", "\n");
 		String[] allStmts = args.split("\n");
@@ -171,26 +177,66 @@ public class GrepApplication implements Grep {
 		return ans;
 	}
 
+	/**
+	 * @params args
+	 * 		   args is the actual content
+	 * Different from the given interface, this function here is more like an entry to the real function, it does not have any meaning here. 
+	 * The core parse is done by the run function and the execution is inside the grepFromContent function. This interface is almost abandoned by our new design.
+	 * @return A string which represents the grep Result.
+	 * 
+	 */
 	@Override
 	public String grepFromStdin(String args) {
 		return grepFromContent(args, pattern);
 	}
 
+	/**
+	 * @params args
+	 * 		   args is the actual content
+	 * Different from the given interface, this function here is more like an entry to the real function, it does not have any meaning here. 
+	 * The core parse is done by the run function and the execution is inside the grepFromContent function. This interface is almost abandoned by our new design.
+	 * @return A string which represents the grep Result.
+	 * 
+	 */
 	@Override
 	public String grepFromOneFile(String args) {
 		return grepFromContent(args, pattern);
 	}
 
+	/**
+	 * @params args
+	 * 		   args is the actual content
+	 * Different from the given interface, this function here is more like an entry to the real function, it does not have any meaning here. 
+	 * The core parse is done by the run function and the execution is inside the grepFromContent function. This interface is almost abandoned by our new design.
+	 * @return A string which represents the grep Result.
+	 * 
+	 */
 	@Override
 	public String grepFromMultipleFiles(String args) {
 		return grepFromContent(args, pattern);
 	}
 
+	/**
+	 * @params args
+	 * 		   args is the actual content
+	 * Different from the given interface, this function here is more like an entry to the real function, it does not have any meaning here. 
+	 * The core parse is done by the run function and the execution is inside the grepFromContent function. This interface is almost abandoned by our new design.
+	 * @return A string which represents the grep Result.
+	 * 
+	 */
 	@Override
 	public String grepInvalidPatternInStdin(String args) {
 		return "Invalid Pattern";
 	}
 
+	/**
+	 * @params args
+	 * 		   args is the actual content
+	 * Different from the given interface, this function here is more like an entry to the real function, it does not have any meaning here. 
+	 * The core parse is done by the run function and the execution is inside the grepFromContent function. This interface is almost abandoned by our new design.
+	 * @return A string which represents the grep Result.
+	 * 
+	 */
 	@Override
 	public String grepInvalidPatternInFile(String args) {
 		return "Invalid Pattern";

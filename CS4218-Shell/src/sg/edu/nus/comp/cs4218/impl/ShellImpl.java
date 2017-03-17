@@ -432,12 +432,12 @@ public class ShellImpl implements Shell {
 	}
 
 	/**
-	 * Process the globbing functionality of the command.
+	 * Process the redirection of input of the command. Before parsing with CommandApplication
 	 * 
 	 * @param stmt
 	 *            String of the individual commands.
 	 * 
-	 * @return A String which replace all the * with the certain files.
+	 * @return A String which remove the redirection of input contents.
 	 * 
 	 * @throws AbstractApplicationException
 	 *             If an exception happens while processing the content in the
@@ -480,12 +480,12 @@ public class ShellImpl implements Shell {
 	}
 
 	/**
-	 * Process the globbing functionality of the command.
+	 * Process the redirection of input of the command. Before parsing with CommandApplication
 	 * 
 	 * @param stmt
 	 *            String of the individual commands.
 	 * 
-	 * @return A String which replace all the * with the certain files.
+	 * @return A input steam got from the redirection of input. Null if invalid.
 	 * 
 	 * @throws AbstractApplicationException
 	 *             If an exception happens while processing the content in the
@@ -528,12 +528,12 @@ public class ShellImpl implements Shell {
 	}
 
 	/**
-	 * Process the globbing functionality of the command.
+	 * Process the redirection of output of the command. Before parsing with CommandApplication
 	 * 
 	 * @param stmt
 	 *            String of the individual commands.
 	 * 
-	 * @return A String which replace all the * with the certain files.
+	 * @return A String which remove the redirection of output contents.
 	 * 
 	 * @throws AbstractApplicationException
 	 *             If an exception happens while processing the content in the
@@ -576,12 +576,12 @@ public class ShellImpl implements Shell {
 	}
 
 	/**
-	 * Process the globbing functionality of the command.
+	 * Process the redirection of input of the command. Before parsing with CommandApplication
 	 * 
 	 * @param stmt
 	 *            String of the individual commands.
 	 * 
-	 * @return A String which replace all the * with the certain files.
+	 * @return A input steam got from the redirection of input. Null if invalid.
 	 * 
 	 * @throws AbstractApplicationException
 	 *             If an exception happens while processing the content in the
@@ -890,7 +890,14 @@ public class ShellImpl implements Shell {
 		}
 
 	}
-
+	/**
+	 * As we do not follow the original design, the interfaces here perform more like an access to the parseAndEvaluate.
+	 * It would just pass the stmt to evaluated by the parseAndEvaluate function.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return The expected output of this command
+	 */
 	@Override
 	public String pipeTwoCommands(String args) {
 		try {
@@ -902,6 +909,14 @@ public class ShellImpl implements Shell {
 		}
 	}
 
+	/**
+	 * As we do not follow the original design, the interfaces here perform more like an access to the parseAndEvaluate.
+	 * It would just pass the stmt to evaluated by the parseAndEvaluate function.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return The expected output of this command
+	 */
 	@Override
 	public String pipeMultipleCommands(String args) {
 		try {
@@ -913,6 +928,14 @@ public class ShellImpl implements Shell {
 		}
 	}
 
+	/**
+	 * As we do not follow the original design, the interfaces here perform more like an access to the parseAndEvaluate.
+	 * It would just pass the stmt to evaluated by the parseAndEvaluate function.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return The expected output of this command
+	 */
 	@Override
 	public String pipeWithException(String args) {
 		try {
@@ -924,6 +947,14 @@ public class ShellImpl implements Shell {
 		}
 	}
 
+	/**
+	 * As we do not follow the original design, the interfaces here perform more like an access to the parseAndEvaluate.
+	 * It would just pass the stmt to evaluated by the parseAndEvaluate function.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return The expected output of this command
+	 */
 	@Override
 	public String globNoPaths(String args) {
 		try {
@@ -935,6 +966,14 @@ public class ShellImpl implements Shell {
 		}
 	}
 
+	/**
+	 * As we do not follow the original design, the interfaces here perform more like an access to the parseAndEvaluate.
+	 * It would just pass the stmt to evaluated by the parseAndEvaluate function.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return The expected output of this command
+	 */
 	@Override
 	public String globOneFile(String args) {
 		try {
@@ -946,6 +985,14 @@ public class ShellImpl implements Shell {
 		}
 	}
 
+	/**
+	 * As we do not follow the original design, the interfaces here perform more like an access to the parseAndEvaluate.
+	 * It would just pass the stmt to evaluated by the parseAndEvaluate function.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return The expected output of this command
+	 */
 	@Override
 	public String globFilesDirectories(String args) {
 		try {
@@ -957,6 +1004,14 @@ public class ShellImpl implements Shell {
 		}
 	}
 
+	/**
+	 * As we do not follow the original design, the interfaces here perform more like an access to the parseAndEvaluate.
+	 * It would just pass the stmt to evaluated by the parseAndEvaluate function.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return The expected output of this command
+	 */
 	@Override
 	public String globWithException(String args) {
 		try {
@@ -968,6 +1023,14 @@ public class ShellImpl implements Shell {
 		}
 	}
 
+	/**
+	 * As we do not follow the original design, the interfaces here perform more like an access to the parseAndEvaluate.
+	 * It would just pass the stmt to evaluated by the parseAndEvaluate function.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return The expected output of this command
+	 */
 	@Override
 	public String redirectInput(String args) {
 		try {
@@ -979,6 +1042,14 @@ public class ShellImpl implements Shell {
 		}
 	}
 
+	/**
+	 * As we do not follow the original design, the interfaces here perform more like an access to the parseAndEvaluate.
+	 * It would just pass the stmt to evaluated by the parseAndEvaluate function.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return The expected output of this command
+	 */
 	@Override
 	public String redirectOutput(String args) {
 		try {
@@ -990,6 +1061,14 @@ public class ShellImpl implements Shell {
 		}
 	}
 
+	/**
+	 * As we do not follow the original design, the interfaces here perform more like an access to the parseAndEvaluate.
+	 * It would just pass the stmt to evaluated by the parseAndEvaluate function.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return The expected output of this command
+	 */
 	@Override
 	public String redirectInputWithNoFile(String args) {
 		try {
@@ -1001,6 +1080,14 @@ public class ShellImpl implements Shell {
 		}
 	}
 
+	/**
+	 * As we do not follow the original design, the interfaces here perform more like an access to the parseAndEvaluate.
+	 * It would just pass the stmt to evaluated by the parseAndEvaluate function.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return The expected output of this command
+	 */
 	@Override
 	public String redirectOutputWithNoFile(String args) {
 		try {
@@ -1012,6 +1099,14 @@ public class ShellImpl implements Shell {
 		}
 	}
 
+	/**
+	 * As we do not follow the original design, the interfaces here perform more like an access to the parseAndEvaluate.
+	 * It would just pass the stmt to evaluated by the parseAndEvaluate function.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return The expected output of this command
+	 */
 	@Override
 	public String redirectInputWithException(String args) {
 		try {
@@ -1022,7 +1117,14 @@ public class ShellImpl implements Shell {
 			return e.getMessage();
 		}
 	}
-
+	/**
+	 * As we do not follow the original design, the interfaces here perform more like an access to the parseAndEvaluate.
+	 * It would just pass the stmt to evaluated by the parseAndEvaluate function.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return The expected output of this command
+	 */
 	@Override
 	public String redirectOutputWithException(String args) {
 		try {
@@ -1034,6 +1136,14 @@ public class ShellImpl implements Shell {
 		}
 	}
 
+	/**
+	 * As we do not follow the original design, the interfaces here perform more like an access to the parseAndEvaluate.
+	 * It would just pass the stmt to evaluated by the parseAndEvaluate function.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return The expected output of this command
+	 */
 	@Override
 	public String performCommandSubstitution(String args) {
 		try {
@@ -1045,6 +1155,14 @@ public class ShellImpl implements Shell {
 		}
 	}
 
+	/**
+	 * As we do not follow the original design, the interfaces here perform more like an access to the parseAndEvaluate.
+	 * It would just pass the stmt to evaluated by the parseAndEvaluate function.
+	 * @param stmt
+	 *            String of the individual commands.
+	 * 
+	 * @return The expected output of this command
+	 */
 	@Override
 	public String performCommandSubstitutionWithException(String args) {
 		try {

@@ -207,6 +207,9 @@ public class SedApplication implements Sed {
 		return contents;
 	}
 
+	/**
+	 * Notice the Stdin need to be set before using this function
+	 */
 	@Override
 	public String replaceFirstSubStringFromStdin(String args) {
 		String regex = getReg(args);
@@ -226,6 +229,9 @@ public class SedApplication implements Sed {
 		return contents;
 	}
 
+	/**
+	 * Notice the Stdin need to be set before using this function
+	 */
 	@Override
 	public String replaceAllSubstringsInStdin(String args) {
 		String regex = getReg(args);

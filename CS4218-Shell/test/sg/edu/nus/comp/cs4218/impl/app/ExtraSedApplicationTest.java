@@ -116,7 +116,6 @@ public class ExtraSedApplicationTest {
 		assertEquals(msg, expected, stdout.toString());
 	}
 
-
 	@Test
 	public void testSedWithEmptyFileInputStream() throws SedException {
 		String args[] = { "s|a|b|" };

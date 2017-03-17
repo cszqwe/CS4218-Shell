@@ -400,7 +400,8 @@ public class SortApplication implements Sort {
 		boolean isFirstNums = Character.isDigit(line.charAt(0));
 		// true if line starts with digit, false otherwise
 		// Assumption: in the case of numerical sort,
-		// only the starting sequence of numbers, if any, are treated numerically.
+		// only the starting sequence of numbers, if any, are treated
+		// numerically.
 		// for example, a line "21th" will be split to [21] [t] [h].
 		String firstNums = "";
 

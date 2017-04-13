@@ -445,7 +445,7 @@ public class ExtraSortApplicationTest {
 	public void testSortPipeFromSort() throws AbstractApplicationException, ShellException {
 		ShellImpl shell = new ShellImpl();
 		String args = "sort -n sortAppTestAll.txt | tail -n 5";
-		String expected = "come here\ncommand unknown\ngain 30 more exp\nok\nokay\n";
+		String expected = "come here"+System.lineSeparator()+"command unknown"+System.lineSeparator()+"gain 30 more exp"+System.lineSeparator()+"ok"+System.lineSeparator()+"okay"+System.lineSeparator()+"";
 		shell.parseAndEvaluate(args, os);
 		assertEquals(expected, os.toString());
 	}

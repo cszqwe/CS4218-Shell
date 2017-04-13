@@ -124,7 +124,7 @@ public class ShellTest {
 		assertEquals(expected, os.toString());
 		os = new ByteArrayOutputStream();
 		cmdline = "cat test.txt | head -n 2 | tail -n 1";
-		expected = "line 2\n";
+		expected = "line 2"+System.lineSeparator()+"";
 		shell.parseAndEvaluate(cmdline, os);
 		assertEquals(expected, os.toString());
 	}

@@ -13,7 +13,7 @@ import java.io.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class HackatonTests {
+public class Hackathon {
 	private static final String EXCEPTION_NOT = "Should not throw exception";
 	private static final String TEST_DIR = "testDir";
 
@@ -81,7 +81,7 @@ public class HackatonTests {
     public void testHeadValidArgsOnMac() throws AbstractApplicationException, ShellException {
         String input = "head -n 3 test.txt";
         ByteArrayOutputStream stdout = new ByteArrayOutputStream();
-        String expected = "line 1\nline 2\nline 3\n";
+        String expected = "line 1"+System.lineSeparator()+"line 2"+System.lineSeparator()+"line 3"+System.lineSeparator();
 
         shell.parseAndEvaluate(input, stdout);
         assertEquals(expected, stdout.toString());
@@ -101,7 +101,7 @@ public class HackatonTests {
     public void testTailValidArgsOnMac() throws AbstractApplicationException, ShellException {
         String input = "tail -n 5 test2.txt";
         ByteArrayOutputStream stdout = new ByteArrayOutputStream();
-        String expected = "line 8\nline 9\nline 10\nline 11\nline 12\n";
+        String expected = "line 8"+System.lineSeparator()+"line 9"+System.lineSeparator()+"line 10"+System.lineSeparator()+"line 11"+System.lineSeparator()+"line 12"+System.lineSeparator()+"";
 
         shell.parseAndEvaluate(input, stdout);
         assertEquals(expected, stdout.toString());
@@ -185,7 +185,23 @@ public class HackatonTests {
 
 		shell.parseAndEvaluate(input, stdout);
 	}
-	
+	/**
+	 * 
+	 * Expected: Head/Tail Exception
+	 * Actual : Prints the first line of file
+	 * Description : head / tail doesn't handle invalid option, the application still proceeds to print the lines
+	 * Reference : Project Description page 11 :  OPTIONS head -n 15 means printing 15 lines. Print first 10 lines if not specified.  
+	 * @throws ShellException 
+	 * @throws AbstractApplicationException **
+	 * 
+	 */
+	@Test(expected=TailException.class)
+	public void testTailInvalidOption() throws AbstractApplicationException, ShellException {
+		String input = "tail -p 1 test.txt";
+		ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+
+		shell.parseAndEvaluate(input, stdout);
+	}
 	
 	/**
 	 * 
@@ -241,7 +257,7 @@ public class HackatonTests {
 
 		shell.parseAndEvaluate(input, stdout);
 		
-		assertEquals("line 1" + "\n" + "line 2\n", stdout.toString());
+		assertEquals("line 1" + System.lineSeparator() + "line 2"+ System.lineSeparator(), stdout.toString());
 	}
 
     /**
@@ -261,7 +277,7 @@ public class HackatonTests {
 
         shell.parseAndEvaluate(input, stdout);
 
-        assertEquals("line 3" + "\n" + "line 4\n", stdout.toString());
+        assertEquals("line 3" + ""+System.lineSeparator()+"" + "line 4"+System.lineSeparator()+"", stdout.toString());
     }
     
     

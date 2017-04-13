@@ -43,7 +43,7 @@ public class TailApplicationTest {
 	public void testTailOptionAndFile() {
 		// 12 lines in test2.txt, should print lines line 8 to 12
 		String args[] = "-n 5 test2.txt".split(" ");
-		String expected = "line 8\nline 9\nline 10\nline 11\nline 12\n";
+		String expected = "line 8"+System.lineSeparator()+"line 9"+System.lineSeparator()+"line 10"+System.lineSeparator()+"line 11"+System.lineSeparator()+"line 12"+System.lineSeparator()+"";
 		try {
 			tailApp.run(args, is, os);
 		} catch (AbstractApplicationException e) {
@@ -58,7 +58,7 @@ public class TailApplicationTest {
 	public void testTailOptionExceedFileLines() {
 		// 4 lines in test.txt, should all 4 lines
 		String args[] = "-n 999 test.txt".split(" ");
-		String expected = "line 1\nline 2\nline 3\nline 4\n";
+		String expected = "line 1"+System.lineSeparator()+"line 2"+System.lineSeparator()+"line 3"+System.lineSeparator()+"line 4"+System.lineSeparator()+"";
 		try {
 			tailApp.run(args, is, os);
 		} catch (AbstractApplicationException e) {
@@ -73,7 +73,7 @@ public class TailApplicationTest {
 	public void testTailFileOnly() {
 		// 12 lines in test2.txt, should print 10 lines
 		String args[] = "test2.txt".split(" ");
-		String expected = "line 3\nline 4\nline 5\nline 6\nline 7\nline 8\nline 9\nline 10\nline 11\nline 12\n";
+		String expected = "line 3"+System.lineSeparator()+"line 4"+System.lineSeparator()+"line 5"+System.lineSeparator()+"line 6"+System.lineSeparator()+"line 7"+System.lineSeparator()+"line 8"+System.lineSeparator()+"line 9"+System.lineSeparator()+"line 10"+System.lineSeparator()+"line 11"+System.lineSeparator()+"line 12"+System.lineSeparator()+"";
 		try {
 			tailApp.run(args, is, os);
 		} catch (AbstractApplicationException e) {
@@ -101,7 +101,7 @@ public class TailApplicationTest {
 	@Test
 	public void testOnlySpacesFile() {
 		String args[] = "fileTest_onlyspaces.txt".split(" ");
-		String expected = "     \n";
+		String expected = "     "+System.lineSeparator()+"";
 		try {
 			tailApp.run(args, is, os);
 		} catch (AbstractApplicationException e) {
@@ -115,7 +115,7 @@ public class TailApplicationTest {
 	@Test
 	public void testOnlyNewlinesFile() {
 		String args[] = { "fileTest only newlines.txt" };
-		String expected = "\n\n\n\n";
+		String expected = ""+System.lineSeparator()+""+System.lineSeparator()+""+System.lineSeparator()+""+System.lineSeparator()+"";
 		try {
 			tailApp.run(args, is, os);
 		} catch (AbstractApplicationException e) {
@@ -129,7 +129,7 @@ public class TailApplicationTest {
 	@Test
 	public void testManyNewlinesFile() {
 		String args[] = { "fileTest manynewlines.txt" };
-		String expected = "\n\n\n\n\n\n\n\n\n\n";
+		String expected = ""+System.lineSeparator()+""+System.lineSeparator()+""+System.lineSeparator()+""+System.lineSeparator()+""+System.lineSeparator()+""+System.lineSeparator()+""+System.lineSeparator()+""+System.lineSeparator()+""+System.lineSeparator()+""+System.lineSeparator()+"";
 		try {
 			tailApp.run(args, is, os);
 		} catch (AbstractApplicationException e) {
@@ -161,7 +161,7 @@ public class TailApplicationTest {
 		os = new ByteArrayOutputStream();
 		ShellImpl shell = new ShellImpl();
 		String args = "cat test.txt | tail -n 2";
-		String expected = "line 3\nline 4\n";
+		String expected = "line 3"+System.lineSeparator()+"line 4"+System.lineSeparator()+"";
 		shell.parseAndEvaluate(args, os);
 		assertEquals(expected, os.toString());
 
@@ -172,7 +172,7 @@ public class TailApplicationTest {
 		os = new ByteArrayOutputStream();
 		ShellImpl shell = new ShellImpl();
 		String args = "tail -n 2 test.txt";
-		String expected = "line 3\nline 4\n";
+		String expected = "line 3"+System.lineSeparator()+"line 4"+System.lineSeparator()+"";
 		shell.parseAndEvaluate(args, os);
 		assertEquals(expected, os.toString());
 	}

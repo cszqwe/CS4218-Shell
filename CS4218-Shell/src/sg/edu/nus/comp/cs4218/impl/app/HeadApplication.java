@@ -42,7 +42,7 @@ public class HeadApplication implements Application {
 						break;
 					} else {
 						stdout.write(sCurrentLine.getBytes());
-						stdout.write("\n".getBytes());
+						stdout.write(System.lineSeparator().getBytes());
 						currLineCount++;
 					}
 				}
@@ -78,7 +78,7 @@ public class HeadApplication implements Application {
 			}
 			for (int i = 0; i < answers.size(); i++) {
 				stdout.write(answers.get(i).getBytes());
-				stdout.write("\n".getBytes());
+				stdout.write(System.lineSeparator().getBytes());
 
 			}
 

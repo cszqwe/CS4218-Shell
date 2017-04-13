@@ -65,7 +65,7 @@ public class TailApplication implements Application {
 				while ((sCurrentLine = bufferedReader.readLine()) != null) {
 					if (currLineCount >= firstWantedLine) {
 						stdout.write(sCurrentLine.getBytes());
-						stdout.write("\n".getBytes());
+						stdout.write(System.lineSeparator().getBytes());
 					}
 					currLineCount++;
 				}
@@ -205,7 +205,7 @@ public class TailApplication implements Application {
 			}
 			for (int i = 0; i < answers.size(); i++) {
 				stdout.write(answers.get(i).getBytes());
-				stdout.write("\n".getBytes());
+				stdout.write(System.lineSeparator().getBytes());
 
 			}
 

@@ -48,7 +48,7 @@ public class PwdApplicationTest {
 		} catch (PwdException e) {
 
 		}
-		assertEquals(pwd, os.toString());
+		assertEquals(pwd + System.lineSeparator(), os.toString());
 
 	}
 
@@ -62,7 +62,7 @@ public class PwdApplicationTest {
 		} catch (PwdException e) {
 
 		}
-		assertEquals(pwd, os.toString());
+		assertEquals(pwd + System.lineSeparator(), os.toString());
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class PwdApplicationTest {
 		} catch (PwdException e) {
 
 		}
-		assertEquals(pwd, os.toString());
+		assertEquals(pwd + System.lineSeparator(), os.toString());
 	}
 
 	@Test

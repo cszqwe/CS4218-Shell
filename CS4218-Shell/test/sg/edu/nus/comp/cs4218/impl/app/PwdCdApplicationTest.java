@@ -64,7 +64,7 @@ public class PwdCdApplicationTest {
 		} catch (Exception e) {
 
 		}
-		assertEquals(currentDir, os.toString());
+		assertEquals(currentDir + System.lineSeparator(), os.toString());
 		os = new ByteArrayOutputStream();
 
 		String[] args2 = { "cd Test_folder" };
@@ -81,7 +81,7 @@ public class PwdCdApplicationTest {
 		} catch (Exception e) {
 
 		}
-		assertEquals(pwdBackup + "\\cd Test_folder", os.toString());
+		assertEquals(pwdBackup + "\\cd Test_folder" + System.lineSeparator(), os.toString());
 		os = new ByteArrayOutputStream();
 	}
 

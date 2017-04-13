@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import sg.edu.nus.comp.cs4218.Application;
@@ -49,6 +50,7 @@ public class ShellImpl implements Shell {
 	public static final String EXP_STDOUT = "Error writing to stdout.";
 	public static final String EXP_NOT_SUPPORTED = " not supported yet";
 
+	
 	/**
 	 * Searches for and processes the commands enclosed by back quotes for
 	 * command substitution.If no back quotes are found, the argsArray from the
@@ -189,7 +191,8 @@ public class ShellImpl implements Shell {
 			}
 			String bqStr = stmt.substring(start + 1, end);
 			String replacedOne = bqStr.replace(" ", SPACE_CHAR);
-			String replacedStr = stmt.replaceFirst('"' + bqStr + '"', replacedOne);
+			
+			String replacedStr = stmt.replaceFirst(Pattern.quote('"' + bqStr + '"'), Matcher.quoteReplacement(replacedOne));
 			stmt = replacedStr;
 		}
 	}
@@ -316,6 +319,8 @@ public class ShellImpl implements Shell {
 		int numOfDQ = 0;
 		int numOfSQ = 0;
 		int numOfBQ = 0;
+		int numOfUnquotedDQ = 0;
+		int numofUnquotedBQ = 0;
 		int startIndex = 0;
 		ArrayList<String> stmts = new ArrayList<String>();
 		stmts.clear();
@@ -325,8 +330,14 @@ public class ShellImpl implements Shell {
 				numOfSQ++;
 			} else if (stmt.charAt(i) == '"') {
 				numOfDQ++;
+				if (numOfSQ % 2 == 0){
+					numOfUnquotedDQ++;
+				}
 			} else if (stmt.charAt(i) == '`') {
 				numOfBQ++;
+				if (numOfSQ % 2 == 0){
+					numofUnquotedBQ++;
+				}
 			} else if (stmt.charAt(i) == '|') {
 				if (numOfDQ % 2 == 0 && numOfSQ % 2 == 0 && numOfBQ % 2 == 0) {
 					String newCmd = stmt.substring(startIndex, i);
@@ -334,6 +345,9 @@ public class ShellImpl implements Shell {
 					startIndex = i + 1;
 				}
 			}
+		}
+		if (numOfSQ % 2 == 1 || numOfUnquotedDQ % 2 == 1 || numofUnquotedBQ % 2 == 1){
+			throw new ShellException("Unfinished Quoted");
 		}
 		String[] commands = new String[stmts.size()];
 		stmts.toArray(commands);
@@ -400,13 +414,22 @@ public class ShellImpl implements Shell {
 							}
 						}
 					}
-					File dir = new File(directory);
-					File file[] = listFilesMatching(dir, pattern);
-					;
+					File dir;
+					File file[] = null;
+					if (directory.equals("")){
+						dir = new File(Environment.currentDirectory);
+						file = listFilesMatching(dir, pattern);
+					}else{
+						dir = new File(directory);
+						file = listFilesMatching(dir, pattern);
+					}
+					
 					if (file != null) {
 						String newStr = "";
 						for (int j = 0; j < file.length; j++) {
-							newStr += (file[j].getPath() + " ").replace("\\", "/");
+							String newFileStr = file[j].getName();
+							newStr += (directory + newFileStr).replace("\\","/") + " ";
+							
 						}
 
 						stmt = stmt.replace(replacedString, newStr);
@@ -470,7 +493,13 @@ public class ShellImpl implements Shell {
 						throw new ShellException("More than one redirect input");
 					}
 					String inputFileName = "";
-					for (int j = i + 2; j < stmt.length(); j++) {
+					String space = "";
+					int ss = i+1;
+					while (ss < stmt.length()-1 && stmt.charAt(ss) == ' ')  {
+						ss++;
+						space = space+" ";
+					}
+					for (int j = ss; j < stmt.length(); j++) {
 						if (stmt.charAt(j) == ' ') {
 							break;
 						}
@@ -480,7 +509,7 @@ public class ShellImpl implements Shell {
 					Path filePath = currentDir.resolve(inputFileName);
 					boolean isFileReadable = checkIfFileIsReadable(filePath);
 					if (isFileReadable) {
-						stmt = stmt.replace("< " + inputFileName, "").trim();
+						stmt = stmt.replace("<"+ space + inputFileName, "").trim();
 					}
 				}
 			}
@@ -521,7 +550,9 @@ public class ShellImpl implements Shell {
 						throw new ShellException("More than one redirect input");
 					}
 					String inputFileName = "";
-					for (int j = i + 2; j < stmt.length(); j++) {
+					int ss = i+1;
+					while (ss < stmt.length()-1 && stmt.charAt(ss) == ' ')  ss++;
+					for (int j = ss; j < stmt.length(); j++) {
 						if (stmt.charAt(j) == ' ') {
 							break;
 						}
@@ -570,18 +601,19 @@ public class ShellImpl implements Shell {
 						throw new ShellException("More than one redirect input");
 					}
 					String inputFileName = "";
-					for (int j = i + 2; j < stmt.length(); j++) {
+					String space = "";
+					int ss = i+1;
+					while (ss < stmt.length()-1 && stmt.charAt(ss) == ' ')  {
+						ss++;
+						space = space+" ";
+					}
+					for (int j = ss; j < stmt.length(); j++) {
 						if (stmt.charAt(j) == ' ') {
 							break;
 						}
 						inputFileName += stmt.charAt(j);
 					}
-					Path currentDir = Paths.get(Environment.currentDirectory);
-					Path filePath = currentDir.resolve(inputFileName);
-					boolean isFileReadable = checkIfFileIsReadable(filePath);
-					if (isFileReadable) {
-						stmt = stmt.replace("< " + inputFileName, "").trim();
-					}
+					stmt = stmt.replace(">" + space + inputFileName, "").trim();
 				}
 			}
 		}
@@ -621,7 +653,9 @@ public class ShellImpl implements Shell {
 						throw new ShellException("More than one redirect input");
 					}
 					String inputFileName = "";
-					for (int j = i + 2; j < stmt.length(); j++) {
+					int ss = i+1;
+					while (ss < stmt.length()-1 && stmt.charAt(ss) == ' ') ss++;
+					for (int j = ss; j < stmt.length(); j++) {
 						if (stmt.charAt(j) == ' ') {
 							break;
 						}

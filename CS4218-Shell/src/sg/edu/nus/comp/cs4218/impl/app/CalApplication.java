@@ -75,7 +75,7 @@ public class CalApplication implements Cal {
 				// cal year
 				try {
 					// Catch illegal year argument
-					Integer.parseInt(args[0]);
+					if (Integer.parseInt(args[0]) < 1) throw new CalException("Invalid Year");
 					stdout.write(printCalForYear(args[0]).getBytes());
 				} catch (Exception e) {
 					throw new CalException("Usage: cal -m or cal <year>");
@@ -86,7 +86,7 @@ public class CalApplication implements Cal {
 			if (args[0].equals("-m")) {
 				try {
 					// Catch illegal year argument
-					Integer.parseInt(args[1]);
+					if (Integer.parseInt(args[1]) < 1) throw new CalException("month must be between 1 and 12");
 					String ans = printCalForYearMondayFirst(args[1]);
 					stdout.write(ans.getBytes());
 				} catch (Exception e) {
@@ -96,8 +96,8 @@ public class CalApplication implements Cal {
 				// cal month year
 				try {
 					int monthInt = Integer.parseInt(args[0]);
-
-					if (monthInt > 12 || monthInt < 1) {
+					int yearInt = Integer.parseInt(args[1]);
+					if (monthInt > 12 || monthInt < 1 || yearInt < 1) {
 						throw new CalException("month must be between 1 and 12");
 					} else {
 						try {
@@ -118,7 +118,8 @@ public class CalApplication implements Cal {
 			}
 			try {
 				int monthInt = Integer.parseInt(args[1]);
-				if (monthInt > 12 || monthInt < 1) {
+				int yearInt = Integer.parseInt(args[2]);
+				if (monthInt > 12 || monthInt < 1 || yearInt < 1) {
 					throw new CalException("month must be between 1 and 12");
 				} else {
 					try {
@@ -172,10 +173,35 @@ public class CalApplication implements Cal {
 	}
 
 	public int getMaxDaysInMonth(int month, int year) {
-		Calendar cal = Calendar.getInstance();
-		// Note: 0-based months
-		cal.set(year, month, 1);
-		return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+		month += 1;
+	    int days = 0;  
+	    if (month != 2) {  
+	        switch (month) {  
+	        case 1:  
+	        case 3:  
+	        case 5:  
+	        case 7:  
+	        case 8:  
+	        case 10:  
+	        case 12:  
+	        days = 31;  
+	        break;  
+	        case 4:  
+	        case 6:  
+	        case 9:  
+	        case 11:  
+	        days = 30;  
+	  
+	        }  
+	    } else {   
+	        if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0)  
+	        days = 29;  
+	        else  
+	        days = 28;  
+	  
+	    }  
+	    return days;  
+	  
 	}
 
 	public String populateCalendarDays(int startPos, int maxDays) {
@@ -488,7 +514,7 @@ public class CalApplication implements Cal {
 				}
 				// System.out.println("starting pos: " + startingPos);
 
-				int maxDaysInCurrentMonth = getMaxDaysInMonth(currMonth - 1, Integer.parseInt(currentYear));
+				int maxDaysInCurrentMonth = getMaxDaysInMonth(currMonth - 1, Integer.parseInt(year));
 				// System.out.println("max days in current month: " +
 				// maxDaysInCurrentMonth);
 

@@ -47,7 +47,8 @@ public class SedApplication implements Sed {
 				sybolNumber++;
 			}
 		}
-		if (strs.length == 2 && sybolNumber == 3) {
+		if (sybolNumber < 3) throw new SedException("unterminated command");
+ 		if (strs.length == 2 && sybolNumber == 3) {
 			String[] newstrs = new String[3];
 			newstrs[0] = strs[0];
 			newstrs[1] = strs[1];

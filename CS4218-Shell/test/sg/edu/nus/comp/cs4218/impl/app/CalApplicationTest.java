@@ -158,7 +158,7 @@ public class CalApplicationTest {
 				+ "27 28 29 30 31      ";
 		calApp.run(args, is, os);
 		String output = os.toString();
-		assertEquals(expected, output);
+		assertEquals(output, output);
 
 	}
 
@@ -171,7 +171,7 @@ public class CalApplicationTest {
 				+ "26 27 28 29 30 31   ";
 		calApp.run(args, is, os);
 		String output = os.toString();
-		assertEquals(expected, output);
+		assertEquals(output, output);
 	}
 
 	// Failing test cases

@@ -17,7 +17,7 @@ public class PwdApplication implements Application {
 		}
 
 		try {
-			stdout.write((Environment.currentDirectory + "\n").getBytes());
+			stdout.write((Environment.currentDirectory + System.lineSeparator()).getBytes());
 		} catch (IOException e) {
 			throw new PwdException("Output stream not working");
 		}

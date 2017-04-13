@@ -17,6 +17,7 @@ import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.CatException;
 import sg.edu.nus.comp.cs4218.exception.HeadException;
+import sg.edu.nus.comp.cs4218.exception.TailException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
 public class HeadApplication implements Application {
@@ -98,7 +99,43 @@ public class HeadApplication implements Application {
 		String currentDir = Environment.currentDirectory;
 		boolean isFileReadable = false;
 		cmdArgs = args;
-
+		int finalNum = 0;
+		boolean haveNum = false;
+		boolean haveFile = false;
+		String fileName = "";
+		for (int i = 0; i < cmdArgs.length; i++){
+			if (cmdArgs[i].equals("-n")){
+				if (i == cmdArgs.length - 1) throw new HeadException("No line number followed by -n");
+				haveNum = true;
+				try{
+					finalNum = Integer.parseInt(cmdArgs[i+1]);
+				}catch (Exception e){
+					throw new HeadException("No line number followed by -n");
+				}
+			}else{
+				try{
+					Integer.parseInt(cmdArgs[i]);
+				}catch (Exception e){
+					if (i == cmdArgs.length - 1){
+						haveFile = true;
+						fileName = cmdArgs[i];
+					}else
+					throw new HeadException("Invalid option");
+				}
+			}
+		}
+		if (finalNum < 0) throw new HeadException("Invalid line number followed by -n");
+		ArrayList<String> newArgs = new ArrayList<String>(); 
+		if (haveNum){
+			newArgs.add("-n");
+			newArgs.add(finalNum+"");
+		}
+		if (haveFile){
+			newArgs.add(fileName);
+		}
+		String strArr[] = new String[newArgs.size()];
+		newArgs.toArray(strArr);
+		cmdArgs = strArr;
 		// If there are command line args, read from it
 		if (cmdArgs.length > 0) {
 			path = currentDir + "\\" + args[0];

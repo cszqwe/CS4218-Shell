@@ -1,4 +1,0 @@
-line 1
-Line 2
-3rd line
-(4th line)
